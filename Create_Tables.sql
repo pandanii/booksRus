@@ -63,9 +63,10 @@ CREATE TABLE DVDs (
 
 
 CREATE TABLE Sequel_To (
-        title VARCHAR (30),
-        FOREIGN KEY (title) REFERENCES DVDs(title),
-        FOREIGN KEY (title) REFERENCES DVDs(title));
+        prequel_title VARCHAR (30),
+		sequel_title VARCHAR (30),
+        FOREIGN KEY (prequel_title) REFERENCES DVDs(title),
+        FOREIGN KEY (sequel_title) REFERENCES DVDs(title));
 
 CREATE TABLE Written_By (
         title VARCHAR (30),
