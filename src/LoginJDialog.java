@@ -34,7 +34,8 @@ JPanel buttonPanel;
 JPanel labelTextFieldPanel;
 
 static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-static final String DATABASE_URL = "jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";
+//static final String DATABASE_URL = "jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";// SWAP THESE FOR SCHOOL EDITING.
+static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books";// SWAP THESE FOR LOCAL EDITING.
 
     //=====================================================
     public LoginJDialog(StoreFrame pointerToStoreFrame)
