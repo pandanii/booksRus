@@ -43,7 +43,7 @@ public LoginJDialog(StoreFrame pointerToStoreFrame)
         pointerToStoreFrame.passConnection(connection);     //passing the connection established to the StoreFrame
     }
     Container cp;
-    Toolkit tk;
+    Toolkit   tk;
     Dimension d;
 
     GroupLayout groupLayout;
@@ -153,14 +153,14 @@ public Connection establishConnection()
     }
     catch (ClassNotFoundException cnfe)
     {
-        System.out.println("ClassNotFoundException in LoginJDialog getConnection");
+        System.out.println("ClassNotFoundException in LoginJDialog establishConnection");
         JOptionPane.showMessageDialog(null, "Failed to load driver.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
 //        cnfe.printStackTrace();
         return null;
     }
     catch (SQLException sqle)
     {
-        System.out.println("SQLException in LoginJDialog getConnection");
+        System.out.println("SQLException in LoginJDialog establishConnection");
         JOptionPane.showMessageDialog(null, "Bad Credentials.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
 //        sqle.printStackTrace();
         return null;
@@ -195,6 +195,7 @@ public Connection getConnection()
 //        sqle.printStackTrace();
         return null;
     }*/
+    return null; // NEED TO TAKE OUT IF USING
 }
 //=====================================================
 public void changedUpdate(DocumentEvent e)

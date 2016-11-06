@@ -7,13 +7,13 @@ public class Queries
     public final String director_Search;
     public final String cast_Search;
     public final String genre_Search;
-    public final String sequel_Search;
+    //public final String sequel_Search;
     public final String keyword_DVDs_Search;
     
     public final String title_Books_Search;
-    public final String author_Search;
-    public final String publisher_Search;
-    public final String subject_category_Search;
+    //public final String author_Search;
+    //public final String publisher_Search;
+    //public final String subject_category_Search;
     
     
     public Queries()
@@ -47,7 +47,5 @@ public class Queries
        title_Books_Search  = "SELECT DISTINCT media.title "
                            + "FROM books, written_by, authors, media"
                            + "WHERE media.title = books.title  AND books.title like ?";
-    }
-    
-    
-}
+    }//EndOf Queries constructor 
+}//EndOf Queries class.
