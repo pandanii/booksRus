@@ -130,8 +130,38 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("LOGIN"))
     {
-        // I think this should just call the query for the database to retrieve the login info for the user.
+        String username = usernameTextField.getText().trim();;
+        String password = new String(passwordTextField.getPassword()).trim();;
         
+        try
+        {
+            ResultSetMetaData metaData;
+            Statement         statement = connection.createStatement();
+            ResultSet         resultSet = statement.executeQuery("SELECT * "
+                                                                +"FROM users "
+                                                                +"WHERE users.userID = '" + username + "' AND users.password = '" + password +"';");
+            if (!resultSet.next())//Couldn't login or find info 
+            {
+                JOptionPane.showMessageDialog(null, "Login unsucessful, try again!");
+                return;
+            }
+            else// did login, will display the login data 
+            {
+                metaData = resultSet.getMetaData();
+                for (int i = 1; i <= metaData.getColumnCount(); ++i) 
+                {
+                    System.out.println(metaData.getColumnLabel(i) + ": " + resultSet.getObject(i));
+                }
+            }
+        }
+        catch (SQLException sqle)
+        {
+            System.out.println("SQLException in LoginJDialog actionPerformed");
+            JOptionPane.showMessageDialog(null, "Bad Query.", "Failed to query", JOptionPane.ERROR_MESSAGE);
+        }
+        
+
+// I think this should just call the query for the database to retrieve the login info for the user.
         /*
         //do login stuff.
         System.out.println("Trying to establish a connection");
@@ -140,7 +170,7 @@ public void actionPerformed(ActionEvent e)
         {
             pointerToStoreFrame.passConnection(connection);     //passing the connection established to the StoreFrame
         }*/
-        dispose();
+        //dispose();
     }
 }
 //=====================================================
