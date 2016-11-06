@@ -121,17 +121,14 @@ public LoginJDialog(StoreFrame pointerToStoreFrame)
 }
 
 //=====================================================
+@Override
 public void actionPerformed(ActionEvent e)
 {
     //Connection connection;
-    if (e.getActionCommand().equals("CANCEL"))
+    if (e.getActionCommand().equals("LOGIN"))
     {
-        dispose();
-    }
-    else if (e.getActionCommand().equals("LOGIN"))
-    {
-        String username = usernameTextField.getText().trim();;
-        String password = new String(passwordTextField.getPassword()).trim();;
+        String username = usernameTextField.getText().trim();
+        String password = new String(passwordTextField.getPassword()).trim();
         
         try
         {
@@ -143,7 +140,6 @@ public void actionPerformed(ActionEvent e)
             if (!resultSet.next())//Couldn't login or find info 
             {
                 JOptionPane.showMessageDialog(null, "Login unsucessful, try again!");
-                return;
             }
             else// did login, will display the login data 
             {
@@ -160,7 +156,6 @@ public void actionPerformed(ActionEvent e)
             JOptionPane.showMessageDialog(null, "Bad Query.", "Failed to query", JOptionPane.ERROR_MESSAGE);
         }
         
-
 // I think this should just call the query for the database to retrieve the login info for the user.
         /*
         //do login stuff.
@@ -171,6 +166,10 @@ public void actionPerformed(ActionEvent e)
             pointerToStoreFrame.passConnection(connection);     //passing the connection established to the StoreFrame
         }*/
         //dispose();
+    }
+    else if (e.getActionCommand().equals("CANCEL"))
+    {
+        dispose();
     }
 }
 //=====================================================
@@ -228,11 +227,13 @@ public Connection getConnection()
     return null; // NEED TO TAKE OUT IF USING
 }
 //=====================================================
+@Override
 public void changedUpdate(DocumentEvent e)
 {
     //do nothing
 }
 //=====================================================
+@Override
 public void removeUpdate(DocumentEvent e)
 {
     if (usernameTextField.getText().trim().equals("") || passwordTextField.getText().trim().equals(""))
@@ -245,6 +246,7 @@ public void removeUpdate(DocumentEvent e)
     }
 }
 //=====================================================
+@Override
 public void insertUpdate(DocumentEvent e)
 {
     if (usernameTextField.getText().trim().equals("") || passwordTextField.getText().trim().equals(""))

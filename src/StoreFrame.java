@@ -130,6 +130,7 @@ private JMenuBar createMenuBar()
     return menuBar;
 }
 //=====================================================
+@Override
 public void actionPerformed(ActionEvent e)
 {
     if (e.getActionCommand().equals("CLOSE"))
@@ -252,11 +253,13 @@ public void actionPerformed(ActionEvent e)
 
 }
 //=====================================================
+@Override
 public void changedUpdate(DocumentEvent e)
 {
     //do nothing
 }
 //=====================================================
+@Override
 public void removeUpdate(DocumentEvent e)
 {
     if (queryTextField.getText().trim().equals(""))
@@ -269,6 +272,7 @@ public void removeUpdate(DocumentEvent e)
     }
 }
 //=====================================================
+@Override
 public void insertUpdate(DocumentEvent e)
 {
     if (queryTextField.getText().trim().equals(""))
@@ -287,6 +291,5 @@ public void passConnection(Connection connection)
     System.out.println("Retrieved a connection.");
 }
 //=====================================================
-
 }
 //#########################################################
