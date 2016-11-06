@@ -10,27 +10,19 @@ import java.util.*;
 
 
 //#########################################################
-public class StoreFrame extends JFrame implements ActionListener, DocumentListener
-{   
+public class StoreFrame extends JFrame implements ActionListener
+{
 JTable     myTable;
-JTextField queryTextField;
-JButton    submitButton;
 JPanel     scrollPanel;
 Connection connection;
-Queries    queries;
 //=====================================================
 public StoreFrame()
 {
     System.out.println("StoreFrame Constructor");
     Container cp;
-    queries = new Queries();
 
     JPanel mainPanel;
     JPanel buttonPanel;
-    JPanel queryPanel;
-    JPanel inputPanel;
-
-    JLabel queryLabel;
 
     JScrollPane myScrollPane;
 
@@ -41,42 +33,19 @@ public StoreFrame()
     closeButton.addActionListener(this);
     closeButton.setToolTipText("Close the program.");
 
-    submitButton = new JButton("Submit");
-    submitButton.setActionCommand("SUBMIT");
-    submitButton.addActionListener(this);
-    submitButton.setToolTipText("Submit the query in the text field.");
-    submitButton.setEnabled(false);
-
-    buttonPanel = new JPanel(new GridLayout(2,1));
-    buttonPanel.add(submitButton);
+    buttonPanel = new JPanel();
     buttonPanel.add(closeButton);
-
-    queryLabel = new JLabel("Query Input");
-
-    queryTextField = new JTextField(30);
-    queryTextField.getDocument().addDocumentListener(this);
-
-    queryPanel = new JPanel(new GridLayout(2,1));
-    queryPanel.add(queryLabel);
-    queryPanel.add(queryTextField);
-
-    inputPanel = new JPanel();
-    inputPanel.add(queryPanel);
-    inputPanel.add(buttonPanel);
 
     scrollPanel = new JPanel();
 
     mainPanel = new JPanel(new BorderLayout());
     mainPanel.add(scrollPanel, BorderLayout.CENTER);
-    mainPanel.add(inputPanel, BorderLayout.SOUTH);
+    mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
     cp = getContentPane();
     cp.add(mainPanel, BorderLayout.CENTER);
 
-    getRootPane().setDefaultButton(submitButton);
-
     setupMainFrame();
-    queryTextField.requestFocus();
 }
 //=====================================================
 private void setupMainFrame()
@@ -102,6 +71,7 @@ private JMenuBar createMenuBar()
 
     JMenuItem viewMenuItem;
     JMenuItem loginMenuItem;
+    JMenuItem searchMenuItem;
 
     menuBar = new JMenuBar();
 
@@ -127,6 +97,18 @@ private JMenuBar createMenuBar()
     viewMenuItem.addActionListener(this);
 
     subMenu.add(viewMenuItem);
+    menuBar.add(subMenu);
+
+    subMenu = new JMenu("Search");
+
+    searchMenuItem = new JMenuItem("Search Options" , KeyEvent.VK_S);
+    searchMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+    searchMenuItem.getAccessibleContext().setAccessibleDescription("Search the store.");
+    searchMenuItem.setToolTipText("Search the store.");
+    searchMenuItem.setActionCommand("SEARCH");
+    searchMenuItem.addActionListener(this);
+
+    subMenu.add(searchMenuItem);
     menuBar.add(subMenu);
 
     return menuBar;
@@ -171,12 +153,29 @@ public void actionPerformed(ActionEvent e)
         {
             System.out.println("Good connection");
         }
+
     }
-    else if (e.getActionCommand().equals("SUBMIT"))
+    else if (e.getActionCommand().equals("SEARCH"))
     {
         //get the text from the text field and try using it as a query?
 
-        String search;
+    ResultSet resultSet;
+    ResultSetMetaData metaData;
+
+    if(connection == null)
+        {
+        new SearchJDialog(this);    //sending it 'this' so it can call a method of StoreFrame later on.
+        }
+    else
+        {
+        System.out.println("No connection to database.");
+        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+//Old code used to accept a query and, using the resultSet returned from the database, show a JTable with resultSet's contents.
+//Still here commented out just for reference.
+/*
+        String query;
         Statement statement;
         ResultSet resultSet;
         ResultSetMetaData resultMetaData;
@@ -185,17 +184,17 @@ public void actionPerformed(ActionEvent e)
         Vector<Object> currentRow;
         Vector<Object> rowList;
 
-	JScrollPane myScrollPane;
+    JScrollPane myScrollPane;
 
         if (connection != null)
         {
             System.out.println("Query submitted");
             //execute query
-            search = queryTextField.getText().trim();
+            query = queryTextField.getText().trim();
             try
             {
                 statement = connection.createStatement();
-                resultSet = statement.executeQuery(search);
+                resultSet = statement.executeQuery(query);
                 if (!resultSet.first())
                 {
                     System.out.println("No records");
@@ -203,27 +202,27 @@ public void actionPerformed(ActionEvent e)
                 }
                 else
                 {
-		     columnNames = new Vector<Object>();
-		     currentRow  = new Vector<Object>();
-		     rowList     = new Vector<Object>();
+             columnNames = new Vector<Object>();
+             currentRow  = new Vector<Object>();
+             rowList     = new Vector<Object>();
                      resultMetaData = resultSet.getMetaData();
-                     
+
                      for (int i=0; i < resultMetaData.getColumnCount(); i++)
                      {
-			columnNames.addElement(resultMetaData.getColumnName(i+1));
+            columnNames.addElement(resultMetaData.getColumnName(i+1));
                      }
-                     
+
                      do
                      {
-			currentRow = new Vector<Object>();
+            currentRow = new Vector<Object>();
                         for (int j=0; j < resultMetaData.getColumnCount(); j++)
                         {
                             currentRow.addElement(resultSet.getObject(j+1));
                         }
                         rowList.addElement(currentRow);
-                     }
-                     while (resultSet.next());
-                     
+                    }
+                    while (resultSet.next());
+
                     myTable = new JTable(rowList, columnNames);
                     myScrollPane = new JScrollPane(myTable);
                     myScrollPane.setPreferredSize(new Dimension(500, 400));
@@ -249,43 +248,75 @@ public void actionPerformed(ActionEvent e)
         }
         queryTextField.setText("");
         queryTextField.requestFocus();
+
+*/
     }
 
 
 }
-//=====================================================
-@Override
-public void changedUpdate(DocumentEvent e)
-{
-    //do nothing
-}
-//=====================================================
-@Override
-public void removeUpdate(DocumentEvent e)
-{
-    if (queryTextField.getText().trim().equals(""))
+
+    //=====================================================
+    public void updateResultTable(ResultSet resultSet)
     {
-        submitButton.setEnabled(false);
+
+    ResultSetMetaData resultMetaData;
+
+    Vector<Object> columnNames;
+    Vector<Object> currentRow;
+    Vector<Object> rowList;
+
+    JScrollPane myScrollPane;
+
+    try
+        {
+        if (!resultSet.first())
+            {
+            System.out.println("No records");
+            JOptionPane.showMessageDialog(null, "No results found.", "No results", JOptionPane.ERROR_MESSAGE);
+            }
+        else
+            {
+            columnNames = new Vector<Object>();
+            currentRow  = new Vector<Object>();
+            rowList     = new Vector<Object>();
+            resultMetaData = resultSet.getMetaData();
+
+            for (int i=0; i < resultMetaData.getColumnCount(); i++)
+                {
+                columnNames.addElement(resultMetaData.getColumnName(i+1));
+                }
+
+            do
+                {
+                currentRow = new Vector<Object>();
+                for (int j=0; j < resultMetaData.getColumnCount(); j++)
+                    {
+                    currentRow.addElement(resultSet.getObject(j+1));
+                    }
+                rowList.addElement(currentRow);
+                }
+            while (resultSet.next());
+
+            myTable = new JTable(rowList, columnNames);
+            myScrollPane = new JScrollPane(myTable);
+            myScrollPane.setPreferredSize(new Dimension(500, 400));
+            scrollPanel.add(myScrollPane);
+            validate();
+            }
+
+        resultSet.close();
+
+        }
+    catch (SQLException sqle2)
+        {
+        System.out.println("SQLException2 in StoreFrame actionPerformed");
+
+        JOptionPane.showMessageDialog(null, "Query Error.", "Query Error", JOptionPane.ERROR_MESSAGE);
+        sqle2.printStackTrace();
+        }
+
     }
-    else
-    {
-        submitButton.setEnabled(true);
-    }
-}
-//=====================================================
-@Override
-public void insertUpdate(DocumentEvent e)
-{
-    if (queryTextField.getText().trim().equals(""))
-    {
-        submitButton.setEnabled(false);
-    }
-    else
-    {
-        submitButton.setEnabled(true);
-    }
-}
-//=====================================================
+    //=====================================================
 public void passConnection(Connection connection)
 {
     this.connection = connection;
