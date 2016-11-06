@@ -148,6 +148,7 @@ public void actionPerformed(ActionEvent e)
                 {
                     System.out.println(metaData.getColumnLabel(i) + ": " + resultSet.getObject(i));
                 }
+                JOptionPane.showMessageDialog(null, "Login sucessful!");JOptionPane.showMessageDialog(null, "Login sucessful!");
             }
         }
         catch (SQLException sqle)

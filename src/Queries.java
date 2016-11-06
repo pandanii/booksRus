@@ -6,7 +6,7 @@ public class Queries
 {
     
     public final String displayResultsDVDs;
-    public final String displayResultsBooks;
+    //public final String displayResultsBooks;
     
     
     public final String title_DVDs_Search;
@@ -24,16 +24,10 @@ public class Queries
     
     
     public Queries()
-    {
-        
-
-               displayResultsDVDs = "SELECT DISTINCT * "+
-                                    "FROM dvds ar " +
-                                    "WHERE ar.rid IN ("; 
-        
-        
-        
-        
+    { 
+        displayResultsDVDs = "SELECT DISTINCT * "
+                           + "FROM media " 
+                           + "WHERE media. IN ("; 
       /*
        *!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
        *Theses queries are setup to just give us the media.title as the return.
@@ -94,7 +88,36 @@ public class Queries
                            + publisher_Search 
                            + " UNION " 
                            + subject_Cate_Search;
-       
-       
     }//EndOf Queries constructor 
+    public String getQuery(String queryName)
+    {
+        if (queryName.equals("title_DVDs_Search"))
+        {
+            return title_DVDs_Search;
+        }
+        else if (queryName.equals("director_Search"))
+        {
+            return director_Search;
+        }
+        else if (queryName.equals("cast_Search"))
+        {
+            return cast_Search;
+        }
+        else if (queryName.equals("genre_Search"))
+        {
+            return genre_Search;
+        }
+        else if (queryName.equals("keyword_DVDs_Search"))
+        {
+            return keyword_DVDs_Search;
+        }
+        else if (queryName.equals("title_Books_Search"))
+        {
+            return title_Books_Search;
+        }
+        else
+        {
+            return "";
+        }
+    }
 }//EndOf Queries class.
