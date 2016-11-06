@@ -10,18 +10,20 @@ import java.util.*;
 
 
 //#########################################################
-public class StoreFrame extends JFrame implements ActionListener,DocumentListener
+public class StoreFrame extends JFrame implements ActionListener, DocumentListener
 {   
 JTable     myTable;
 JTextField queryTextField;
 JButton    submitButton;
 JPanel     scrollPanel;
 Connection connection;
+Queries    queries;
 //=====================================================
 public StoreFrame()
 {
     System.out.println("StoreFrame Constructor");
     Container cp;
+    queries = new Queries();
 
     JPanel mainPanel;
     JPanel buttonPanel;
@@ -169,13 +171,12 @@ public void actionPerformed(ActionEvent e)
         {
             System.out.println("Good connection");
         }
-
     }
     else if (e.getActionCommand().equals("SUBMIT"))
     {
         //get the text from the text field and try using it as a query?
 
-        String query;
+        String search;
         Statement statement;
         ResultSet resultSet;
         ResultSetMetaData resultMetaData;
@@ -190,11 +191,11 @@ public void actionPerformed(ActionEvent e)
         {
             System.out.println("Query submitted");
             //execute query
-            query = queryTextField.getText().trim();
+            search = queryTextField.getText().trim();
             try
             {
                 statement = connection.createStatement();
-                resultSet = statement.executeQuery(query);
+                resultSet = statement.executeQuery(search);
                 if (!resultSet.first())
                 {
                     System.out.println("No records");
@@ -220,8 +221,8 @@ public void actionPerformed(ActionEvent e)
                             currentRow.addElement(resultSet.getObject(j+1));
                         }
                         rowList.addElement(currentRow);
-                    }
-                    while (resultSet.next());
+                     }
+                     while (resultSet.next());
                      
                     myTable = new JTable(rowList, columnNames);
                     myScrollPane = new JScrollPane(myTable);

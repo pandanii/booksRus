@@ -23,7 +23,11 @@ SELECT DISTINCT media.title
 FROM dvds, media
 WHERE media.title = dvds.title AND  dvds.genre like "%gay%";
 /************************************************************************************************************************************************************************************************************************/
-
+/*sequel_Search*/
+SELECT DISTINCT sequel_to.sequel_title 
+FROM dvds, media, sequel_to
+WHERE media.title = "catdog" AND media.title = dvds.title AND  dvds.title = sequel_to.prequel_title;
+/************************************************************************************************************************************************************************************************************************/
 /*Books Title search*/
 SELECT DISTINCT media.title 
 FROM books, written_by, authors, media
@@ -41,7 +45,12 @@ FROM books, written_by, authors, media
 WHERE media.title = books.title AND authors.name = written_by.name AND authors.address = written_by.address AND authors.name like "fred";
 /*replace "fred" with ? in java program.*/
 /************************************************************************************************************************************************************************************************************************/
-
+/*Publisher Search*/
+SELECT DISTINCT media.title 
+FROM books, media
+WHERE media.title = books.title  AND name like "%zalgo%";
+/*replace "%zalgo%" with ? in java program.*/    
+/************************************************************************************************************************************************************************************************************************/
 /*keyword search dvds*/
 CREATE OR REPLACE view  KeyWordSearch as
 SELECT DISTINCT media.title
@@ -79,10 +88,16 @@ SELECT DISTINCT media.title
 FROM books, written_by, authors, media
 WHERE media.title = books.title AND authors.name = written_by.name AND authors.address = written_by.address AND authors.name like "%fred%"
 UNION
+/*Publisher Search*/
+SELECT DISTINCT media.title 
+FROM books, media
+WHERE media.title = books.title  AND name like "%fred%"
+/*replace "%zalgo%" with ? in java program.*/    
+UNION
 /*Books subject_category search*/ 
 SELECT DISTINCT media.title 
-FROM books, written_by, authors, media
-WHERE media.title = books.title  AND books.subject_category like "horror";
+FROM books, media
+WHERE media.title = books.title  AND books.subject_category like "%fred%";
 /*"%fred%" will be replaced with ? also we could just like add our static strings togther....*/
 /************************************************************************************************************************************************************************************************************************/
 
