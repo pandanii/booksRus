@@ -1,11 +1,5 @@
 //BooksRUs Software
 //Version 1.1
-//
-//
-//
-
-//=========================================================
-
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,25 +8,19 @@ import javax.swing.table.*;
 import javax.swing.event.*;
 import java.util.*;
 
+
 //#########################################################
-public class StoreFrame extends JFrame
-                        implements ActionListener,
-                                   DocumentListener
-{
-
-JTable myTable;
-
+public class StoreFrame extends JFrame implements ActionListener,DocumentListener
+{   
+JTable     myTable;
 JTextField queryTextField;
-JButton submitButton;
-JPanel scrollPanel;
-
+JButton    submitButton;
+JPanel     scrollPanel;
 Connection connection;
-
-    //=====================================================
-    public StoreFrame()
-    {
+//=====================================================
+public StoreFrame()
+{
     System.out.println("StoreFrame Constructor");
-
     Container cp;
 
     JPanel mainPanel;
@@ -87,33 +75,27 @@ Connection connection;
 
     setupMainFrame();
     queryTextField.requestFocus();
-    }
-    //=====================================================
-    private void setupMainFrame()
-    {
+}
+//=====================================================
+private void setupMainFrame()
+{
     Toolkit tk;
     Dimension d;
-
     tk = Toolkit.getDefaultToolkit();
     d = tk.getScreenSize();
     setSize(d.width/4, d.height/4);
     setLocation(d.width/3, d.height/3);
-
     setTitle("Books-R-Us");
-
     d.setSize(550, 550);
     setMinimumSize(d);
-
     setJMenuBar(createMenuBar());
-
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
-    }
-    //=====================================================
-    private JMenuBar createMenuBar()
-    {
+}
+//=====================================================
+private JMenuBar createMenuBar()
+{
     JMenuBar menuBar;
-
     JMenu subMenu;
 
     JMenuItem viewMenuItem;
@@ -146,56 +128,50 @@ Connection connection;
     menuBar.add(subMenu);
 
     return menuBar;
-    }
-    //=====================================================
-    public void actionPerformed(ActionEvent e)
-    {
-//    System.out.println("StoreFrame ActionPerformed");
-
-
+}
+//=====================================================
+public void actionPerformed(ActionEvent e)
+{
     if (e.getActionCommand().equals("CLOSE"))
-        {
+    {
         try
-            {
+        {
             if (connection != null)
-                {
-                connection.close();
-                }
-            }
-        catch (SQLException sqle1)
             {
+                connection.close();
+            }
+        }
+        catch (SQLException sqle1)
+        {
             System.out.println("SQLException in StoreFrame actionPerformed");
-
             JOptionPane.showMessageDialog(null, "Unable to sever connection.", "Connection Error", JOptionPane.ERROR_MESSAGE);
             //sqle1.printStackTrace();
-            }
-
+        }
         System.exit(0);
-        }
+    }
     else if (e.getActionCommand().equals("VIEW"))
-        {
+    {
         //new JDialog to change appearance of the frame
-        }
+    }
     else if (e.getActionCommand().equals("LOGIN"))
-        {
+    {
         System.out.println("Creating LoginJDialog");
         //new JDialog to accept the login credentials
         //then try to establish a Connection with the database
-
         new LoginJDialog(this);     //sending the JDialog a pointer to this instance of
                                     //StoreFrame so it can all one of its methods
         if (connection == null)
-            {
-            System.out.println("Null connection");
-            }
-        else
-            {
-            System.out.println("Good connection");
-            }
-
-        }
-    else if (e.getActionCommand().equals("SUBMIT"))
         {
+            System.out.println("Null connection");
+        }
+        else
+        {
+            System.out.println("Good connection");
+        }
+
+    }
+    else if (e.getActionCommand().equals("SUBMIT"))
+    {
         //get the text from the text field and try using it as a query?
 
         String query;
@@ -207,144 +183,110 @@ Connection connection;
         Vector<Object> currentRow;
         Vector<Object> rowList;
 
-		JScrollPane myScrollPane;
+	JScrollPane myScrollPane;
 
         if (connection != null)
-            {
+        {
             System.out.println("Query submitted");
             //execute query
-
             query = queryTextField.getText().trim();
-
             try
-                {
+            {
                 statement = connection.createStatement();
-
                 resultSet = statement.executeQuery(query);
-
-
                 if (!resultSet.first())
-                    {
+                {
                     System.out.println("No records");
                     JOptionPane.showMessageDialog(null, "No results found.", "No results", JOptionPane.ERROR_MESSAGE);
-                    }
+                }
                 else
-                    {
-
-					columnNames = new Vector<Object>();
-					currentRow = new Vector<Object>();
-					rowList = new Vector<Object>();
-
-                    resultMetaData = resultSet.getMetaData();
-
-
-                    for (int i=0; i < resultMetaData.getColumnCount(); i++)
-                        {
-						columnNames.addElement(resultMetaData.getColumnName(i+1));
-                        }
-
-                    do
-                        {
-						currentRow = new Vector<Object>();
+                {
+		     columnNames = new Vector<Object>();
+		     currentRow  = new Vector<Object>();
+		     rowList     = new Vector<Object>();
+                     resultMetaData = resultSet.getMetaData();
+                     
+                     for (int i=0; i < resultMetaData.getColumnCount(); i++)
+                     {
+			columnNames.addElement(resultMetaData.getColumnName(i+1));
+                     }
+                     
+                     do
+                     {
+			currentRow = new Vector<Object>();
                         for (int j=0; j < resultMetaData.getColumnCount(); j++)
-                            {
+                        {
                             currentRow.addElement(resultSet.getObject(j+1));
-                            }
-                        rowList.addElement(currentRow);
                         }
-                    while (resultSet.next());
-
-					myTable = new JTable(rowList, columnNames);
-
-				    myScrollPane = new JScrollPane(myTable);
-				    myScrollPane.setPreferredSize(new Dimension(500, 400));
-				    scrollPanel.add(myScrollPane);
-				    validate();
+                        rowList.addElement(currentRow);
                     }
-
+                    while (resultSet.next());
+                     
+                    myTable = new JTable(rowList, columnNames);
+                    myScrollPane = new JScrollPane(myTable);
+                    myScrollPane.setPreferredSize(new Dimension(500, 400));
+                    scrollPanel.add(myScrollPane);
+                    validate();
+                }
                 resultSet.close();
                 statement.close();
-
-                }
+            }
             catch (SQLException sqle2)
-                {
+            {
                 System.out.println("SQLException2 in StoreFrame actionPerformed");
 
                 JOptionPane.showMessageDialog(null, "Query Error.", "Query Error", JOptionPane.ERROR_MESSAGE);
                 sqle2.printStackTrace();
-                }
-
             }
+
+        }
         else
-            {
+        {
             System.out.println("No connection");
             JOptionPane.showMessageDialog(null, "Must be connected to the database first.", "No Connection", JOptionPane.ERROR_MESSAGE);
-            }
-
-
+        }
         queryTextField.setText("");
         queryTextField.requestFocus();
-        }
-
-
     }
-    //=====================================================
-    public void changedUpdate(DocumentEvent e)
-    {
+
+
+}
+//=====================================================
+public void changedUpdate(DocumentEvent e)
+{
     //do nothing
-    }
-    //=====================================================
-    public void removeUpdate(DocumentEvent e)
-    {
-
+}
+//=====================================================
+public void removeUpdate(DocumentEvent e)
+{
     if (queryTextField.getText().trim().equals(""))
-        {
-        submitButton.setEnabled(false);
-        }
-    else
-        {
-        submitButton.setEnabled(true);
-        }
-
-    }
-    //=====================================================
-    public void insertUpdate(DocumentEvent e)
     {
-
+        submitButton.setEnabled(false);
+    }
+    else
+    {
+        submitButton.setEnabled(true);
+    }
+}
+//=====================================================
+public void insertUpdate(DocumentEvent e)
+{
     if (queryTextField.getText().trim().equals(""))
-        {
-        submitButton.setEnabled(false);
-        }
-    else
-        {
-        submitButton.setEnabled(true);
-        }
-
-    }
-    //=====================================================
-    public void passConnection(Connection connection)
     {
+        submitButton.setEnabled(false);
+    }
+    else
+    {
+        submitButton.setEnabled(true);
+    }
+}
+//=====================================================
+public void passConnection(Connection connection)
+{
     this.connection = connection;
-
     System.out.println("Retrieved a connection.");
-
-    }
-    //=====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
+//=====================================================
 
 }
 //#########################################################
