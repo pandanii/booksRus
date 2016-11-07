@@ -162,7 +162,7 @@ public void actionPerformed(ActionEvent e)
     ResultSet resultSet;
     ResultSetMetaData metaData;
 
-    if(connection == null)
+    if(connection != null)
         {
         new SearchJDialog(this);    //sending it 'this' so it can call a method of StoreFrame later on.
         }
