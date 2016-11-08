@@ -131,6 +131,11 @@ FROM purchase_history, purchase, users
 WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;
 
 
+/*customer purchases*/
+SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as "book/dvd title", media.price, media.year
+FROM  media, purchase_history, purchase, users
+WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = "Not_admin"AND  purchase.title = media.title;
+
 
 
 /*FOR INSERTION INTO purhcaseHistory*//*INSERT INTO `movies&books`.`purchase_history` (`transactionID`, `date_of_purchase`, `number_of_copies`, `total_cost`) VALUES ('1', CURDATE(), '1', '666');*/

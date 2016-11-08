@@ -7,7 +7,7 @@ public class Queries
 
     public final String displayResultsDVDs;
     //public final String displayResultsBooks;
-    //public final String purchase_History;
+    public final String purchase_History;
 
     //public final String top_10;
 
@@ -41,9 +41,9 @@ public class Queries
         //                    + ""
         //                    + ""
         
-        //purchase_History = ""
-        //                 + ""
-        //                 + ""
+        purchase_History = "SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as book/dvd title, media.price, media.year"
+                         + "FROM  media, purchase_history, purchase, users"
+                         + "WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = ? AND  purchase.title = media.title;";
         
         
         /*This query is for *ADMINS ONLY* to geting the publisher info and the author info */
