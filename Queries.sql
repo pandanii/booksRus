@@ -129,13 +129,19 @@ WHERE  books.address = publishers.address AND books.name = publishers.name AND
 SELECT DISTINCT purchase_history.date_of_purchase,purchase_history.total_cost, purchase_history.transactionID, purchase.title as "Media title",  users.userID as "Purchasing User", users.address as "Shipping address", users.name
 FROM purchase_history, purchase, users
 WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;
-
+/************************************************************************************************************************************************************************************************************************/
 
 /*customer purchases*/
 SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as "book/dvd title", media.price, media.year
 FROM  media, purchase_history, purchase, users
 WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = "Not_admin"AND  purchase.title = media.title;
+/************************************************************************************************************************************************************************************************************************/
 
 
-
+/*ADMIN LAST 7 DAYS top10*/
+SELECT DISTINCT media.title
+FROM  media, purchase, purchase_history
+WHERE (purchase_history.date_of_purchase BETWEEN ( CURDATE() - INTERVAL 7 DAY) AND CURDATE() ) AND purchase.transactionID = purchase_history.transactionID 
+      AND purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10;
+/************************************************************************************************************************************************************************************************************************/
 /*FOR INSERTION INTO purhcaseHistory*//*INSERT INTO `movies&books`.`purchase_history` (`transactionID`, `date_of_purchase`, `number_of_copies`, `total_cost`) VALUES ('1', CURDATE(), '1', '666');*/
