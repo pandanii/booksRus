@@ -1,5 +1,4 @@
 //BooksRUs Software
-//Version 1.0
 
 import java.sql.*;
 import java.awt.*;
@@ -27,21 +26,12 @@ JPanel mainPanel;
 JPanel buttonPanel;
 JPanel labelTextFieldPanel;
 
-static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
-static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
-static final String USERNAME     = "root";
-static final String PASSWORD     = "admin";  //Adust this according to local host login or server login
-
 //=====================================================
 public LoginJDialog(StoreFrame pointerToStoreFrame)
 {
     this.pointerToStoreFrame = pointerToStoreFrame;     //so a method of StoreFrame can be called later.
-    
-    connection = establishConnection();
-    if(connection != null)
-    {
-        pointerToStoreFrame.passConnection(connection);     //passing the connection established to the StoreFrame
-    }
+    this.connection = pointerToStoreFrame.connection;
+
     Container cp;
     Toolkit   tk;
     Dimension d;
@@ -118,6 +108,7 @@ public LoginJDialog(StoreFrame pointerToStoreFrame)
     usernameTextField.requestFocus();
 
     setVisible(true);
+
 }
 
 //=====================================================
@@ -129,26 +120,48 @@ public void actionPerformed(ActionEvent e)
     {
         String username = usernameTextField.getText().trim();
         String password = new String(passwordTextField.getPassword()).trim();
-        
+
         try
         {
             ResultSetMetaData metaData;
-            Statement         statement = connection.createStatement();
-            ResultSet         resultSet = statement.executeQuery("SELECT * "
-                                                                +"FROM users "
-                                                                +"WHERE users.userID = '" + username + "' AND users.password = '" + password +"';");
-            if (!resultSet.next())//Couldn't login or find info 
+            PreparedStatement preparedStatement;
+            ResultSet resultSet;
+
+
+            preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE users.userID = '?' AND users.password = '?';");
+            preparedStatement.clearParameters();
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.next())//Couldn't login or find info
             {
                 JOptionPane.showMessageDialog(null, "Login unsucessful, try again!");
             }
-            else// did login, will display the login data 
+            else// did login, will display the login data
             {
                 metaData = resultSet.getMetaData();
-                for (int i = 1; i <= metaData.getColumnCount(); ++i) 
+                for (int i = 1; i <= metaData.getColumnCount(); ++i)
                 {
                     System.out.println(metaData.getColumnLabel(i) + ": " + resultSet.getObject(i));
                 }
-                JOptionPane.showMessageDialog(null, "Login sucessful!");JOptionPane.showMessageDialog(null, "Login sucessful!");
+
+                preparedStatement = connection.prepareStatement("SELECT is_Admin FROM Users WHERE users.userID = '?' AND users.password = '?';");
+                preparedStatement.clearParameters();
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.getInt(1) == 1)
+                    {
+                    pointerToStoreFrame.setUserInfo(true, username);
+                    JOptionPane.showMessageDialog(null, "Welcome Admin " + username + ".");
+                    }
+                else
+                    {
+                    pointerToStoreFrame.setUserInfo(false, username);
+                    JOptionPane.showMessageDialog(null, "Welcome " + username + ".");
+                    }
             }
         }
         catch (SQLException sqle)
@@ -156,76 +169,12 @@ public void actionPerformed(ActionEvent e)
             System.out.println("SQLException in LoginJDialog actionPerformed");
             JOptionPane.showMessageDialog(null, "Bad Query.", "Failed to query", JOptionPane.ERROR_MESSAGE);
         }
-        
-// I think this should just call the query for the database to retrieve the login info for the user.
-        /*
-        //do login stuff.
-        System.out.println("Trying to establish a connection");
-        connection = getConnection();   //local method using input of fields to connect to the database
-        if (connection != null)
-        {
-            pointerToStoreFrame.passConnection(connection);     //passing the connection established to the StoreFrame
-        }*/
-        //dispose();
+
     }
     else if (e.getActionCommand().equals("CANCEL"))
     {
         dispose();
     }
-}
-//=====================================================
-public Connection establishConnection() 
-{
-    try
-    {
-        Class.forName(JDBC_DRIVER);
-        return DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
-    }
-    catch (ClassNotFoundException cnfe)
-    {
-        System.out.println("ClassNotFoundException in LoginJDialog establishConnection");
-        JOptionPane.showMessageDialog(null, "Failed to load driver.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
-//        cnfe.printStackTrace();
-        return null;
-    }
-    catch (SQLException sqle)
-    {
-        System.out.println("SQLException in LoginJDialog establishConnection");
-        JOptionPane.showMessageDialog(null, "Bad Credentials.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
-//        sqle.printStackTrace();
-        return null;
-    }
-    
-}
-//=====================================================
-public Connection getConnection()
-{
-// I think the connection should be established before we actually login. The login would be something seperate. Otherwise we would have to add a lot of other accounts to the DB
-    /*Connection connection;
-    String username;
-    char[] password;
-    try
-    {
-        Class.forName(JDBC_DRIVER);
-        connection = DriverManager.getConnection(DATABASE_URL, usernameTextField.getText().trim(), new String(passwordTextField.getPassword()).trim());
-        return connection;
-        //return DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
-    }
-    catch (ClassNotFoundException cnfe)
-    {
-        System.out.println("ClassNotFoundException in LoginJDialog getConnection");
-        JOptionPane.showMessageDialog(null, "Failed to load driver.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
-//        cnfe.printStackTrace();
-        return null;
-    }
-    catch (SQLException sqle)
-    {
-        System.out.println("SQLException in LoginJDialog getConnection");
-        JOptionPane.showMessageDialog(null, "Bad Credentials.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
-//        sqle.printStackTrace();
-        return null;
-    }*/
-    return null; // NEED TO TAKE OUT IF USING
 }
 //=====================================================
 @Override
