@@ -3,8 +3,10 @@
 
 
 
-
-
+/*displayResultsDVDs*/
+SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.directors as Director, dvds.genre as Genre
+FROM media, dvds
+WHERE media.title = dvd.title IN(
 
 
 
