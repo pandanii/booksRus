@@ -33,34 +33,34 @@ public class Queries
     public Queries()
     {
         
-        displayResultsDVDs = "SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.directors as Director, dvds.genre as Genre"
-                           + "FROM media, dvds "
-                           + "WHERE media.title = dvd.title IN(;";
+        displayResultsDVDs = " SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.directors as Director, dvds.genre as Genre"
+                           + " FROM media, dvds "
+                           + " WHERE media.title = dvd.title IN(;";
         
         //displayResultsBooks = ""
         //                    + ""
         //                    + ""
         
-        purchase_History   = "SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as book/dvd title, media.price, media.year"
-                           + "FROM  media, purchase_history, purchase, users"
-                           + "WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = ? AND  purchase.title = media.title;";
+        purchase_History   = " SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as book/dvd title, media.price, media.year"
+                           + " FROM  media, purchase_history, purchase, users"
+                           + " WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = ? AND  purchase.title = media.title;";
         
         
         /*This query is for *ADMINS ONLY* to geting the publisher info and the author info */
-        admin_Book_Info    = "SELECT DISTINCT books.title as \"Book title\", books.ISBN,books.subject_category, "
+        admin_Book_Info    = " SELECT DISTINCT books.title as \"Book title\", books.ISBN,books.subject_category, "
                            + "                publishers.address as \"Publishers address\",publishers.name as \"Publishers name\", publishers.URL as \"Publishers site\", publishers.phone_number, "
                            + "                authors.name as \"authors name\", authors.address as \"authors address\""
-                           + "FROM books, publishers, authors, written_by" 
-                           + "WHERE books.address = publishers.address AND books.name = publishers.name AND \n" 
+                           + " FROM books, publishers, authors, written_by" 
+                           + " WHERE books.address = publishers.address AND books.name = publishers.name AND \n" 
                            +"       books.title = written_by.title AND written_by.address = authors.address AND written_by.name = authors.name AND books.title = ?";
         
-       admin_In_Last_24h   = "SELECT DISTINCT purchase_history.date_of_purchase,purchase_history.total_cost, purchase_history.transactionID, purchase.title as Media title,  users.userID as Purchasing User, users.address as Shipping address, users.name"
-                           + "FROM purchase_history, purchase, users"
-                           + "WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;";
+       admin_In_Last_24h   = " SELECT DISTINCT purchase_history.date_of_purchase,purchase_history.total_cost, purchase_history.transactionID, purchase.title as Media title,  users.userID as Purchasing User, users.address as Shipping address, users.name"
+                           + " FROM purchase_history, purchase, users"
+                           +  "WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;";
         
-       admin_top_10        = "SELECT DISTINCT media.title"
-                           + "FROM  media, purchase, purchase_history"
-                           + "WHERE (purchase_history.date_of_purchase BETWEEN ( CURDATE() - INTERVAL 7 DAY) AND CURDATE() ) AND purchase.transactionID = purchase_history.transactionID AND" 
+       admin_top_10        = " SELECT DISTINCT media.title"
+                           + " FROM  media, purchase, purchase_history"
+                           + " WHERE (purchase_history.date_of_purchase BETWEEN ( CURDATE() - INTERVAL 7 DAY) AND CURDATE() ) AND purchase.transactionID = purchase_history.transactionID AND" 
                            + "      purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10;";
         
         
@@ -72,25 +72,25 @@ public class Queries
        *!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
        */
        /* DVDS SEARCH STUFF */
-       title_DVDs_Search   = "SELECT DISTINCT media.title"
-                           + "FROM dvds, media"
-                           + "WHERE media.title = dvds.title AND media.title like ?";
+       title_DVDs_Search   = " SELECT DISTINCT media.title"
+                           + " FROM dvds, media"
+                           + " WHERE media.title = dvds.title AND media.title like ?";
 
-       director_Search     = "SELECT DISTINCT media.title"
-                           + "FROM dvds, media"
-                           + "WHERE media.title = dvds.title AND  dvds.director like ?";
+       director_Search     = " SELECT DISTINCT media.title"
+                           + " FROM dvds, media"
+                           + " WHERE media.title = dvds.title AND  dvds.director like ?";
 
-       cast_Search         = "SELECT DISTINCT media.title"
-                           + "FROM dvds, media"
-                           + "WHERE media.title = dvds.title AND  dvds.cast like ?";
+       cast_Search         = " SELECT DISTINCT media.title"
+                           + " FROM dvds, media"
+                           + " WHERE media.title = dvds.title AND  dvds.cast like ?";
 
-       genre_Search        = "SELECT DISTINCT media.title"
-                           + "FROM dvds, media"
-                           + "WHERE media.title = dvds.title AND  dvds.genre like ?";
+       genre_Search        = " SELECT DISTINCT media.title"
+                           + " FROM dvds, media"
+                           + " WHERE media.title = dvds.title AND  dvds.genre like ?";
 
-       sequel_Search       = "SELECT DISTINCT sequel_to.sequel_title"
-                           + "FROM dvds, media, sequel_to"
-                           + "WHERE media.title = ? AND media.title = dvds.title AND  dvds.title = sequel_to.prequel_title";
+       sequel_Search       = " SELECT DISTINCT sequel_to.sequel_title"
+                           + " FROM dvds, media, sequel_to"
+                           + " WHERE media.title = ? AND media.title = dvds.title AND  dvds.title = sequel_to.prequel_title";
 
        keyword_DVDs_Search = title_DVDs_Search
                            + " UNION "
@@ -102,21 +102,21 @@ public class Queries
 
 
        /* BOOKS SEARCH STUFF */
-       title_Books_Search  = "SELECT DISTINCT media.title "
-                           + "FROM books, media"
-                           + "WHERE media.title = books.title  AND books.title like ?";
+       title_Books_Search  = " SELECT DISTINCT media.title "
+                           + " FROM books, media"
+                           + " WHERE media.title = books.title  AND books.title like ?";
 
-       author_Search       = "SELECT DISTINCT media.title"
-                           + "FROM books, written_by, authors, media"
-                           + "WHERE media.title = books.title AND authors.name = written_by.name AND authors.address = written_by.address AND authors.name like ?";
+       author_Search       = " SELECT DISTINCT media.title"
+                           + " FROM books, written_by, authors, media"
+                           + " WHERE media.title = books.title AND authors.name = written_by.name AND authors.address = written_by.address AND authors.name like ?";
 
-       publisher_Search    = "SELECT DISTINCT media.title"
-                           + "FROM books, media"
-                           + "WHERE media.title = books.title  AND name like ?";
+       publisher_Search    = " SELECT DISTINCT media.title"
+                           + " FROM books, media"
+                           + " WHERE media.title = books.title  AND name like ?";
 
-       subject_Cate_Search = "SELECT DISTINCT media.title"
-                           + "FROM books, media"
-                           + "WHERE media.title = books.title  AND books.subject_category like ?";
+       subject_Cate_Search = " SELECT DISTINCT media.title"
+                           + " FROM books, media"
+                           + " WHERE media.title = books.title  AND books.subject_category like ?";
 
        keyword_Books_Search = title_Books_Search
                            + " UNION "

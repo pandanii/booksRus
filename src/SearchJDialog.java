@@ -140,6 +140,7 @@ JComboBox searchComboBox;
 
             if (comboObject.toString().equals("DVD Title"))
                 {
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.title_DVDs_Search);
                 preparedStatement = connection.prepareStatement((String)listOfQueries.title_DVDs_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
@@ -147,6 +148,7 @@ JComboBox searchComboBox;
                 }
             else if (comboObject.toString().equals("Director Name"))
                 {
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.director_Search);
                 preparedStatement = connection.prepareStatement((String)listOfQueries.director_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
@@ -154,6 +156,7 @@ JComboBox searchComboBox;
                 }
             else if (comboObject.toString().equals("Cast Member Name"))
                 {
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.cast_Search);
                 preparedStatement = connection.prepareStatement((String)listOfQueries.cast_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
@@ -161,6 +164,7 @@ JComboBox searchComboBox;
                 }
             else if (comboObject.toString().equals("Genre"))
                 {
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.genre_Search);
                 preparedStatement = connection.prepareStatement((String)listOfQueries.genre_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
