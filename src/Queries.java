@@ -7,7 +7,9 @@ public class Queries
 
     public final String displayResultsDVDs;
     //public final String displayResultsBooks;
+    //public final String purchase_History;
 
+    //public final String top_10;
 
     public final String title_DVDs_Search;
     public final String director_Search;
@@ -21,13 +23,47 @@ public class Queries
     public final String publisher_Search;
     public final String subject_Cate_Search;
     public final String keyword_Books_Search;
-
+    
+  
+    public final String admin_Book_Info;
+    public final String admin_In_Last_24h;
+    //public final String admin_top_10;
+    
 
     public Queries()
     {
+        
         displayResultsDVDs = "SELECT DISTINCT * "
                            + "FROM media "
                            + "WHERE media. IN (";
+        
+        //displayResultsBooks = ""
+        //                    + ""
+        //                    + ""
+        
+        //purchase_History = ""
+        //                 + ""
+        //                 + ""
+        
+        
+        /*This query is for *ADMINS ONLY* to geting the publisher info and the author info */
+        admin_Book_Info    = "SELECT DISTINCT books.title as \"Book title\", books.ISBN,books.subject_category, "
+                           + "                publishers.address as \"Publishers address\",publishers.name as \"Publishers name\", publishers.URL as \"Publishers site\", publishers.phone_number, "
+                           + "                authors.name as \"authors name\", authors.address as \"authors address\""
+                           + "FROM books, publishers, authors, written_by" 
+                           + "WHERE books.address = publishers.address AND books.name = publishers.name AND \n" 
+                           +"       books.title = written_by.title AND written_by.address = authors.address AND written_by.name = authors.name AND books.title = ?";
+        
+       admin_In_Last_24h   = "SELECT DISTINCT purchase_history.date_of_purchase,purchase_history.total_cost, purchase_history.transactionID, purchase.title as Media title,  users.userID as Purchasing User, users.address as Shipping address, users.name"
+                           + "FROM purchase_history, purchase, users"
+                           + "WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;";
+        
+       //admin_top_10      = ""
+       //                  + ""
+       //                  + ""
+        
+        
+     
       /*
        *!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
        *Theses queries are setup to just give us the media.title as the return.

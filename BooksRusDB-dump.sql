@@ -37,7 +37,7 @@ CREATE TABLE `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES ('newtownsomewhere','fred');
+INSERT INTO `authors` VALUES ('812 cthulhu lane','H. P. Lovecraft '),('newtownsomewhere','fred');
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +67,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES ('WitchCraft and Wizardry',666,'zalgo','zalgo','zalgo'),('yoMomma',11,'horror','SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz');
+INSERT INTO `books` VALUES ('Necronomicon ',6660,'horror','underworld, 666 1000 street','necorocorp'),('WitchCraft and Wizardry',666,'zalgo','zalgo','zalgo'),('yoMomma',11,'horror','SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,9 +94,21 @@ CREATE TABLE `dvds` (
 
 LOCK TABLES `dvds` WRITE;
 /*!40000 ALTER TABLE `dvds` DISABLE KEYS */;
-INSERT INTO `dvds` VALUES ('catdog','somedudes','neil patrick harris','gayromance'),('catdog2','somedudes and stuff','neil patrick harris','gayromance'),('Harry Potter and the sore bone','Harry and Ron','neil patrick harris','horror'),('rip','rip','rip','rip');
+INSERT INTO `dvds` VALUES ('Bruno','Sacha Baron Cohen ','Sacha Baron Cohen ','comedy'),('catdog','somedudes','neil patrick harris','gayromance'),('catdog2','somedudes and stuff','neil patrick harris','gayromance'),('Doctor Strange ','Ben CucumberBatch','Scott Derrickson','SuperHero'),('Fifty Shades of Grey','Dakota Johnson','Sam Taylor-Johnson',' erotic drama '),('Harry Potter and the sore bone','Harry and Ron','neil patrick harris','horror'),('rip','rip','rip','rip'),('the ring','Gore','Gore Verbinski','horror'),('the ring 2','Gore','Gore Verbinski','horror'),('the ring 3','Gore','Gore Verbinski','horror');
 /*!40000 ALTER TABLE `dvds` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `keywordsearch`
+--
+
+DROP TABLE IF EXISTS `keywordsearch`;
+/*!50001 DROP VIEW IF EXISTS `keywordsearch`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `keywordsearch` AS SELECT 
+ 1 AS `title`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `media`
@@ -120,7 +132,7 @@ CREATE TABLE `media` (
 
 LOCK TABLES `media` WRITE;
 /*!40000 ALTER TABLE `media` DISABLE KEYS */;
-INSERT INTO `media` VALUES ('catdog',100,5,1994),('catdog2',100,5,1995),('Harry Potter and the sore bone',2,1,2016),('rip',6,6,2006),('WitchCraft and Wizardry',666,666,1996),('yoMomma',1,100,1969);
+INSERT INTO `media` VALUES ('Bruno',1,3,2016),('catdog',100,5,1994),('catdog2',100,5,1995),('Doctor Strange ',1,3,2016),('Fifty Shades of Grey',1,3,2016),('Harry Potter and the sore bone',2,1,2016),('Necronomicon ',666,6,2017),('rip',6,6,2006),('the ring',1,111,2002),('the ring 2',2,222,2003),('the ring 3',3,333,2003),('WitchCraft and Wizardry',666,666,1996),('yoMomma',1,100,1969);
 /*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +158,7 @@ CREATE TABLE `publishers` (
 
 LOCK TABLES `publishers` WRITE;
 /*!40000 ALTER TABLE `publishers` DISABLE KEYS */;
-INSERT INTO `publishers` VALUES ('SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz','wizis.com','1111111111'),('zalgo','zalgo','zalgo.zalgo','1234555555');
+INSERT INTO `publishers` VALUES ('SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz','wizis.com','1111111111'),('underworld, 666 1000 street','necorocorp','necrocorp.com','6666666666'),('zalgo','zalgo','zalgo.zalgo','1234555555');
 /*!40000 ALTER TABLE `publishers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +188,7 @@ CREATE TABLE `purchase` (
 
 LOCK TABLES `purchase` WRITE;
 /*!40000 ALTER TABLE `purchase` DISABLE KEYS */;
-INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3);
+INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3),('Not_admin','yoMomma',4),('Not_admin','yoMomma',5),('Not_admin','yoMomma',6),('Not_admin','Necronomicon ',7),('Not_admin','Necronomicon ',8),('Not_admin','WitchCraft and Wizardry',9);
 /*!40000 ALTER TABLE `purchase` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,7 +214,7 @@ CREATE TABLE `purchase_history` (
 
 LOCK TABLES `purchase_history` WRITE;
 /*!40000 ALTER TABLE `purchase_history` DISABLE KEYS */;
-INSERT INTO `purchase_history` VALUES (1,'2016-11-05',1,667),(2,'2016-11-05',1,3),(3,'2016-11-05',1,3);
+INSERT INTO `purchase_history` VALUES (1,'2016-11-05',1,667),(2,'2016-11-05',1,3),(3,'2016-11-05',1,3),(4,'2016-11-07',1,666),(5,'2016-11-07',1,666),(6,'2016-11-07',1,666),(7,'2016-11-07',1,666),(8,'2016-11-07',1,666),(9,'2016-11-08',2,112312);
 /*!40000 ALTER TABLE `purchase_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +241,7 @@ CREATE TABLE `sequel_to` (
 
 LOCK TABLES `sequel_to` WRITE;
 /*!40000 ALTER TABLE `sequel_to` DISABLE KEYS */;
-INSERT INTO `sequel_to` VALUES ('catdog','catdog2');
+INSERT INTO `sequel_to` VALUES ('catdog','catdog2'),('the ring','the ring 2'),('the ring 2','the ring 3');
 /*!40000 ALTER TABLE `sequel_to` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,7 +298,7 @@ CREATE TABLE `written_by` (
 
 LOCK TABLES `written_by` WRITE;
 /*!40000 ALTER TABLE `written_by` DISABLE KEYS */;
-INSERT INTO `written_by` VALUES ('WitchCraft and Wizardry','newtownsomewhere','fred'),('yoMomma','newtownsomewhere','fred');
+INSERT INTO `written_by` VALUES ('Necronomicon ','812 cthulhu lane','H. P. Lovecraft '),('WitchCraft and Wizardry','newtownsomewhere','fred'),('yoMomma','newtownsomewhere','fred');
 /*!40000 ALTER TABLE `written_by` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,6 +309,24 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'movies&books'
 --
+
+--
+-- Final view structure for view `keywordsearch`
+--
+
+/*!50001 DROP VIEW IF EXISTS `keywordsearch`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `keywordsearch` AS select distinct `media`.`title` AS `title` from (((`books` join `written_by`) join `authors`) join `media`) where ((`media`.`title` = `books`.`title`) and (`authors`.`name` = `written_by`.`name`) and (`authors`.`address` = `written_by`.`address`) and (`media`.`title` like '%fred%')) union select distinct `media`.`title` AS `title` from (((`books` join `written_by`) join `authors`) join `media`) where ((`media`.`title` = `books`.`title`) and (`authors`.`name` = `written_by`.`name`) and (`authors`.`address` = `written_by`.`address`) and (`authors`.`name` like '%fred%')) union select distinct `media`.`title` AS `title` from (`books` join `media`) where ((`media`.`title` = `books`.`title`) and (`books`.`name` like '%fred%')) union select distinct `media`.`title` AS `title` from (`books` join `media`) where ((`media`.`title` = `books`.`title`) and (`books`.`subject_category` like '%fred%')) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -307,4 +337,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-05 22:07:25
+-- Dump completed on 2016-11-07 19:47:30

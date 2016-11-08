@@ -1,3 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*DVD Title search*/
 SELECT DISTINCT media.title 
 FROM dvds, media
@@ -102,6 +116,19 @@ WHERE media.title = books.title  AND books.subject_category like "%fred%";
 /************************************************************************************************************************************************************************************************************************/
 
 
+
+/*Contact info*/
+SELECT DISTINCT books.title as "Book title", books.ISBN,books.subject_category, publishers.address as "Publishers address",publishers.name as "Publishers name", publishers.URL as "Publishers site", publishers.phone_number, authors.name as "authors name", authors.address as "authors address"
+FROM books, publishers, authors, written_by
+WHERE  books.address = publishers.address AND books.name = publishers.name AND 
+       books.title = written_by.title AND written_by.address = authors.address AND written_by.name = authors.name AND books.title = "Necronomicon"
+
+/************************************************************************************************************************************************************************************************************************/
+
+/*ADMIN last24hrs info*/
+SELECT DISTINCT purchase_history.date_of_purchase,purchase_history.total_cost, purchase_history.transactionID, purchase.title as "Media title",  users.userID as "Purchasing User", users.address as "Shipping address", users.name
+FROM purchase_history, purchase, users
+WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;
 
 
 
