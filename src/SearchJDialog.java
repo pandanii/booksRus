@@ -21,10 +21,13 @@ JButton searchButton;
 JTextField searchTextField;
 JComboBox searchComboBox;
 
+boolean isAdmin;
+
     //=====================================================
     public SearchJDialog(StoreFrame pointerToStoreFrame)
     {
     this.pointerToStoreFrame = pointerToStoreFrame;
+    this.isAdmin = pointerToStoreFrame.isAdmin;
 
     Container cp;
     Toolkit tk;
@@ -62,12 +65,19 @@ JComboBox searchComboBox;
     searchTextFieldLabel = new JLabel("Keywords:");
 
     searchComboBox = new JComboBox();
+    if (isAdmin)
+        {
+        searchComboBox.addItem("Admin Book Info");
+        searchComboBox.addItem("Admin Last 24 hours");
+        searchComboBox.addItem("Admin Top Ten");
+        }
+    searchComboBox.addItem("Purchase History");
     searchComboBox.addItem("DVD Title");
     searchComboBox.addItem("Director Name");
     searchComboBox.addItem("Cast Member Name");
     searchComboBox.addItem("Genre");
-    searchComboBox.addItem("DVD Keyword");
     searchComboBox.addItem("Sequel");
+    searchComboBox.addItem("DVD Keyword");
     searchComboBox.addItem("Book Title");
     searchComboBox.addItem("Author Name");
     searchComboBox.addItem("Publisher Name");
@@ -101,7 +111,7 @@ JComboBox searchComboBox;
     setSize(d.width/4, d.height/8);
     setLocation(d.width/3, d.height/3);
 
-    d.setSize(500, 100);
+    d.setSize(550, 100);
     setMinimumSize(d);
 
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -138,7 +148,36 @@ JComboBox searchComboBox;
         try
             {
 
-            if (comboObject.toString().equals("DVD Title"))
+
+            if (comboObject.toString().equals("Purchase History"))
+                {
+                preparedStatement = connection.prepareStatement((String)listOfQueries.purchase_History);
+                preparedStatement.clearParameters();
+                preparedStatement.setString(1, pointerToStoreFrame.username);   //only the logged in user can see their history
+                resultSet = preparedStatement.executeQuery();
+                }
+            else if (comboObject.toString().equals("Admin Book Info"))
+                {
+                preparedStatement = connection.prepareStatement((String)listOfQueries.admin_Book_Info);
+                preparedStatement.clearParameters();
+                preparedStatement.setString(1, searchString);
+                resultSet = preparedStatement.executeQuery();
+                }
+            else if (comboObject.toString().equals("Admin Last 24 hours"))
+                {
+                preparedStatement = connection.prepareStatement((String)listOfQueries.admin_In_Last_24h);
+                preparedStatement.clearParameters();
+//                preparedStatement.setString(1, searchString); //not needed in this query
+                resultSet = preparedStatement.executeQuery();
+                }
+            else if (comboObject.toString().equals("Admin Top Ten"))
+                {
+                preparedStatement = connection.prepareStatement((String)listOfQueries.admin_top_10);
+                preparedStatement.clearParameters();
+//                preparedStatement.setString(1, searchString); //not needed in this query
+                resultSet = preparedStatement.executeQuery();
+                }
+            else if (comboObject.toString().equals("DVD Title"))
                 {
                 System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.title_DVDs_Search);
                 preparedStatement = connection.prepareStatement((String)listOfQueries.title_DVDs_Search);
@@ -175,6 +214,9 @@ JComboBox searchComboBox;
                 preparedStatement = connection.prepareStatement((String)listOfQueries.keyword_DVDs_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
+                preparedStatement.setString(2, searchString);
+                preparedStatement.setString(3, searchString);
+                preparedStatement.setString(4, searchString);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Sequel"))
@@ -217,6 +259,9 @@ JComboBox searchComboBox;
                 preparedStatement = connection.prepareStatement((String)listOfQueries.keyword_Books_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
+                preparedStatement.setString(2, searchString);
+                preparedStatement.setString(3, searchString);
+                preparedStatement.setString(4, searchString);
                 resultSet = preparedStatement.executeQuery();
                 }
 

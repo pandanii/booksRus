@@ -1,5 +1,6 @@
 //BooksRUs Software
-//Version 1.1
+
+
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,11 +16,22 @@ public class StoreFrame extends JFrame implements ActionListener
 JTable     myTable;
 JPanel     scrollPanel;
 Connection connection;
+
+boolean isAdmin;
+String username;
+
+static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
+static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
+static final String USERNAME     = "root";
+static final String PASSWORD     = "admin";  //Adust this according to local host login or server login
+
 //=====================================================
 public StoreFrame()
 {
     System.out.println("StoreFrame Constructor");
     Container cp;
+
+    isAdmin = false;
 
     JPanel mainPanel;
     JPanel buttonPanel;
@@ -46,6 +58,8 @@ public StoreFrame()
     cp.add(mainPanel, BorderLayout.CENTER);
 
     setupMainFrame();
+
+    establishConnection();
 }
 //=====================================================
 private void setupMainFrame()
@@ -79,8 +93,8 @@ private JMenuBar createMenuBar()
 
     loginMenuItem = new JMenuItem("Log In" , KeyEvent.VK_L);
     loginMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK));
-    loginMenuItem.getAccessibleContext().setAccessibleDescription("Log into the database.");
-    loginMenuItem.setToolTipText("Log into the database.");
+    loginMenuItem.getAccessibleContext().setAccessibleDescription("Log into your Books-R-Us account.");
+    loginMenuItem.setToolTipText("Log into your Books-R-Us account.");
     loginMenuItem.setActionCommand("LOGIN");
     loginMenuItem.addActionListener(this);
 
@@ -141,17 +155,17 @@ public void actionPerformed(ActionEvent e)
     else if (e.getActionCommand().equals("LOGIN"))
     {
         System.out.println("Creating LoginJDialog");
-        //new JDialog to accept the login credentials
-        //then try to establish a Connection with the database
-        new LoginJDialog(this);     //sending the JDialog a pointer to this instance of
-                                    //StoreFrame so it can all one of its methods
-        if (connection == null)
+
+        if (connection != null)
         {
-            System.out.println("Null connection");
+            new LoginJDialog(this);     //sending the JDialog a pointer to this instance of
+                                        //StoreFrame so it can all one of its methods
+            System.out.println("Good connection");
         }
         else
         {
-            System.out.println("Good connection");
+            System.out.println("Null connection");
+            JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -171,90 +185,8 @@ public void actionPerformed(ActionEvent e)
         System.out.println("No connection to database.");
         JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
-
-//Old code used to accept a query and, using the resultSet returned from the database, show a JTable with resultSet's contents.
-//Still here commented out just for reference.
-/*
-        String query;
-        Statement statement;
-        ResultSet resultSet;
-        ResultSetMetaData resultMetaData;
-
-        Vector<Object> columnNames;
-        Vector<Object> currentRow;
-        Vector<Object> rowList;
-
-    JScrollPane myScrollPane;
-
-        if (connection != null)
-        {
-            System.out.println("Query submitted");
-            //execute query
-            query = queryTextField.getText().trim();
-            try
-            {
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(query);
-                if (!resultSet.first())
-                {
-                    System.out.println("No records");
-                    JOptionPane.showMessageDialog(null, "No results found.", "No results", JOptionPane.ERROR_MESSAGE);
-                }
-                else
-                {
-             columnNames = new Vector<Object>();
-             currentRow  = new Vector<Object>();
-             rowList     = new Vector<Object>();
-                     resultMetaData = resultSet.getMetaData();
-
-                     for (int i=0; i < resultMetaData.getColumnCount(); i++)
-                     {
-            columnNames.addElement(resultMetaData.getColumnName(i+1));
-                     }
-
-                     do
-                     {
-            currentRow = new Vector<Object>();
-                        for (int j=0; j < resultMetaData.getColumnCount(); j++)
-                        {
-                            currentRow.addElement(resultSet.getObject(j+1));
-                        }
-                        rowList.addElement(currentRow);
-                    }
-                    while (resultSet.next());
-
-                    myTable = new JTable(rowList, columnNames);
-                    myScrollPane = new JScrollPane(myTable);
-                    myScrollPane.setPreferredSize(new Dimension(500, 400));
-                    scrollPanel.add(myScrollPane);
-                    validate();
-                }
-                resultSet.close();
-                statement.close();
-            }
-            catch (SQLException sqle2)
-            {
-                System.out.println("SQLException2 in StoreFrame actionPerformed");
-
-                JOptionPane.showMessageDialog(null, "Query Error.", "Query Error", JOptionPane.ERROR_MESSAGE);
-                sqle2.printStackTrace();
-            }
-
-        }
-        else
-        {
-            System.out.println("No connection");
-            JOptionPane.showMessageDialog(null, "Must be connected to the database first.", "No Connection", JOptionPane.ERROR_MESSAGE);
-        }
-        queryTextField.setText("");
-        queryTextField.requestFocus();
-
-*/
     }
-
-
 }
-
     //=====================================================
     public void updateResultTable(ResultSet resultSet)
     {
@@ -317,11 +249,32 @@ public void actionPerformed(ActionEvent e)
 
     }
     //=====================================================
-public void passConnection(Connection connection)
-{
-    this.connection = connection;
-    System.out.println("Retrieved a connection.");
-}
-//=====================================================
+    public void establishConnection()
+    {
+        try
+        {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        }
+        catch (ClassNotFoundException cnfe)
+        {
+            System.out.println("ClassNotFoundException in LoginJDialog establishConnection");
+            JOptionPane.showMessageDialog(null, "Failed to load driver.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
+    //        cnfe.printStackTrace();
+        }
+        catch (SQLException sqle)
+        {
+            System.out.println("SQLException in LoginJDialog establishConnection");
+            JOptionPane.showMessageDialog(null, "Failed to create a connection with the database.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
+    //        sqle.printStackTrace();
+        }
+    }
+    //=====================================================
+    public void setUserInfo(boolean isAdmin, String username)
+    {
+    this.isAdmin = isAdmin;
+    this.username = username;
+    }
+    //=====================================================
 }
 //#########################################################
