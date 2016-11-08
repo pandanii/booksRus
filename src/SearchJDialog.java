@@ -179,51 +179,53 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("DVD Title"))
                 {
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.title_DVDs_Search);
-                preparedStatement = connection.prepareStatement((String)listOfQueries.title_DVDs_Search);
+                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs +listOfQueries.title_DVDs_Search +" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Director Name"))
                 {
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.director_Search);
-                preparedStatement = connection.prepareStatement((String)listOfQueries.director_Search);
+                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.director_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Cast Member Name"))
                 {
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.cast_Search);
-                preparedStatement = connection.prepareStatement((String)listOfQueries.cast_Search);
+                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.cast_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Genre"))
                 {
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + listOfQueries.genre_Search);
-                preparedStatement = connection.prepareStatement((String)listOfQueries.genre_Search);
+                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.genre_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("DVD Keyword"))
                 {
-                preparedStatement = connection.prepareStatement((String)listOfQueries.keyword_DVDs_Search);
+                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.keyword_DVDs_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
                 preparedStatement.setString(2, '%'+searchString+'%');
                 preparedStatement.setString(3, '%'+searchString+'%');
                 preparedStatement.setString(4, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Sequel"))
                 {
-                preparedStatement = connection.prepareStatement((String)listOfQueries.sequel_Search);
+                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.sequel_Search+" );");
                 preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
+                preparedStatement.setString(1, searchString);
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Book Title"))
@@ -231,6 +233,7 @@ boolean isAdmin;
                 preparedStatement = connection.prepareStatement((String)listOfQueries.title_Books_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Author Name"))
@@ -238,6 +241,7 @@ boolean isAdmin;
                 preparedStatement = connection.prepareStatement((String)listOfQueries.author_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Publisher Name"))
@@ -245,6 +249,7 @@ boolean isAdmin;
                 preparedStatement = connection.prepareStatement((String)listOfQueries.publisher_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Book Category"))
@@ -252,6 +257,7 @@ boolean isAdmin;
                 preparedStatement = connection.prepareStatement((String)listOfQueries.subject_Cate_Search);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Book Keyword"))
@@ -262,6 +268,7 @@ boolean isAdmin;
                 preparedStatement.setString(2, '%'+searchString+'%');
                 preparedStatement.setString(3, '%'+searchString+'%');
                 preparedStatement.setString(4, '%'+searchString+'%');
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
 

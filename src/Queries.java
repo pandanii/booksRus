@@ -33,9 +33,9 @@ public class Queries
     public Queries()
     {
         
-        displayResultsDVDs = " SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.directors as Director, dvds.genre as Genre"
+        displayResultsDVDs = " SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.director as Director, dvds.genre as Genre"
                            + " FROM media, dvds "
-                           + " WHERE media.title = dvd.title IN(;";
+                           + " WHERE media.title = dvds.title AND media.title IN ( ";
         
         //displayResultsBooks = ""
         //                    + ""
@@ -43,7 +43,7 @@ public class Queries
         
         purchase_History   = " SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as book/dvd title, media.price, media.year"
                            + " FROM  media, purchase_history, purchase, users"
-                           + " WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = ? AND  purchase.title = media.title;";
+                           + " WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = ? AND  purchase.title = media.title";
         
         
         /*This query is for *ADMINS ONLY* to geting the publisher info and the author info */
@@ -56,12 +56,12 @@ public class Queries
         
        admin_In_Last_24h   = " SELECT DISTINCT purchase_history.date_of_purchase,purchase_history.total_cost, purchase_history.transactionID, purchase.title as Media title,  users.userID as Purchasing User, users.address as Shipping address, users.name"
                            + " FROM purchase_history, purchase, users"
-                           +  "WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID;";
+                           +  "WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID";
         
        admin_top_10        = " SELECT DISTINCT media.title"
                            + " FROM  media, purchase, purchase_history"
                            + " WHERE (purchase_history.date_of_purchase BETWEEN ( CURDATE() - INTERVAL 7 DAY) AND CURDATE() ) AND purchase.transactionID = purchase_history.transactionID AND" 
-                           + "      purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10;";
+                           + "      purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10";
         
         
      
