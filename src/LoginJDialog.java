@@ -128,10 +128,11 @@ public void actionPerformed(ActionEvent e)
             ResultSet resultSet;
 
 
-            preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE users.userID = '?' AND users.password = '?';");
+            preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE users.userID = ? AND users.password = ?;");
             preparedStatement.clearParameters();
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
+            System.out.println("preparedStatement: "+preparedStatement);
             resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next())//Couldn't login or find info
@@ -146,19 +147,16 @@ public void actionPerformed(ActionEvent e)
                     System.out.println(metaData.getColumnLabel(i) + ": " + resultSet.getObject(i));
                 }
 
-                preparedStatement = connection.prepareStatement("SELECT is_Admin FROM Users WHERE users.userID = '?' AND users.password = '?';");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, username);
-                preparedStatement.setString(2, password);
-                resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.getInt(1) == 1)
+                // removed second query. No need to requery.
+                if (resultSet.getInt(7) == 1)
                     {
+                    System.out.println("Admin loged in");
                     pointerToStoreFrame.setUserInfo(true, username);
                     JOptionPane.showMessageDialog(null, "Welcome Admin " + username + ".");
                     }
                 else
                     {
+                    System.out.println("NONE Admin loged in");
                     pointerToStoreFrame.setUserInfo(false, username);
                     JOptionPane.showMessageDialog(null, "Welcome " + username + ".");
                     }
@@ -168,6 +166,7 @@ public void actionPerformed(ActionEvent e)
         {
             System.out.println("SQLException in LoginJDialog actionPerformed");
             JOptionPane.showMessageDialog(null, "Bad Query.", "Failed to query", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
         }
 
     }
