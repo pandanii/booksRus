@@ -188,7 +188,7 @@ CREATE TABLE `purchase` (
 
 LOCK TABLES `purchase` WRITE;
 /*!40000 ALTER TABLE `purchase` DISABLE KEYS */;
-INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3),('Not_admin','yoMomma',4),('Not_admin','yoMomma',5),('Not_admin','yoMomma',6),('Not_admin','Necronomicon ',7),('Not_admin','Necronomicon ',8),('Not_admin','WitchCraft and Wizardry',9);
+INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3),('Not_admin','yoMomma',4),('Not_admin','yoMomma',5),('Not_admin','yoMomma',6),('Not_admin','Necronomicon ',7),('Not_admin','Necronomicon ',8),('Not_admin','WitchCraft and Wizardry',9),('Not_admin','Necronomicon ',10);
 /*!40000 ALTER TABLE `purchase` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +214,7 @@ CREATE TABLE `purchase_history` (
 
 LOCK TABLES `purchase_history` WRITE;
 /*!40000 ALTER TABLE `purchase_history` DISABLE KEYS */;
-INSERT INTO `purchase_history` VALUES (1,'2016-11-05',1,667),(2,'2016-11-05',1,3),(3,'2016-11-05',1,3),(4,'2016-11-07',1,666),(5,'2016-11-07',1,666),(6,'2016-11-07',1,666),(7,'2016-11-07',1,666),(8,'2016-11-07',1,666),(9,'2016-11-08',2,112312);
+INSERT INTO `purchase_history` VALUES (1,'2016-11-05',1,667),(2,'2016-11-05',1,3),(3,'2016-11-05',1,3),(4,'2016-11-07',1,666),(5,'2016-11-07',1,666),(6,'2016-11-07',1,666),(7,'2016-11-07',1,666),(8,'2016-11-07',1,666),(9,'2016-11-08',2,112312),(10,'2016-11-09',2,1111);
 /*!40000 ALTER TABLE `purchase_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,4 +337,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-07 19:47:30
+-- Dump completed on 2016-11-08 22:57:40

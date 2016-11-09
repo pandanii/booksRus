@@ -46,7 +46,7 @@ public class Queries
                            + " WHERE  purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID AND users.userID = ? AND  purchase.title = media.title";
         
         
-        top_10             = " SELECT DISTINCT media.title"
+        top_10             = " SELECT media.title"
                            + " FROM  media, purchase, purchase_history"
                            + " WHERE  purchase.transactionID = purchase_history.transactionID AND purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10;";
         
@@ -62,7 +62,7 @@ public class Queries
                            + " FROM purchase_history, purchase, users"
                            +  " WHERE purchase_history.date_of_purchase between (now() - INTERVAL 1 DAY) AND NOW() AND purchase_history.transactionID = purchase.transactionID AND users.userID = purchase.userID";
         
-       admin_top_10        = " SELECT DISTINCT media.title, media.price, media.copies_In_Stock, media.year"
+       admin_top_10        = " SELECT media.title, media.price, media.copies_In_Stock, media.year"
                            + " FROM  media, purchase, purchase_history"
                            + " WHERE (purchase_history.date_of_purchase BETWEEN ( CURDATE() - INTERVAL 7 DAY) AND CURDATE() ) AND purchase.transactionID = purchase_history.transactionID AND" 
                            + "      purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10";
