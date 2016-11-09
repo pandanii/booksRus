@@ -215,7 +215,7 @@ public void actionPerformed(ActionEvent e)
 
             for (int i=0; i < resultMetaData.getColumnCount(); i++)
                 {
-                columnNames.addElement(resultMetaData.getColumnName(i+1));
+                columnNames.addElement(resultMetaData.getColumnLabel(i+1));// USING getColumnLabel() INSTEAD OF getColumnName() ALLOWS FOR ALIASING!
                 }
 
             do

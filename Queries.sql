@@ -1,12 +1,15 @@
-
+/*displayResultsBooks*/
+SELECT DISTINCT media.title as 'Book Title', media.price, media.copies_In_Stock, media.year as 'Year released', written_by.name as 'Author name', books.ISBN, books.subject_category, books.name as Publisher
+FROM media, books
+WHERE media.title = books.title IN(
 
 
 
 
 /*displayResultsDVDs*/
-SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.directors as Director, dvds.genre as Genre
+SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.director as Director, dvds.genre as Genre
 FROM media, dvds
-WHERE media.title = dvd.title IN(
+WHERE media.title = dvds.title IN(
 
 
 

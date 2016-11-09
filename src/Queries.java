@@ -6,7 +6,7 @@ public class Queries
 {
 
     public final String displayResultsDVDs;
-    //public final String displayResultsBooks;
+    public final String displayResultsBooks;
     public final String purchase_History;
 
     //public final String top_10;
@@ -33,13 +33,13 @@ public class Queries
     public Queries()
     {
         
-        displayResultsDVDs = " SELECT DISTINCT media.title as 'DVD Title', media.price, media.copies_In_Stock, media.year as 'Year released', dvds.cast, dvds.director as Director, dvds.genre as Genre"
+        displayResultsDVDs = " SELECT DISTINCT media.title AS 'DVD Title', media.price AS 'Price', media.copies_In_Stock AS 'Amount in Stock', media.year as 'Year Released', dvds.cast AS 'CAST', dvds.director as Director, dvds.genre as Genre"
                            + " FROM media, dvds "
                            + " WHERE media.title = dvds.title AND media.title IN ( ";
         
-        //displayResultsBooks = ""
-        //                    + ""
-        //                    + ""
+       displayResultsBooks = " SELECT DISTINCT media.title as 'Book Title', media.price AS 'Price', media.copies_In_Stock AS 'Amount in Stock', media.year as 'Year Released', written_by.name as 'Author Name', books.ISBN, books.subject_category AS 'Subject Category', books.name as Publisher"
+                           + " FROM media, books, written_by"
+                           + " WHERE media.title = books.title AND books.title = written_by.title AND books.title IN ( ";
         
         purchase_History   = " SELECT DISTINCT purchase_history.date_of_purchase, purchase_history.total_cost, purchase_history.transactionID, media.title as book/dvd title, media.price, media.year"
                            + " FROM  media, purchase_history, purchase, users"
