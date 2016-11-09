@@ -198,6 +198,8 @@ public void actionPerformed(ActionEvent e)
     Vector<Object> rowList;
 
     JScrollPane myScrollPane;
+    
+    scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
 
     try
         {
