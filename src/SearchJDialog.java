@@ -81,7 +81,7 @@ boolean isAdmin;
     searchComboBox.addItem("Book Title");
     searchComboBox.addItem("Author Name");
     searchComboBox.addItem("Publisher Name");
-    searchComboBox.addItem("Book Catagory");
+    searchComboBox.addItem("Book Category");
     searchComboBox.addItem("Book Keyword");
 
     searchTextField = new JTextField(30);
@@ -123,6 +123,8 @@ boolean isAdmin;
 
     }
     //=====================================================
+@SuppressWarnings("CallToPrintStackTrace")
+@Override
     public void actionPerformed(ActionEvent e)
     {
 
@@ -151,34 +153,39 @@ boolean isAdmin;
 
             if (comboObject.toString().equals("Purchase History"))
                 {
-                preparedStatement = connection.prepareStatement((String)listOfQueries.purchase_History);
+                System.out.println("comboObject.toString().equals(\"Purchase History\")");//DEBUG
+                preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, pointerToStoreFrame.username);   //only the logged in user can see their history
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Admin Book Info"))
                 {
-                preparedStatement = connection.prepareStatement((String)listOfQueries.admin_Book_Info);
+                System.out.println("comboObject.toString().equals(\"Admin Book Info\")");//DEBUG
+                preparedStatement = connection.prepareStatement(listOfQueries.admin_Book_Info);
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Admin Last 24 hours"))
                 {
-                preparedStatement = connection.prepareStatement((String)listOfQueries.admin_In_Last_24h);
+                System.out.println("comboObject.toString().equals(\"Admin Last 24 hours\")");//DEBUG
+                preparedStatement = connection.prepareStatement(listOfQueries.admin_In_Last_24h);
                 preparedStatement.clearParameters();
 //                preparedStatement.setString(1, '%'+searchString+'%'); //not needed in this query
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Admin Top Ten"))
                 {
-                preparedStatement = connection.prepareStatement((String)listOfQueries.admin_top_10);
+                System.out.println("comboObject.toString().equals(\"Admin Top Ten\")");//DEBUG
+                preparedStatement = connection.prepareStatement(listOfQueries.admin_top_10);
                 preparedStatement.clearParameters();
 //                preparedStatement.setString(1, '%'+searchString+'%'); //not needed in this query
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("DVD Title"))
                 {
+                System.out.println("comboObject.toString().equals(\"DVD Title\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs +listOfQueries.title_DVDs_Search +" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -187,6 +194,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Director Name"))
                 {
+                System.out.println("comboObject.toString().equals(\"Director Name\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.director_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -195,6 +203,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Cast Member Name"))
                 {
+                System.out.println("comboObject.toString().equals(\"Cast Member Name\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.cast_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -203,6 +212,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Genre"))
                 {
+                System.out.println("comboObject.toString().equals(\"Genre\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.genre_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -211,6 +221,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("DVD Keyword"))
                 {
+                System.out.println("comboObject.toString().equals(\"DVD Keyword\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.keyword_DVDs_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -222,6 +233,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Sequel"))
                 {
+                System.out.println("comboObject.toString().equals(\"Sequel\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.sequel_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, searchString);
@@ -230,6 +242,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Book Title"))
                 {
+                System.out.println("comboObject.toString().equals(\"Book Title\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.title_Books_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -238,6 +251,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Author Name"))
                 {
+                System.out.println("comboObject.toString().equals(\"Author Name\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.author_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -246,6 +260,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Publisher Name"))
                 {
+                System.out.println("comboObject.toString().equals(\"Publisher Name\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.publisher_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -254,6 +269,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Book Category"))
                 {
+                System.out.println("comboObject.toString().equals(\"Book Category\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.subject_Cate_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -262,6 +278,7 @@ boolean isAdmin;
                 }
             else if (comboObject.toString().equals("Book Keyword"))
                 {
+                System.out.println("comboObject.toString().equals(\"Book Keyword\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.keyword_Books_Search+" );");
                 preparedStatement.clearParameters();
                 preparedStatement.setString(1, '%'+searchString+'%');
@@ -280,18 +297,19 @@ boolean isAdmin;
         catch (SQLException sqle)
             {
             System.out.println("SQLException in SearchJDialog actionPerformed");
-
             sqle.printStackTrace();
             }
         }
 
     }
     //=====================================================
+@Override
     public void changedUpdate(DocumentEvent e)
     {
     //do nothing
     }
     //=====================================================
+@Override
     public void removeUpdate(DocumentEvent e)
     {
     if (searchTextField.getText().trim().equals(""))
@@ -304,6 +322,7 @@ boolean isAdmin;
         }
     }
     //=====================================================
+@Override
     public void insertUpdate(DocumentEvent e)
     {
     if (searchTextField.getText().trim().equals(""))
