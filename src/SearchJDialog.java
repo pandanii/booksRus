@@ -49,7 +49,7 @@ boolean isAdmin;
     searchButton.setActionCommand("SEARCH");
     searchButton.addActionListener(this);
     searchButton.setToolTipText("Begin the search.");
-    searchButton.setEnabled(false);
+    //searchButton.setEnabled(false);
 
     cancelButton = new JButton("Cancel");
     cancelButton.setActionCommand("CANCEL");
@@ -149,13 +149,12 @@ boolean isAdmin;
         resultSet = null;
         try
             {
-
-
             if (comboObject.toString().equals("Purchase History"))
                 {
                 System.out.println("comboObject.toString().equals(\"Purchase History\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
                 preparedStatement.clearParameters();
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 preparedStatement.setString(1, pointerToStoreFrame.username);   //only the logged in user can see their history
                 resultSet = preparedStatement.executeQuery();
                 }
@@ -164,7 +163,8 @@ boolean isAdmin;
                 System.out.println("comboObject.toString().equals(\"Admin Book Info\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.admin_Book_Info);
                 preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
+                preparedStatement.setString(1, searchString);
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Admin Last 24 hours"))
@@ -172,6 +172,7 @@ boolean isAdmin;
                 System.out.println("comboObject.toString().equals(\"Admin Last 24 hours\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.admin_In_Last_24h);
                 preparedStatement.clearParameters();
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
 //                preparedStatement.setString(1, '%'+searchString+'%'); //not needed in this query
                 resultSet = preparedStatement.executeQuery();
                 }
@@ -180,6 +181,7 @@ boolean isAdmin;
                 System.out.println("comboObject.toString().equals(\"Admin Top Ten\")");//DEBUG
                 preparedStatement = connection.prepareStatement(listOfQueries.admin_top_10);
                 preparedStatement.clearParameters();
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
 //                preparedStatement.setString(1, '%'+searchString+'%'); //not needed in this query
                 resultSet = preparedStatement.executeQuery();
                 }
@@ -312,27 +314,27 @@ boolean isAdmin;
 @Override
     public void removeUpdate(DocumentEvent e)
     {
-    if (searchTextField.getText().trim().equals(""))
+    /*if (searchTextField.getText().trim().equals(""))
         {
         searchButton.setEnabled(false);
         }
     else
         {
         searchButton.setEnabled(true);
-        }
+        }*/
     }
     //=====================================================
 @Override
     public void insertUpdate(DocumentEvent e)
     {
-    if (searchTextField.getText().trim().equals(""))
+   /* if (searchTextField.getText().trim().equals(""))
         {
         searchButton.setEnabled(false);
         }
     else
         {
         searchButton.setEnabled(true);
-        }
+        }*/
     }
     //=====================================================
 
