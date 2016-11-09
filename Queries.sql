@@ -1,3 +1,13 @@
+ SELECT DISTINCT media.title
+FROM books, written_by, authors, media
+WHERE media.title = books.title AND authors.name = written_by.name AND authors.address = written_by.address AND authors.name like '%fred%'?
+
+
+
+
+
+
+
 /*displayResultsBooks*/
 SELECT DISTINCT media.title as 'Book Title', media.price, media.copies_In_Stock, media.year as 'Year released', written_by.name as 'Author name', books.ISBN, books.subject_category, books.name as Publisher
 FROM media, books
@@ -14,7 +24,9 @@ WHERE media.title = dvds.title IN(
 
 
 
-
+SELECT DISTINCT media.title
+FROM  media, purchase, purchase_history
+WHERE  purchase.transactionID = purchase_history.transactionID AND purchase.title = media.title GROUP BY purchase.title ORDER BY COUNT(*) DESC LIMIT 10;
 
 
 /*DVD Title search*/

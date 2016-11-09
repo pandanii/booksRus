@@ -246,7 +246,6 @@ public void actionPerformed(ActionEvent e)
         System.out.println("SQLException2 in StoreFrame actionPerformed");
 
         JOptionPane.showMessageDialog(null, "Query Error.", "Query Error", JOptionPane.ERROR_MESSAGE);
-        sqle2.printStackTrace();
         }
 
     }

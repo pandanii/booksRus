@@ -153,12 +153,14 @@ public void actionPerformed(ActionEvent e)
                     System.out.println("Admin loged in");
                     pointerToStoreFrame.setUserInfo(true, username);
                     JOptionPane.showMessageDialog(null, "Welcome Admin " + username + ".");
+                    this.dispose();
                     }
                 else
                     {
                     System.out.println("NONE Admin loged in");
                     pointerToStoreFrame.setUserInfo(false, username);
                     JOptionPane.showMessageDialog(null, "Welcome " + username + ".");
+                    this.dispose();
                     }
             }
         }
