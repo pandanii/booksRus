@@ -188,7 +188,7 @@ CREATE TABLE `purchase` (
 
 LOCK TABLES `purchase` WRITE;
 /*!40000 ALTER TABLE `purchase` DISABLE KEYS */;
-INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3),('Not_admin','yoMomma',4),('Not_admin','yoMomma',5),('Not_admin','yoMomma',6),('Not_admin','Necronomicon ',7),('Not_admin','Necronomicon ',8),('Not_admin','WitchCraft and Wizardry',9),('Not_admin','Necronomicon ',10),('Admin_1','WitchCraft and Wizardry',11);
+INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3),('Not_admin','yoMomma',4),('Not_admin','yoMomma',5),('Not_admin','yoMomma',6),('Not_admin','Necronomicon ',7),('Not_admin','Necronomicon ',8),('Not_admin','WitchCraft and Wizardry',9),('Not_admin','Necronomicon ',10),('Admin_1','WitchCraft and Wizardry',11),('Admin_1','Doctor Strange ',12),('Admin_1','the ring',13),('Admin_1','the ring 2',14),('Admin_1','the ring 3',15),('Admin_1','WitchCraft and Wizardry',16);
 /*!40000 ALTER TABLE `purchase` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +214,7 @@ CREATE TABLE `purchase_history` (
 
 LOCK TABLES `purchase_history` WRITE;
 /*!40000 ALTER TABLE `purchase_history` DISABLE KEYS */;
-INSERT INTO `purchase_history` VALUES (1,'2016-11-05',1,667),(2,'2016-11-05',1,3),(3,'2016-11-05',1,3),(4,'2016-11-07',1,666),(5,'2016-11-07',1,666),(6,'2016-11-07',1,666),(7,'2016-11-07',1,666),(8,'2016-11-07',1,666),(9,'2016-11-08',2,112312),(10,'2016-11-09',2,1111)(11,'2016-11-09',2,112312);
+INSERT INTO `purchase_history` VALUES (1,'2016-11-05',1,667),(2,'2016-11-05',1,3),(3,'2016-11-05',1,3),(4,'2016-11-07',1,666),(5,'2016-11-07',1,666),(6,'2016-11-07',1,666),(7,'2016-11-07',1,666),(8,'2016-11-07',1,666),(9,'2016-11-08',2,112312),(10,'2016-11-09',2,1111),(11,'2016-11-08',2,112312),(12,'2016-11-09',2,2),(13,'2016-11-09',2,222),(14,'2016-11-09',2,444),(15,'2016-11-07',2,666),(16,'2016-11-09',2,112312);
 /*!40000 ALTER TABLE `purchase_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
