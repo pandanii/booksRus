@@ -22,6 +22,7 @@ JTextField searchTextField;
 JComboBox searchComboBox;
 
 boolean isAdmin;
+boolean loggedIn;
 
     //=====================================================
     public SearchJDialog(StoreFrame pointerToStoreFrame)
@@ -71,7 +72,10 @@ boolean isAdmin;
         searchComboBox.addItem("Admin Last 24 hours");
         searchComboBox.addItem("Admin Top Ten");
         }
-    searchComboBox.addItem("Purchase History");
+    if (loggedIn)
+        {
+        searchComboBox.addItem("Purchase History");
+        }
     searchComboBox.addItem("DVD Title");
     searchComboBox.addItem("Director Name");
     searchComboBox.addItem("Cast Member Name");
@@ -83,6 +87,7 @@ boolean isAdmin;
     searchComboBox.addItem("Publisher Name");
     searchComboBox.addItem("Book Category");
     searchComboBox.addItem("Book Keyword");
+    searchComboBox.addActionListener(this);
 
     searchTextField = new JTextField(30);
     searchTextField.getDocument().addDocumentListener(this);
@@ -115,6 +120,8 @@ boolean isAdmin;
     setMinimumSize(d);
 
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+    searchComboBox.setSelectedIndex(0); //select the first Item in the combobox to determine text field status
 
     getRootPane().setDefaultButton(searchButton);
     searchTextField.requestFocus();
@@ -302,6 +309,10 @@ boolean isAdmin;
             sqle.printStackTrace();
             }
         }
+    else
+        {
+        reactToComboChanges();  //if selected Combo Item doesn't allow use of text field, disable field
+        }
 
     }
     //=====================================================
@@ -337,6 +348,36 @@ boolean isAdmin;
         }*/
     }
     //=====================================================
+    public void reactToComboChanges()
+    {
+//    System.out.println("reacting");
+    String selectedItem;
+
+    selectedItem = searchComboBox.getSelectedItem().toString();
+
+    if (selectedItem.equals("Purchase History"))    //for any search option that cannot use the text field, disable it.
+        {
+        searchTextField.setText("");
+        searchTextField.setEnabled(false);
+        }
+    else if (selectedItem.equals("Admin Last 24 hours"))
+        {
+        searchTextField.setText("");
+        searchTextField.setEnabled(false);
+        }
+    else if (selectedItem.equals("Admin Top Ten"))
+        {
+        searchTextField.setText("");
+        searchTextField.setEnabled(false);
+        }
+    else
+        {
+        searchTextField.setEnabled(true);
+        searchTextField.requestFocus();
+        }
+    }
+    //=====================================================
+
 
 }
 //#########################################################

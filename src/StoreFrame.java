@@ -19,6 +19,9 @@ Connection connection;
 
 boolean isAdmin;
 String username;
+boolean loggedIn;
+
+JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be referenced
 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
@@ -32,6 +35,7 @@ public StoreFrame()
     Container cp;
 
     isAdmin = false;
+    loggedIn = false;
 
     JPanel mainPanel;
     JPanel buttonPanel;
@@ -81,7 +85,9 @@ private void setupMainFrame()
 private JMenuBar createMenuBar()
 {
     JMenuBar menuBar;
-    JMenu subMenu;
+//    JMenu logInMenu; //made this have a larger scope so it can be used later to logout when user is logged in.
+    JMenu viewMenu;
+    JMenu searchMenu;
 
     JMenuItem viewMenuItem;
     JMenuItem loginMenuItem;
@@ -89,7 +95,7 @@ private JMenuBar createMenuBar()
 
     menuBar = new JMenuBar();
 
-    subMenu = new JMenu("LogIn");
+    logInMenu = new JMenu("LogIn");
 
     loginMenuItem = new JMenuItem("Log In" , KeyEvent.VK_L);
     loginMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK));
@@ -98,10 +104,10 @@ private JMenuBar createMenuBar()
     loginMenuItem.setActionCommand("LOGIN");
     loginMenuItem.addActionListener(this);
 
-    subMenu.add(loginMenuItem);
-    menuBar.add(subMenu);
+    logInMenu.add(loginMenuItem);
+    menuBar.add(logInMenu);
 
-    subMenu = new JMenu("View");
+    viewMenu = new JMenu("View");
 
     viewMenuItem = new JMenuItem("View Options" , KeyEvent.VK_V);
     viewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
@@ -110,10 +116,10 @@ private JMenuBar createMenuBar()
     viewMenuItem.setActionCommand("VIEW");
     viewMenuItem.addActionListener(this);
 
-    subMenu.add(viewMenuItem);
-    menuBar.add(subMenu);
+    viewMenu.add(viewMenuItem);
+    menuBar.add(viewMenu);
 
-    subMenu = new JMenu("Search");
+    searchMenu = new JMenu("Search");
 
     searchMenuItem = new JMenuItem("Search Options" , KeyEvent.VK_S);
     searchMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
@@ -122,8 +128,8 @@ private JMenuBar createMenuBar()
     searchMenuItem.setActionCommand("SEARCH");
     searchMenuItem.addActionListener(this);
 
-    subMenu.add(searchMenuItem);
-    menuBar.add(subMenu);
+    searchMenu.add(searchMenuItem);
+    menuBar.add(searchMenu);
 
     return menuBar;
 }
@@ -156,16 +162,31 @@ public void actionPerformed(ActionEvent e)
     {
         System.out.println("Creating LoginJDialog");
 
-        if (connection != null)
+
+    if (!loggedIn)
         {
+        if (connection != null)
+            {
             new LoginJDialog(this);     //sending the JDialog a pointer to this instance of
                                         //StoreFrame so it can all one of its methods
             System.out.println("Good connection");
-        }
+            }
         else
-        {
+            {
             System.out.println("Null connection");
             JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    else
+        {
+        //change the menu item back to Login
+        logInMenu.setText("Login");
+        logInMenu.getItem(0).setText("LogIn");  //getting the JMenuItem
+        isAdmin = false;
+        loggedIn = false;
+        username = null;
+        this.setTitle("Books-R-Us");
+        this.repaint(); //causes the whole frame to repaint with the update to its components
         }
 
     }
@@ -198,7 +219,7 @@ public void actionPerformed(ActionEvent e)
     Vector<Object> rowList;
 
     JScrollPane myScrollPane;
-    
+
     scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
 
     try
@@ -275,6 +296,11 @@ public void actionPerformed(ActionEvent e)
     {
     this.isAdmin = isAdmin;
     this.username = username;
+    loggedIn = true;
+    logInMenu.setText("Logout");
+    logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
+    this.setTitle("Books-R-Us" + " - Signed in as: " + username);
+    this.repaint();     //causes the whole frame to repaint with the update to its components
     }
     //=====================================================
 }
