@@ -182,7 +182,7 @@ public void actionPerformed(ActionEvent e)
         //change the menu item back to Login
         logInMenu.setText("Login");
         logInMenu.getItem(0).setText("LogIn");  //getting the JMenuItem
-        isAdmin = false;
+        isAdmin  = false;
         loggedIn = false;
         username = null;
         this.setTitle("Books-R-Us");
