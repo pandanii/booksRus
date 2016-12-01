@@ -29,6 +29,7 @@ boolean loggedIn;
     {
     this.pointerToStoreFrame = pointerToStoreFrame;
     this.isAdmin = pointerToStoreFrame.isAdmin;
+    this.loggedIn = pointerToStoreFrame.loggedIn;
 
     Container cp;
     Toolkit tk;

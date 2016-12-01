@@ -4,32 +4,11 @@
  */
 public class Queries
 {
-    public final String maxTransactionID; // THIS IS FOR GETING THE LATEST TRANSACTION ID SO WE CAN ADD 1 TO IT WHEN MAKING OUR QUERIES
-    
-    public final String updateUser;
-    public final String newUser;
-    public final String displayUsers;
-    public final String displayMedia;
-    public final String deleteMedia; 
-    public final String deleteUser; 
-    
+
     public final String displayResultsDVDs;
     public final String displayResultsBooks;
     public final String purchase_History;
-    
-    public final String insertMedia;
-    public final String insertDvds;
-    public final String insertBooks;
-    public final String insertAuthors;
-    public final String insertWrittenBy;
-    public final String insertSequel;
-    public final String insertUsers;
-    public final String insertPurchase;
-    public final String insertPurchase_History;
-    
-    
-    
-    
+
     public final String top_10;
 
     public final String title_DVDs_Search;
@@ -53,49 +32,6 @@ public class Queries
 
     public Queries()
     {
-        
-        maxTransactionID = " SELECT MAX (TransactionID)"
-                         + " FROM 'movies&books'.purchase_history ";
-        
-        
-        updateUser       = " UPDATE Users SET password = ?, phone_number = ?, address = ?, email = ?, name = ? WHERE userID = ?;";
-             
-        newUser          = " INSERT INTO User(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
-        
-        displayUsers     = " SELECT * FROM users; ";
-        
-        displayMedia     = " SELECT * FROM Media; ";
-        
-        deleteMedia      = " DELETE FROM media WHERE title = ?; ";
-        
-        deleteUser       = " DELETE FROM Users WHERE userID = ?; ";
-        
-        
-        
-        
-        insertMedia            = " INSERT INTO Media(title,price,copies_In_Stock,year) VALUES (?,?,?,?);";
-        
-        insertDvds             = " INSERT INTO dvds(Title,cast,director,genre) VALUES (?,?,?,?);";
-         
-        insertBooks            = " INSERT INTO books(Title,ISBN,subject_category,Address,name) values (?,?,?,?,?);";
-        
-        insertAuthors          = " INSERT INTO AUTHORS(Address,Name) values (?,?);";
-        
-        insertWrittenBy        = " INSERT INTO written_by(Title,Address,name) values (?,?,?);";
-        
-        insertSequel           = "INSERT INTO sequel(prequel_title,sequel_title) values (?,?);";// optional only need to insert if pos
-        
-        insertUsers            = "INSERT INTO Users(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
-        
-        insertPurchase         = "INSERT INTO 'purchase' (usersID, title, transationID) VALUES (?,?,?)";
-        
-        insertPurchase_History = "INSERT INTO 'purchase_History' (transationID,date_of_purchase, number_of_copies, total_cost) VALUES(?,CURDATE(),?,?);";
-        
-        
-        
-        
-        
-        
         
         displayResultsDVDs = " SELECT DISTINCT media.title AS 'DVD Title', media.price AS 'Price', media.copies_In_Stock AS 'Amount in Stock', media.year as 'Year Released', dvds.cast AS 'CAST', dvds.director as Director, dvds.genre as Genre"
                            + " FROM media, dvds "
