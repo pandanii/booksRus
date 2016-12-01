@@ -20,11 +20,11 @@ Queries    listOfQueries;
 
 JMenu      adminMenu;
 JPopupMenu rightClickMenu;
-int selectedRow;
-Point mousePoint;
+int        selectedRow;
+Point      mousePoint;
 
 Vector<Object> columnNames;
-ShoppingCart shoppingCart;
+ShoppingCart   shoppingCart;
 
 JTable cartTable;
 
@@ -37,7 +37,7 @@ JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
 static final String USERNAME     = "root";
-static final String PASSWORD     = "password";  //Adust this according to local host login or server login
+static final String PASSWORD     = "admin";//"password"  //Adust this according to local host login or server login
 
 //=====================================================
 public StoreFrame()
@@ -334,6 +334,7 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
     {
+        System.out.println("Attempting to  ADDTOCART");
         int currentColumnIndex;
         int numberInStockColumnIndex = 0;
         Vector<Object> cartRowList = new Vector<Object>(); //only ever size one in this setup
@@ -559,6 +560,7 @@ public void actionPerformed(ActionEvent e)
             while (resultSet.next());
 
             myTable = new JTable(rowList, columnNames);
+            myTable.addMouseListener(this);
             myScrollPane = new JScrollPane(myTable);
             myScrollPane.setPreferredSize(new Dimension(500, 400));
             scrollPanel.add(myScrollPane);
@@ -604,8 +606,9 @@ public void actionPerformed(ActionEvent e)
     this.username = username;
     loggedIn = true;
 
-    if(isAdmin)
+    if(isAdmin) {
         adminMenu.setEnabled(true);
+    }
 
     logInMenu.setText("Logout");
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
@@ -614,6 +617,7 @@ public void actionPerformed(ActionEvent e)
     }
     //=====================================================
         //=====================================================
+@Override
     public void mouseClicked(MouseEvent e)
     {
     System.out.println("StoreFrame mouseClicked");
@@ -631,18 +635,22 @@ public void actionPerformed(ActionEvent e)
     }
 
     //=====================================================
+@Override
     public void mousePressed(MouseEvent e)
     {
     }
     //=====================================================
+@Override
     public void mouseReleased(MouseEvent e)
     {
     }
     //=====================================================
+@Override
     public void mouseEntered(MouseEvent e)
     {
     }
     //=====================================================
+@Override
     public void mouseExited(MouseEvent e)
     {
     }
