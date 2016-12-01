@@ -230,8 +230,8 @@ CREATE TABLE `sequel_to` (
   `sequel_title` varchar(30) DEFAULT NULL,
   KEY `prequel_title` (`prequel_title`),
   KEY `sequel_title` (`sequel_title`),
-  CONSTRAINT `sequel_to_ibfk_1` FOREIGN KEY (`prequel_title`) REFERENCES `dvds` (`title`),
-  CONSTRAINT `sequel_to_ibfk_2` FOREIGN KEY (`sequel_title`) REFERENCES `dvds` (`title`)
+  CONSTRAINT `sequel_to_ibfk_1` FOREIGN KEY (`prequel_title`) REFERENCES `dvds` (`title`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sequel_to_ibfk_2` FOREIGN KEY (`sequel_title`) REFERENCES `dvds` (`title`) ON DELETE CASCADE ON UPDATE CASCADE 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
