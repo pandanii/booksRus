@@ -37,7 +37,7 @@ JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
 static final String USERNAME     = "root";
-static final String PASSWORD     = "admin";  //Adust this according to local host login or server login
+static final String PASSWORD     = "password";  //Adust this according to local host login or server login
 
 //=====================================================
 public StoreFrame()
@@ -147,6 +147,7 @@ private JMenuBar createMenuBar()
     JMenuItem userInfoMenuItem;
     JMenuItem searchMenuItem;
     JMenuItem historyMenuItem;
+    JMenuItem addcartMenuItem;
     JMenuItem cartMenuItem;
 
     JMenuItem adminDisplayUserMenuItem;
@@ -197,6 +198,17 @@ private JMenuBar createMenuBar()
     cartMenuItem.setActionCommand("OPENCART");
     cartMenuItem.addActionListener(this);
 
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	    addcartMenuItem = new JMenuItem("Add" , KeyEvent.VK_A);
+	    addcartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+	    addcartMenuItem.getAccessibleContext().setAccessibleDescription("Add item to cart");
+	    addcartMenuItem.setToolTipText("Add item to cart");
+	    addcartMenuItem.setActionCommand("ADDTOCART");
+    addcartMenuItem.addActionListener(this);
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    cartMenu.add(addcartMenuItem);
     cartMenu.add(cartMenuItem);
     menuBar.add(cartMenu);
 
@@ -338,6 +350,7 @@ public void actionPerformed(ActionEvent e)
 
         if ((int)myTable.getValueAt(selectedRow, numberInStockColumnIndex) > 0)
             {
+
             currentColumnIndex = 0;
             while (currentColumnIndex < myTable.getColumnCount())
                 {
