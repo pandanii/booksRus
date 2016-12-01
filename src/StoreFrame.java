@@ -355,6 +355,7 @@ public void actionPerformed(ActionEvent e)
                     System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                     preparedStatement.execute();
                     preparedStatement.close();
+                    adminMenu.getItem(1).doClick();// should click on DISPLAY_MEDIA button 
                 }
                 catch (SQLException sqle)
                 {
@@ -383,6 +384,7 @@ public void actionPerformed(ActionEvent e)
                     System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                     preparedStatement.execute();
                     preparedStatement.close();
+                    adminMenu.getItem(0).doClick();// should click on DISPLAY_MEDIA button 
                 }
                 catch (SQLException sqle)
                 {
