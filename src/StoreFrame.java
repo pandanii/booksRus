@@ -114,6 +114,7 @@ private void setupPopMenu()
         addToCartButton.setToolTipText("Add this item to your checkout cart.");
         addToCartButton.setPreferredSize(new Dimension(100,40));
         rightClickMenu.add(addToCartButton);
+        rightClickMenu.addSeparator();
     }
     if (isAdmin)
     {
@@ -563,6 +564,7 @@ public void actionPerformed(ActionEvent e)
             myTable.addMouseListener(this);
             myScrollPane = new JScrollPane(myTable);
             myScrollPane.setPreferredSize(new Dimension(500, 400));
+            myTable.addMouseListener(this);
             scrollPanel.add(myScrollPane);
             validate();
             }
@@ -638,11 +640,18 @@ public void actionPerformed(ActionEvent e)
 @Override
     public void mousePressed(MouseEvent e)
     {
+    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+	rightClickMenu.setVisible(false);// to get the menu to go away whe you click somewhere else
+    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
     }
     //=====================================================
 @Override
     public void mouseReleased(MouseEvent e)
     {
+    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+	setupPopMenu();//to show the popup when you release the mouse button
+    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
     }
     //=====================================================
 @Override
@@ -653,6 +662,7 @@ public void actionPerformed(ActionEvent e)
 @Override
     public void mouseExited(MouseEvent e)
     {
+
     }
     //=====================================================
     public Connection copyConnection()
