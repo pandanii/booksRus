@@ -18,6 +18,8 @@ JPanel     scrollPanel;
 Connection connection;
 Queries    listOfQueries;
 
+JMenu      adminMenu;
+
 boolean isAdmin;
 String username;
 boolean loggedIn;
@@ -93,12 +95,16 @@ private JMenuBar createMenuBar()
 
     JMenuItem viewMenuItem;
     JMenuItem loginMenuItem;
+    JMenuItem userInfoMenuItem;
     JMenuItem searchMenuItem;
-    JMenuItem     historyMenuItem;
+    JMenuItem historyMenuItem;
+    
+    JMenuItem adminAddUserMenuItem;
+    JMenuItem adminRemoveUserMenuItem;
 
     menuBar = new JMenuBar();
 
-    logInMenu = new JMenu("LogIn");
+    logInMenu = new JMenu("UserInfo/LogIn");
 
     loginMenuItem = new JMenuItem("Log In" , KeyEvent.VK_L);
     loginMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK));
@@ -106,12 +112,19 @@ private JMenuBar createMenuBar()
     loginMenuItem.setToolTipText("Log into your Books-R-Us account.");
     loginMenuItem.setActionCommand("LOGIN");
     loginMenuItem.addActionListener(this);
+    
+    userInfoMenuItem = new JMenuItem("User Info" , KeyEvent.VK_U);
+    userInfoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.ALT_MASK));
+    userInfoMenuItem.getAccessibleContext().setAccessibleDescription("EDIT your Books-R-Us account info.");
+    userInfoMenuItem.setToolTipText("EDIT your Books-R-Us account info.");
+    userInfoMenuItem.setActionCommand("USERINFO");
+    userInfoMenuItem.addActionListener(this);
 
     logInMenu.add(loginMenuItem);
+    logInMenu.add(userInfoMenuItem);
     menuBar.add(logInMenu);
 
-    viewMenu = new JMenu("View");
-
+    viewMenu     = new JMenu("View");
     viewMenuItem = new JMenuItem("View Options" , KeyEvent.VK_V);
     viewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
     viewMenuItem.getAccessibleContext().setAccessibleDescription("Change the appearance.");
@@ -122,8 +135,7 @@ private JMenuBar createMenuBar()
     viewMenu.add(viewMenuItem);
     menuBar.add(viewMenu);
 
-    searchMenu = new JMenu("Search");
-
+    searchMenu     = new JMenu("Search");
     searchMenuItem = new JMenuItem("Search Options" , KeyEvent.VK_S);
     searchMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
     searchMenuItem.getAccessibleContext().setAccessibleDescription("Search the store.");
@@ -141,6 +153,17 @@ private JMenuBar createMenuBar()
     searchMenu.add(searchMenuItem);
     searchMenu.add(historyMenuItem);
     menuBar.add(searchMenu);
+    
+    adminMenu            = new JMenu("Admin");
+    adminAddUserMenuItem = new JMenuItem("Display Users" , KeyEvent.VK_D);
+    adminAddUserMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+    adminAddUserMenuItem.getAccessibleContext().setAccessibleDescription("Display Users");
+    adminAddUserMenuItem.setToolTipText("Display Users");
+    adminAddUserMenuItem.setActionCommand("DISPLAY_USERS");
+    adminAddUserMenuItem.addActionListener(this);
+    adminMenu.add(adminAddUserMenuItem);
+    menuBar.add(adminMenu);
+    adminMenu.setEnabled(false);
 
     return menuBar;
 }
@@ -148,6 +171,8 @@ private JMenuBar createMenuBar()
 @Override
 public void actionPerformed(ActionEvent e)
 {
+    PreparedStatement preparedStatement;
+    ResultSet         resultSet = null;
     if (e.getActionCommand().equals("CLOSE"))
     {
         try
@@ -165,15 +190,17 @@ public void actionPerformed(ActionEvent e)
         }
         System.exit(0);
     }
+    else if (e.getActionCommand().equals("USERINFO"))
+    {
+        // HERE WE WILL OPEN THE DIALOG FOR THE USERS INFO
+    }
     else if (e.getActionCommand().equals("VIEW"))
     {
         //new JDialog to change appearance of the frame
     }
     else if (e.getActionCommand().equals("LOGIN"))
     {
-        System.out.println("Creating LoginJDialog");
-
-
+    System.out.println("Creating LoginJDialog");
     if (!loggedIn)
         {
         if (connection != null)
@@ -196,6 +223,7 @@ public void actionPerformed(ActionEvent e)
         isAdmin  = false;
         loggedIn = false;
         username = null;
+        adminMenu.setEnabled(false);
         this.setTitle("Books-R-Us");
         this.repaint(); //causes the whole frame to repaint with the update to its components
         }
@@ -215,8 +243,6 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("HISTORY"))
     {   
-        PreparedStatement preparedStatement;
-        ResultSet         resultSet = null;
         if(connection != null && username != null)
         {
             try
@@ -225,6 +251,33 @@ public void actionPerformed(ActionEvent e)
                 preparedStatement.clearParameters();
                 System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 preparedStatement.setString(1, username);   //only the logged in user can see their history
+                resultSet = preparedStatement.executeQuery();
+            }
+        catch (SQLException sqle)
+            {
+            System.out.println("SQLException in StoreFrame actionPerformed");
+            sqle.printStackTrace();
+            }
+         if (resultSet != null)
+            {
+            this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+            }
+        }
+        else
+        {
+        System.out.println("No connection to database, or you are not logged in.");
+        JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    else if (e.getActionCommand().equals("DISPLAY_USERS"))
+    {   
+        if(connection != null && username != null)
+        {
+            try
+            {
+                preparedStatement = connection.prepareStatement(listOfQueries.displayUsers);
+                preparedStatement.clearParameters();
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                 resultSet = preparedStatement.executeQuery();
             }
         catch (SQLException sqle)
@@ -333,6 +386,10 @@ public void actionPerformed(ActionEvent e)
     this.isAdmin = isAdmin;
     this.username = username;
     loggedIn = true;
+    
+    if(isAdmin)
+        adminMenu.setEnabled(true);
+    
     logInMenu.setText("Logout");
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
     this.setTitle("Books-R-Us" + " - Signed in as: " + username);
