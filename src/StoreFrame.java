@@ -16,6 +16,7 @@ public class StoreFrame extends JFrame implements ActionListener
 JTable     myTable;
 JPanel     scrollPanel;
 Connection connection;
+Queries    listOfQueries;
 
 boolean isAdmin;
 String username;
@@ -36,6 +37,7 @@ public StoreFrame()
 
     isAdmin = false;
     loggedIn = false;
+    listOfQueries = new Queries();
 
     JPanel mainPanel;
     JPanel buttonPanel;
@@ -92,6 +94,7 @@ private JMenuBar createMenuBar()
     JMenuItem viewMenuItem;
     JMenuItem loginMenuItem;
     JMenuItem searchMenuItem;
+    JMenuItem     historyMenuItem;
 
     menuBar = new JMenuBar();
 
@@ -127,8 +130,16 @@ private JMenuBar createMenuBar()
     searchMenuItem.setToolTipText("Search the store.");
     searchMenuItem.setActionCommand("SEARCH");
     searchMenuItem.addActionListener(this);
-
+    
+    historyMenuItem = new JMenuItem("Purchase History" , KeyEvent.VK_H);
+    historyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.ALT_MASK));
+    historyMenuItem.getAccessibleContext().setAccessibleDescription("Show users history");
+    historyMenuItem.setToolTipText("Show users history");
+    historyMenuItem.setActionCommand("HISTORY");
+    historyMenuItem.addActionListener(this);
+    
     searchMenu.add(searchMenuItem);
+    searchMenu.add(historyMenuItem);
     menuBar.add(searchMenu);
 
     return menuBar;
@@ -192,11 +203,6 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("SEARCH"))
     {
-        //get the text from the text field and try using it as a query?
-
-    ResultSet resultSet;
-    ResultSetMetaData metaData;
-
     if(connection != null)
         {
         new SearchJDialog(this);    //sending it 'this' so it can call a method of StoreFrame later on.
@@ -205,6 +211,36 @@ public void actionPerformed(ActionEvent e)
         {
         System.out.println("No connection to database.");
         JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    else if (e.getActionCommand().equals("HISTORY"))
+    {   
+        PreparedStatement preparedStatement;
+        ResultSet         resultSet = null;
+        if(connection != null && username != null)
+        {
+            try
+            {
+                preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
+                preparedStatement.clearParameters();
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                preparedStatement.setString(1, username);   //only the logged in user can see their history
+                resultSet = preparedStatement.executeQuery();
+            }
+        catch (SQLException sqle)
+            {
+            System.out.println("SQLException in StoreFrame actionPerformed");
+            sqle.printStackTrace();
+            }
+         if (resultSet != null)
+            {
+            this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+            }
+        }
+        else
+        {
+        System.out.println("No connection to database, or you are not logged in.");
+        JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
