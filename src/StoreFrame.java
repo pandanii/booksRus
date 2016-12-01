@@ -99,8 +99,13 @@ private JMenuBar createMenuBar()
     JMenuItem searchMenuItem;
     JMenuItem historyMenuItem;
     
+    JMenuItem adminDisplayUserMenuItem;
     JMenuItem adminAddUserMenuItem;
     JMenuItem adminRemoveUserMenuItem;
+    JMenuItem adminDisplayAllMediaMenuItem;
+    JMenuItem adminAddDvdMenuItem;
+    JMenuItem adminAddBookMenuItem;
+    JMenuItem adminRemoveMediaMenuItem;
 
     menuBar = new JMenuBar();
 
@@ -154,14 +159,39 @@ private JMenuBar createMenuBar()
     searchMenu.add(historyMenuItem);
     menuBar.add(searchMenu);
     
-    adminMenu            = new JMenu("Admin");
-    adminAddUserMenuItem = new JMenuItem("Display Users" , KeyEvent.VK_D);
-    adminAddUserMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
-    adminAddUserMenuItem.getAccessibleContext().setAccessibleDescription("Display Users");
-    adminAddUserMenuItem.setToolTipText("Display Users");
-    adminAddUserMenuItem.setActionCommand("DISPLAY_USERS");
-    adminAddUserMenuItem.addActionListener(this);
-    adminMenu.add(adminAddUserMenuItem);
+    adminMenu = new JMenu("Admin");
+    adminDisplayUserMenuItem = new JMenuItem("Display Users" , KeyEvent.VK_D);
+    adminDisplayUserMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+    adminDisplayUserMenuItem.getAccessibleContext().setAccessibleDescription("Display Users");
+    adminDisplayUserMenuItem.setToolTipText("Display Users");
+    adminDisplayUserMenuItem.setActionCommand("DISPLAY_USERS");
+    adminDisplayUserMenuItem.addActionListener(this);
+    adminMenu.add(adminDisplayUserMenuItem);
+    
+    adminDisplayAllMediaMenuItem = new JMenuItem("Display Media" , KeyEvent.VK_M);
+    adminDisplayAllMediaMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.ALT_MASK));
+    adminDisplayAllMediaMenuItem.getAccessibleContext().setAccessibleDescription("Display Media");
+    adminDisplayAllMediaMenuItem.setToolTipText("Display Media");
+    adminDisplayAllMediaMenuItem.setActionCommand("DISPLAY_MEDIA");
+    adminDisplayAllMediaMenuItem.addActionListener(this);
+    adminMenu.add(adminDisplayAllMediaMenuItem);
+    
+    adminRemoveUserMenuItem = new JMenuItem("Remove User" , KeyEvent.VK_R);
+    adminRemoveUserMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
+    adminRemoveUserMenuItem.getAccessibleContext().setAccessibleDescription("Remove User");
+    adminRemoveUserMenuItem.setToolTipText("Remove User");
+    adminRemoveUserMenuItem.setActionCommand("REMOVE_USER");
+    adminRemoveUserMenuItem.addActionListener(this);
+    adminMenu.add(adminRemoveUserMenuItem);
+    
+    adminRemoveMediaMenuItem = new JMenuItem("Remove Media" , KeyEvent.VK_R);
+    adminRemoveMediaMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
+    adminRemoveMediaMenuItem.getAccessibleContext().setAccessibleDescription("Remove Media");
+    adminRemoveMediaMenuItem.setToolTipText("Remove Media");
+    adminRemoveMediaMenuItem.setActionCommand("REMOVE_MEDIA");
+    adminRemoveMediaMenuItem.addActionListener(this);
+    adminMenu.add(adminRemoveMediaMenuItem);
+    
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
 
@@ -271,29 +301,95 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("DISPLAY_USERS"))
     {   
-        if(connection != null && username != null)
+        try
         {
-            try
-            {
-                preparedStatement = connection.prepareStatement(listOfQueries.displayUsers);
-                preparedStatement.clearParameters();
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
-            }
+            preparedStatement = connection.prepareStatement(listOfQueries.displayUsers);
+            preparedStatement.clearParameters();
+            System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+        }
         catch (SQLException sqle)
-            {
+        {
             System.out.println("SQLException in StoreFrame actionPerformed");
             sqle.printStackTrace();
-            }
-         if (resultSet != null)
-            {
+        }
+        if (resultSet != null)
+        {
             this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+        }
+    }
+    else if (e.getActionCommand().equals("DISPLAY_MEDIA"))
+    {   
+        try
+        {
+            preparedStatement = connection.prepareStatement(listOfQueries.displayMedia);
+            preparedStatement.clearParameters();
+            System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+        }
+        catch (SQLException sqle)
+        {
+            System.out.println("SQLException in StoreFrame actionPerformed");
+            sqle.printStackTrace();
+        }
+        if (resultSet != null)
+        {
+            this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+        }
+    }
+    else if (e.getActionCommand().equals("REMOVE_MEDIA"))
+    {   
+        if(myTable.getSelectedRow() == -1) 
+        {
+            JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
+        } else
+        {
+            int option = JOptionPane.showConfirmDialog(null,"Attempting to delete "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
+            if(option == JOptionPane.YES_OPTION)
+            {
+                try
+                {
+                    preparedStatement = connection.prepareStatement(listOfQueries.deleteMedia);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.execute();
+                    preparedStatement.close();
+                }
+                catch (SQLException sqle)
+                {
+                    System.out.println("SQLException in StoreFrame actionPerformed");
+                    sqle.printStackTrace();
+                }
             }
         }
+    }
+    else if (e.getActionCommand().equals("REMOVE_USER"))
+    {   
+        if(myTable.getSelectedRow() == -1) 
+        {
+            JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
+        } 
         else
         {
-        System.out.println("No connection to database, or you are not logged in.");
-        JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(null,"Attempting to delete "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
+            if(option == JOptionPane.YES_OPTION)
+            {
+                try
+                {
+                    preparedStatement = connection.prepareStatement(listOfQueries.deleteUser);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.execute();
+                    preparedStatement.close();
+                }
+                catch (SQLException sqle)
+                {
+                    System.out.println("SQLException in StoreFrame actionPerformed");
+                    sqle.printStackTrace();
+                }
+            }
         }
     }
 }
