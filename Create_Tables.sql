@@ -37,7 +37,7 @@ CREATE TABLE Purchase (
         title VARCHAR (30),
     	transactionID INT,
         FOREIGN KEY (userID) REFERENCES Users(userID),
-        FOREIGN KEY (title) REFERENCES MEDIA (title),
+        FOREIGN KEY (title) REFERENCES MEDIA (title) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (transactionID) REFERENCES Purchase_History(transactionID),
         PRIMARY KEY (userID,title, transactionID));
 
