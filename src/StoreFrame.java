@@ -5,14 +5,13 @@ import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
 import java.util.*;
 
 
 //#########################################################
 public class StoreFrame extends JFrame implements ActionListener,MouseListener
 {
+private static final long serialVersionUID = 1L;
 JTable     myTable;
 JPanel     scrollPanel;
 Connection connection;
@@ -45,6 +44,7 @@ static final String USERNAME     = "root";
 static final String PASSWORD     = "admin";  //Adust this according to local host login or server login
 
 //=====================================================
+@SuppressWarnings({"LeakingThisInConstructor", "OverridableMethodCallInConstructor"})
 public StoreFrame()
 {
     System.out.println("StoreFrame Constructor");
@@ -144,11 +144,11 @@ private JMenuBar createMenuBar()
 {
     JMenuBar menuBar;
 //    JMenu logInMenu; //made this have a larger scope so it can be used later to logout when user is logged in.
-    JMenu viewMenu;
+    //JMenu viewMenu;
     JMenu searchMenu;
     JMenu cartMenu;
 
-    JMenuItem viewMenuItem;
+    //JMenuItem viewMenuItem;
     JMenuItem loginMenuItem;
     JMenuItem userInfoMenuItem;
     JMenuItem searchMenuItem;
@@ -328,7 +328,7 @@ public void actionPerformed(ActionEvent e)
     {
     if (connection != null && loggedIn == true)
         {
-        new ModifyUserJDialog(this);
+        ModifyUserJDialog modifyUserJDialog = new ModifyUserJDialog(this);
         }
     else
         {
@@ -342,7 +342,7 @@ public void actionPerformed(ActionEvent e)
         {
         if (connection != null)
             {
-            new LoginJDialog(this);     //sending the JDialog a pointer to this instance of
+            LoginJDialog loginJDialog = new LoginJDialog(this); //sending the JDialog a pointer to this instance of
                                         //StoreFrame so it can all one of its methods
             System.out.println("Good connection");
             }
@@ -508,8 +508,8 @@ public void actionPerformed(ActionEvent e)
 
         int currentColumnIndex;
         int numberInStockColumnIndex = 0;
-        Vector<Object> cartRowList = new Vector<Object>(); //only ever size one in this setup
-        Vector<Object> currentRow = new Vector<Object>();
+        Vector<Object> cartRowList = new Vector<>(); //only ever size one in this setup
+        Vector<Object> currentRow = new Vector<>();
 
         for (int i=0; i < myTable.getColumnCount(); i++)
             {
@@ -527,7 +527,7 @@ public void actionPerformed(ActionEvent e)
                 {
                 currentRow.add(myTable.getValueAt(selectedRow, currentColumnIndex));  //selectedRow comes from mouselistener click
                                                                                       //do JTables index at 0? This assumes so.
-                currentColumnIndex = currentColumnIndex + 1;
+                currentColumnIndex += 1;
                 }                                                                     //current column index to walk through the rows columns
 
             cartRowList.add(currentRow);
@@ -549,7 +549,7 @@ public void actionPerformed(ActionEvent e)
     {
     if(connection != null)
         {
-        new SearchJDialog(this);    //sending it 'this' so it can call a method of StoreFrame later on.
+        SearchJDialog searchJDialog = new SearchJDialog(this); //sending it 'this' so it can call a method of StoreFrame later on.
         }
     else
         {
@@ -685,7 +685,7 @@ public void actionPerformed(ActionEvent e)
     {
         if(connection != null)
         {
-        new AddUserJDialog(this);
+            AddUserJDialog addUserJDialog = new AddUserJDialog(this);
         }
         else
         {
@@ -697,7 +697,7 @@ public void actionPerformed(ActionEvent e)
     {
       if(connection != null)
         {
-        new AddBookDialog(this);
+          AddBookDialog addBookDialog = new AddBookDialog(this);
         }
       else
         {
@@ -709,7 +709,7 @@ public void actionPerformed(ActionEvent e)
     {
       if(connection != null)
       {
-          new AddDvdDialog(this);
+          AddDvdDialog addDvdDialog = new AddDvdDialog(this);
       }
       else
       {
@@ -741,9 +741,9 @@ public void actionPerformed(ActionEvent e)
             }
         else
             {
-            columnNames = new Vector<Object>();
-            currentRow  = new Vector<Object>();
-            rowList     = new Vector<Object>();
+            columnNames = new Vector<>();
+            currentRow  = new Vector<>();
+            rowList     = new Vector<>();
             resultMetaData = resultSet.getMetaData();
 
             for (int i=0; i < resultMetaData.getColumnCount(); i++)
@@ -753,7 +753,7 @@ public void actionPerformed(ActionEvent e)
 
             do
                 {
-                currentRow = new Vector<Object>();
+                currentRow = new Vector<>();
                 for (int j=0; j < resultMetaData.getColumnCount(); j++)
                     {
                     currentRow.addElement(resultSet.getObject(j+1));
@@ -815,8 +815,10 @@ public void actionPerformed(ActionEvent e)
 
     loggedIn = true;
 
-    if(isAdmin)
+    if(isAdmin) 
+    {
         adminMenu.setEnabled(true);
+    }
 
     logInMenu.setText("Logout");
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
@@ -824,6 +826,7 @@ public void actionPerformed(ActionEvent e)
     this.repaint();     //causes the whole frame to repaint with the update to its components
     }
     //=====================================================
+@Override
     public void mouseClicked(MouseEvent e)
     {
     System.out.println("StoreFrame mouseClicked");
@@ -841,18 +844,22 @@ public void actionPerformed(ActionEvent e)
     }
 
     //=====================================================
+@Override
     public void mousePressed(MouseEvent e)
     {
     }
     //=====================================================
+@Override
     public void mouseReleased(MouseEvent e)
     {
     }
     //=====================================================
+@Override
     public void mouseEntered(MouseEvent e)
     {
     }
     //=====================================================
+@Override
     public void mouseExited(MouseEvent e)
     {
     }
@@ -943,7 +950,5 @@ System.out.println("isAdmin" + isAdmin);
 
     }
     //=====================================================
-
-
 }
 //#########################################################
