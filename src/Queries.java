@@ -10,9 +10,7 @@ public class Queries
     public final String newUser;
     public final String displayUsers;
     public final String displayMedia;
-    public final String deleteMedia;
-    public final String deletePurchase;
-    public final String deleteWrittenBy;
+    public final String deleteMedia; 
     public final String deleteUser; 
     
     public final String displayResultsDVDs;
@@ -67,10 +65,6 @@ public class Queries
         displayUsers     = " SELECT * FROM users; ";
         
         displayMedia     = " SELECT * FROM Media; ";
-        
-        deletePurchase     = " DELETE FROM purchase WHERE title = ?; ";
-        
-        deleteWrittenBy     = " DELETE FROM written_by WHERE title = ?; ";
         
         deleteMedia      = " DELETE FROM media WHERE title = ?; ";
         
