@@ -281,6 +281,14 @@ private JMenuBar createMenuBar()
     adminAddBookMenuItem.setActionCommand("ADD_BOOK");
     adminAddBookMenuItem.addActionListener(this);
     adminMenu.add(adminAddBookMenuItem);
+    
+    adminAddDvdMenuItem = new JMenuItem("Add DVD" , KeyEvent.VK_I);
+    adminAddDvdMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.ALT_MASK));
+    adminAddDvdMenuItem.getAccessibleContext().setAccessibleDescription("Add DVD");
+    adminAddDvdMenuItem.setToolTipText("Add DVD");
+    adminAddDvdMenuItem.setActionCommand("ADD_DVD");
+    adminAddDvdMenuItem.addActionListener(this);
+    adminMenu.add(adminAddDvdMenuItem);
 
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
@@ -477,7 +485,8 @@ public void actionPerformed(ActionEvent e)
         if(myTable.getSelectedRow() == -1)
         {
             JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
-        } else
+        } 
+        else
         {
             int option = JOptionPane.showConfirmDialog(null,"Attempting to delete "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
             if(option == JOptionPane.YES_OPTION)
@@ -552,6 +561,18 @@ public void actionPerformed(ActionEvent e)
         System.out.println("No connection to database.");
         JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    else if(e.getActionCommand().equals("ADD_DVD"))
+    {
+      if(connection != null)
+      {
+          new AddDvdDialog(this);
+      }
+      else
+      {
+        System.out.println("No connection to database.");
+        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+      }
     }
 }
     //=====================================================
