@@ -20,11 +20,11 @@ Queries    listOfQueries;
 
 JMenu      adminMenu;
 JPopupMenu rightClickMenu;
-int        selectedRow;
-Point      mousePoint;
+int selectedRow;
+Point mousePoint;
 
 Vector<Object> columnNames;
-ShoppingCart   shoppingCart;
+ShoppingCart shoppingCart;
 
 JTable cartTable;
 
@@ -37,7 +37,7 @@ JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
 static final String USERNAME     = "root";
-static final String PASSWORD     = "admin";//"password"  //Adust this according to local host login or server login
+static final String PASSWORD     = "admin";  //Adust this according to local host login or server login
 
 //=====================================================
 public StoreFrame()
@@ -102,7 +102,7 @@ private void setupPopMenu()
     Toolkit         tk;
     Dimension        d;
     JMenuItem addToCartButton;
-    JMenuItem editRowButton;
+//    JMenuItem editRowButton;
 
     rightClickMenu = new JPopupMenu("Right Click Options");
 
@@ -114,8 +114,8 @@ private void setupPopMenu()
         addToCartButton.setToolTipText("Add this item to your checkout cart.");
         addToCartButton.setPreferredSize(new Dimension(100,40));
         rightClickMenu.add(addToCartButton);
-        rightClickMenu.addSeparator();
     }
+/* //this is not going to be used unless we want admins to edit individual table rows.
     if (isAdmin)
     {
         editRowButton = new JMenuItem("Edit");
@@ -125,7 +125,7 @@ private void setupPopMenu()
         editRowButton.setPreferredSize(new Dimension(100,40));
         rightClickMenu.add(editRowButton);
     }
-
+*/
     tk = Toolkit.getDefaultToolkit();
     d = tk.getScreenSize();
     rightClickMenu.setSize(d.width/4, d.height/5);
@@ -148,7 +148,6 @@ private JMenuBar createMenuBar()
     JMenuItem userInfoMenuItem;
     JMenuItem searchMenuItem;
     JMenuItem historyMenuItem;
-    JMenuItem addcartMenuItem;
     JMenuItem cartMenuItem;
 
     JMenuItem adminDisplayUserMenuItem;
@@ -199,17 +198,6 @@ private JMenuBar createMenuBar()
     cartMenuItem.setActionCommand("OPENCART");
     cartMenuItem.addActionListener(this);
 
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-	    addcartMenuItem = new JMenuItem("Add" , KeyEvent.VK_A);
-	    addcartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
-	    addcartMenuItem.getAccessibleContext().setAccessibleDescription("Add item to cart");
-	    addcartMenuItem.setToolTipText("Add item to cart");
-	    addcartMenuItem.setActionCommand("ADDTOCART");
-    addcartMenuItem.addActionListener(this);
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    cartMenu.add(addcartMenuItem);
     cartMenu.add(cartMenuItem);
     menuBar.add(cartMenu);
 
@@ -258,13 +246,21 @@ private JMenuBar createMenuBar()
     adminRemoveUserMenuItem.addActionListener(this);
     adminMenu.add(adminRemoveUserMenuItem);
 
-    adminRemoveMediaMenuItem = new JMenuItem("Remove Media" , KeyEvent.VK_R);
-    adminRemoveMediaMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.ALT_MASK));
+    adminRemoveMediaMenuItem = new JMenuItem("Remove Media" , KeyEvent.VK_E);
+    adminRemoveMediaMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
     adminRemoveMediaMenuItem.getAccessibleContext().setAccessibleDescription("Remove Media");
     adminRemoveMediaMenuItem.setToolTipText("Remove Media");
     adminRemoveMediaMenuItem.setActionCommand("REMOVE_MEDIA");
     adminRemoveMediaMenuItem.addActionListener(this);
     adminMenu.add(adminRemoveMediaMenuItem);
+
+    adminAddUserMenuItem = new JMenuItem("Add New User" , KeyEvent.VK_A);
+    adminAddUserMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+    adminAddUserMenuItem.getAccessibleContext().setAccessibleDescription("Add New User");
+    adminAddUserMenuItem.setToolTipText("Add New User");
+    adminAddUserMenuItem.setActionCommand("ADD_USER");
+    adminAddUserMenuItem.addActionListener(this);
+    adminMenu.add(adminAddUserMenuItem);
 
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
@@ -335,7 +331,8 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
     {
-        System.out.println("Attempting to  ADDTOCART");
+        rightClickMenu.setVisible(false);
+
         int currentColumnIndex;
         int numberInStockColumnIndex = 0;
         Vector<Object> cartRowList = new Vector<Object>(); //only ever size one in this setup
@@ -352,7 +349,6 @@ public void actionPerformed(ActionEvent e)
 
         if ((int)myTable.getValueAt(selectedRow, numberInStockColumnIndex) > 0)
             {
-
             currentColumnIndex = 0;
             while (currentColumnIndex < myTable.getColumnCount())
                 {
@@ -370,10 +366,6 @@ public void actionPerformed(ActionEvent e)
             {
             JOptionPane.showMessageDialog(null, "Couldn't add item to cart.", "Out of Stock", JOptionPane.ERROR_MESSAGE);
             }
-
-    }
-    else if (e.getActionCommand().equals("EDITROW"))
-    {
 
     }
     else if (e.getActionCommand().equals("OPENCART"))
@@ -515,6 +507,12 @@ public void actionPerformed(ActionEvent e)
             }
         }
     }
+    else if (e.getActionCommand().equals("ADD_USER"))
+    {
+        new AddUserJDialog(this);   //intending on sending 'this' to the JDialog
+                                    //then after gathering the data from the JDialog
+                                    //calling a method of StoreFrame to add the new user to the DB
+    }
 }
     //=====================================================
     public void updateResultTable(ResultSet resultSet)
@@ -564,7 +562,6 @@ public void actionPerformed(ActionEvent e)
             myTable.addMouseListener(this);
             myScrollPane = new JScrollPane(myTable);
             myScrollPane.setPreferredSize(new Dimension(500, 400));
-            myTable.addMouseListener(this);
             scrollPanel.add(myScrollPane);
             validate();
             }
@@ -608,9 +605,8 @@ public void actionPerformed(ActionEvent e)
     this.username = username;
     loggedIn = true;
 
-    if(isAdmin) {
+    if(isAdmin)
         adminMenu.setEnabled(true);
-    }
 
     logInMenu.setText("Logout");
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
@@ -618,8 +614,6 @@ public void actionPerformed(ActionEvent e)
     this.repaint();     //causes the whole frame to repaint with the update to its components
     }
     //=====================================================
-        //=====================================================
-@Override
     public void mouseClicked(MouseEvent e)
     {
     System.out.println("StoreFrame mouseClicked");
@@ -637,38 +631,66 @@ public void actionPerformed(ActionEvent e)
     }
 
     //=====================================================
-@Override
     public void mousePressed(MouseEvent e)
     {
-    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-	rightClickMenu.setVisible(false);// to get the menu to go away whe you click somewhere else
-    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
     }
     //=====================================================
-@Override
     public void mouseReleased(MouseEvent e)
     {
-    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-	setupPopMenu();//to show the popup when you release the mouse button
-    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
     }
     //=====================================================
-@Override
     public void mouseEntered(MouseEvent e)
     {
     }
     //=====================================================
-@Override
     public void mouseExited(MouseEvent e)
     {
-
     }
     //=====================================================
     public Connection copyConnection()
     {
         return connection;
     }
-//=====================================================
+    //=====================================================
+    public void createNewUser(String userID, String password, String phoneNumber, String address, String email, String name, int isAdmin)
+    {
+
+    PreparedStatement preparedStatement;
+/*
+System.out.println("UserID" + userID);
+System.out.println("password" + password);
+System.out.println("phoneNumber" + phoneNumber);
+System.out.println("address" + address);
+System.out.println("email" + email);
+System.out.println("name" + name);
+System.out.println("isAdmin" + isAdmin);
+*/
+    try
+    {
+        preparedStatement = connection.prepareStatement(listOfQueries.newUser);
+        preparedStatement.clearParameters();
+        preparedStatement.setString(1, userID);
+        preparedStatement.setString(2, password);
+        preparedStatement.setString(3, phoneNumber);
+        preparedStatement.setString(4, address);
+        preparedStatement.setString(5, email);
+        preparedStatement.setString(6, name);
+        preparedStatement.setInt(7, isAdmin);
+
+
+        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+        preparedStatement.execute();
+        preparedStatement.close();
+
+    }
+    catch (SQLException sqle)
+    {
+        System.out.println("SQLException in StoreFrame createNewUser");
+        sqle.printStackTrace();
+    }
+
+    }
+    //=====================================================
+
 }
 //#########################################################
