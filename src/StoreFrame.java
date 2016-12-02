@@ -194,7 +194,7 @@ private JMenuBar createMenuBar()
     cartMenuItem.setToolTipText("View your shopping cart.");
     cartMenuItem.setActionCommand("OPENCART");
     cartMenuItem.addActionListener(this);
-    
+
     buyCartMenuItem = new JMenuItem("Buy" , KeyEvent.VK_B);
     buyCartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.ALT_MASK));
     buyCartMenuItem.getAccessibleContext().setAccessibleDescription("buy the selected item");
@@ -375,7 +375,7 @@ public void actionPerformed(ActionEvent e)
         else if(myTable.getSelectedRow() == -1)
         {
             JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
-        } 
+        }
         else
         {
             int option = JOptionPane.showConfirmDialog(null,"Attempting to Buy "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
@@ -388,41 +388,41 @@ public void actionPerformed(ActionEvent e)
                     // Checks if it is a dvd so that we can update the pricing
                     preparedStatement = connection.prepareStatement(listOfQueries.checkIfDvd);
                     preparedStatement.clearParameters();
-                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0)); 
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
                     System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                     resultSet = preparedStatement.executeQuery();
-                    if (!resultSet.next()) 
+                    if (!resultSet.next())
                     {
                         System.out.println("No records found in DVDs!");
                     }
-                    else 
+                    else
                     {
                         isAdvd = true;
                         System.out.println("ISADVD!");
                     }
                     preparedStatement.close();
-                    
+
                     if(!isAdvd)
                     {
                         // Checks if it is a book so that we can update the pricing
                         preparedStatement = connection.prepareStatement(listOfQueries.checkIfBook);
                         preparedStatement.clearParameters();
-                        preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0)); 
+                        preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                         resultSet = preparedStatement.executeQuery();
                         if (!resultSet.next())
                         {
                             JOptionPane.showMessageDialog(null, "No records found!");
                             return;
-                        } 
-                        else 
+                        }
+                        else
                         {
                             isAbook = true;
                             System.out.println("ISABOOK!");
                         }
-                    }        
+                    }
                     preparedStatement.close();
-      
+
                     if(isAdvd || isAbook)
                     {
                         // GET MAX TRANSID
@@ -430,48 +430,48 @@ public void actionPerformed(ActionEvent e)
                         preparedStatement = connection.prepareStatement(listOfQueries.maxTransactionID);
                         preparedStatement.clearParameters();
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                        resultSet = preparedStatement.executeQuery(); 
-                        if (!resultSet.next()) 
+                        resultSet = preparedStatement.executeQuery();
+                        if (!resultSet.next())
                         {
                             JOptionPane.showMessageDialog(null, "No records found!");
                             return;
                         }
-                        else 
+                        else
                         {
                             maxTransactionId = resultSet.getInt(1) + 1;
                         }
                         preparedStatement.close();
-                        
+
                         // GET MAX TRANSID
                         System.out.println("GET PRICE!");
                         preparedStatement = connection.prepareStatement(listOfQueries.getMediaCost);
                         preparedStatement.clearParameters();
                         preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                        resultSet = preparedStatement.executeQuery(); 
-                        if (!resultSet.next()) 
+                        resultSet = preparedStatement.executeQuery();
+                        if (!resultSet.next())
                         {
                             JOptionPane.showMessageDialog(null, "No records found!");
                             return;
                         }
-                        else 
+                        else
                         {
                             System.out.println("geting cost!!!!");
                             if(isAdvd)
                             {
                                 cost = resultSet.getInt(1) + 1;
                                 System.out.println("Cost: " + cost);
-                            }                         
+                            }
                             if(isAbook)
                             {
                                 cost = resultSet.getInt(1) + 2;
                                 System.out.println("Cost: " + cost);
                             }
                         }
-                        
+
                         preparedStatement.close();
-                        
-                        
+
+
                         // inserts purchase history
                         preparedStatement = connection.prepareStatement(listOfQueries.insertPurchase_History);//"INSERT INTO 'purchase_History' (transationID,date_of_purchase, number_of_copies, total_cost) VALUES(?,CURDATE(),?,?);";
                         preparedStatement.clearParameters();
@@ -481,7 +481,7 @@ public void actionPerformed(ActionEvent e)
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                         preparedStatement.execute();
                         preparedStatement.close();
-                        
+
                         // insert purchase
                         preparedStatement = connection.prepareStatement(listOfQueries.insertPurchase);//"INSERT INTO 'purchase' (usersID, title, transationID) VALUES (?,?,?);";
                         preparedStatement.clearParameters();
@@ -638,6 +638,21 @@ public void actionPerformed(ActionEvent e)
             {
                 try
                 {
+
+                    preparedStatement = connection.prepareStatement(listOfQueries.deletePurchase);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.execute();
+                    preparedStatement.close();
+
+                    preparedStatement = connection.prepareStatement(listOfQueries.deleteWrittenBy);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.execute();
+                    preparedStatement.close();
+
                     preparedStatement = connection.prepareStatement(listOfQueries.deleteMedia);
                     preparedStatement.clearParameters();
                     preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
@@ -817,7 +832,7 @@ public void actionPerformed(ActionEvent e)
 
     loggedIn = true;
 
-    if(isAdmin) 
+    if(isAdmin)
     {
         adminMenu.setEnabled(true);
     }
