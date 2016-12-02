@@ -8,11 +8,7 @@ public class AddBookDialog extends JDialog implements ActionListener
    private JTextField        titleTextField;
    private JTextField        priceTextField;
    private JTextField        numCopiesTextField;
-   
-   private JSpinner          dateJSpinner;
-   private SpinnerDateModel  mySpinnerDateModel;
-   private JComponent        spinEditor;
-
+   private JTextField        yearTextField;
    private JTextField        isbnTextField;
    private JTextField        subjectTextField;
    private JTextField        publisherAddressTextField;
@@ -23,7 +19,7 @@ public class AddBookDialog extends JDialog implements ActionListener
    private JLabel        titleJLabel;
    private JLabel        priceJLabel;
    private JLabel        numCopiesJLabel;
-   private JLabel        dateSpinnerJLabel;
+   private JLabel        yearJLabel;
    private JLabel        isbnJLabel;
    private JLabel        subjectJLabel;
    private JLabel        publisherAddressJLabel;
@@ -50,12 +46,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
     mainPanel =  new JPanel();
     mainPanel.setLayout(new GridLayout(14,2,0,3));
     buttonPanel  =  new JPanel();
-    
-    mySpinnerDateModel = new SpinnerDateModel();
-    dateJSpinner       = new JSpinner(mySpinnerDateModel);
-    spinEditor         = new JSpinner.DateEditor(dateJSpinner,"yyyy-MM-dd");
-    dateJSpinner.setEditor(spinEditor);
-    
+        
     titleJLabel    = new JLabel("Title: "); 
     titleTextField = new JTextField();
     mainPanel.add(titleJLabel);
@@ -71,9 +62,10 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
     mainPanel.add(numCopiesJLabel);
     mainPanel.add(numCopiesTextField); 
 
-    dateSpinnerJLabel = new JLabel("DATE RELEASED: ");
-    mainPanel.add(dateSpinnerJLabel);
-    mainPanel.add(dateJSpinner); 
+    yearJLabel = new JLabel("Year RELEASED: ");
+    yearTextField = new JTextField();
+    mainPanel.add(yearJLabel);
+    mainPanel.add(yearTextField); 
    
     isbnJLabel = new JLabel("ISBN: ");
     isbnTextField = new JTextField();
@@ -146,7 +138,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.setString(1, titleTextField.getText().trim());
             preparedStatement.setInt(2, Integer.parseInt(priceTextField.getText().trim()));
             preparedStatement.setInt(3, Integer.parseInt(numCopiesTextField.getText().trim()));
-            preparedStatement.setDate(4, new java.sql.Date(mySpinnerDateModel.getDate().getTime()));
+            preparedStatement.setString(4, yearTextField.getText().trim());
             System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
             preparedStatement.execute();
             preparedStatement.clearParameters();

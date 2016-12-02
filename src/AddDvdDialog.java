@@ -8,11 +8,7 @@ public class AddDvdDialog extends JDialog implements ActionListener
    private JTextField        titleTextField;
    private JTextField        priceTextField;
    private JTextField        numCopiesTextField;
-   
-   private JSpinner          dateJSpinner;
-   private SpinnerDateModel  mySpinnerDateModel;
-   private JComponent        spinEditor;
-
+   private JTextField        yearTextField;
    private JTextField        castTextField;
    private JTextField        directorTextField;
    private JTextField        genreTextField;
@@ -22,7 +18,7 @@ public class AddDvdDialog extends JDialog implements ActionListener
    private JLabel        titleJLabel;
    private JLabel        priceJLabel;
    private JLabel        numCopiesJLabel;
-   private JLabel        dateSpinnerJLabel;
+   private JLabel        yearJLabel;
    private JLabel        castJLabel;
    private JLabel        directorJLabel;
    private JLabel        genreJLabel;
@@ -48,10 +44,6 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
     mainPanel.setLayout(new GridLayout(14,2,0,3));
     buttonPanel  =  new JPanel();
     
-    mySpinnerDateModel = new SpinnerDateModel();
-    dateJSpinner       = new JSpinner(mySpinnerDateModel);
-    spinEditor         = new JSpinner.DateEditor(dateJSpinner,"yyyy-MM-dd");
-    dateJSpinner.setEditor(spinEditor);
     
     titleJLabel    = new JLabel("Title: "); 
     titleTextField = new JTextField();
@@ -68,9 +60,10 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
     mainPanel.add(numCopiesJLabel);
     mainPanel.add(numCopiesTextField); 
 
-    dateSpinnerJLabel = new JLabel("DATE RELEASED: ");
-    mainPanel.add(dateSpinnerJLabel);
-    mainPanel.add(dateJSpinner); 
+    yearJLabel = new JLabel("Year RELEASED: ");
+    yearTextField = new JTextField();
+    mainPanel.add(yearJLabel);
+    mainPanel.add(yearTextField); 
    
     castJLabel = new JLabel("Cast: ");
     castTextField = new JTextField();
@@ -132,7 +125,7 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.setString(1, titleTextField.getText().trim());
             preparedStatement.setInt(2, Integer.parseInt(priceTextField.getText().trim()));
             preparedStatement.setInt(3, Integer.parseInt(numCopiesTextField.getText().trim()));
-            preparedStatement.setDate(4, new java.sql.Date(mySpinnerDateModel.getDate().getTime()));
+            preparedStatement.setString(4, yearTextField.getText().trim());
             System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
             preparedStatement.execute();
             preparedStatement.clearParameters();
