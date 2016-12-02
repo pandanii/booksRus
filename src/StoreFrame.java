@@ -393,8 +393,7 @@ public void actionPerformed(ActionEvent e)
                     resultSet = preparedStatement.executeQuery();
                     if (!resultSet.next()) 
                     {
-                        JOptionPane.showMessageDialog(null, "No records found!");
-                        return;
+                        System.out.println("No records found in DVDs!");
                     }
                     else 
                     {
@@ -426,6 +425,8 @@ public void actionPerformed(ActionEvent e)
       
                     if(isAdvd || isAbook)
                     {
+                        // GET MAX TRANSID
+                        System.out.println("GET MAX TRANSID!");
                         preparedStatement = connection.prepareStatement(listOfQueries.maxTransactionID);
                         preparedStatement.clearParameters();
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
@@ -439,10 +440,10 @@ public void actionPerformed(ActionEvent e)
                         {
                             maxTransactionId = resultSet.getInt(1) + 1;
                         }
-                        
                         preparedStatement.close();
                         
-                        
+                        // GET MAX TRANSID
+                        System.out.println("GET PRICE!");
                         preparedStatement = connection.prepareStatement(listOfQueries.getMediaCost);
                         preparedStatement.clearParameters();
                         preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
