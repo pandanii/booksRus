@@ -2,8 +2,6 @@ import java.sql.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import java.awt.List;
 
 public class AddBookDialog extends JDialog implements ActionListener
 {
@@ -135,7 +133,6 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
   public void actionPerformed(ActionEvent e)
 {
     PreparedStatement preparedStatement;
-    ResultSet resultSet = null;
     if(e.getActionCommand().equals("DONE"))
     {
         /*-- QUERY(s): "INSERT INTO MEDIA(Title,price,copies_In_Stock,year) values (?,?,?,?)"
