@@ -10,7 +10,9 @@ public class Queries
     public final String newUser;
     public final String displayUsers;
     public final String displayMedia;
-    public final String deleteMedia; 
+    public final String deleteMedia;
+    public final String deletePurchase;
+    public final String deleteWrittenBy;
     public final String deleteUser; 
     
     public final String displayResultsDVDs;
@@ -27,6 +29,9 @@ public class Queries
     public final String insertPurchase;
     public final String insertPurchase_History;
     
+    public final String checkIfDvd;
+    public final String checkIfBook;
+    public final String getMediaCost;
     
     
     
@@ -54,8 +59,22 @@ public class Queries
     public Queries()
     {
         
-        maxTransactionID = " SELECT MAX (TransactionID)"
-                         + " FROM 'movies&books'.purchase_history ";
+        checkIfDvd = " SELECT title"
+                   + " FROM   dvds"
+                   + " WHERE  dvds.title = ?;";
+        
+         checkIfBook = " SELECT title"
+                     + " FROM   books "
+                     + " WHERE  books.title = ? ";
+         
+         getMediaCost = " SELECT price"
+                      + " FROM   media "
+                      + " WHERE  media.title = ? ";
+        
+        
+        
+        maxTransactionID = " SELECT MAX(TransactionID)"
+                         + " FROM purchase_history; ";
         
         
         updateUser       = " UPDATE Users SET password = ?, phone_number = ?, address = ?, email = ?, name = ? WHERE userID = ?;";
@@ -65,6 +84,10 @@ public class Queries
         displayUsers     = " SELECT * FROM users; ";
         
         displayMedia     = " SELECT * FROM Media; ";
+        
+        deletePurchase     = " DELETE FROM purchase WHERE title = ?; ";
+        
+        deleteWrittenBy     = " DELETE FROM written_by WHERE title = ?; ";
         
         deleteMedia      = " DELETE FROM media WHERE title = ?; ";
         
@@ -87,9 +110,9 @@ public class Queries
         
         insertUsers            = "INSERT INTO Users(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
         
-        insertPurchase         = "INSERT INTO 'purchase' (usersID, title, transationID) VALUES (?,?,?)";
+        insertPurchase         = "INSERT INTO purchase(userID, title, transactionID) VALUES (?,?,?);";
         
-        insertPurchase_History = "INSERT INTO 'purchase_History' (transationID,date_of_purchase, number_of_copies, total_cost) VALUES(?,CURDATE(),?,?);";
+        insertPurchase_History = "INSERT INTO purchase_History(transactionID, date_of_purchase, number_of_copies, total_cost) VALUES (?,CURDATE(),?,?);";
         
         
         

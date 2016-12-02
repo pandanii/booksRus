@@ -155,6 +155,7 @@ private JMenuBar createMenuBar()
     JMenuItem historyMenuItem;
     JMenuItem cartMenuItem;
     JMenuItem addCartMenuItem;
+    JMenuItem buyCartMenuItem;
 
     JMenuItem adminDisplayUserMenuItem;
     JMenuItem adminAddUserMenuItem;
@@ -193,6 +194,14 @@ private JMenuBar createMenuBar()
     cartMenuItem.setToolTipText("View your shopping cart.");
     cartMenuItem.setActionCommand("OPENCART");
     cartMenuItem.addActionListener(this);
+    
+    buyCartMenuItem = new JMenuItem("Buy" , KeyEvent.VK_B);
+    buyCartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.ALT_MASK));
+    buyCartMenuItem.getAccessibleContext().setAccessibleDescription("buy the selected item");
+    buyCartMenuItem.setToolTipText("buy the selected item");
+    buyCartMenuItem.setActionCommand("BUY");
+    buyCartMenuItem.addActionListener(this);
+    cartMenu.add(buyCartMenuItem);
 
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -296,6 +305,8 @@ public void actionPerformed(ActionEvent e)
 {
     PreparedStatement preparedStatement;
     ResultSet         resultSet = null;
+    boolean isAdvd = false;
+    boolean isAbook = false;
     if (e.getActionCommand().equals("CLOSE"))
     {
         try
@@ -354,6 +365,140 @@ public void actionPerformed(ActionEvent e)
         this.repaint(); //causes the whole frame to repaint with the update to its components
         }
 
+    }
+    else if (e.getActionCommand().equals("BUY"))
+    {
+        if(myTable == null)
+        {
+            JOptionPane.showMessageDialog(null,"There is nothing displayed!");
+        }
+        else if(myTable.getSelectedRow() == -1)
+        {
+            JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
+        } 
+        else
+        {
+            int option = JOptionPane.showConfirmDialog(null,"Attempting to Buy "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
+            if(option == JOptionPane.YES_OPTION)
+            {
+                int maxTransactionId;
+                int cost = 0;
+                try
+                {
+                    // Checks if it is a dvd so that we can update the pricing
+                    preparedStatement = connection.prepareStatement(listOfQueries.checkIfDvd);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0)); 
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
+                    if (!resultSet.next()) 
+                    {
+                        JOptionPane.showMessageDialog(null, "No records found!");
+                        return;
+                    }
+                    else 
+                    {
+                        isAdvd = true;
+                        System.out.println("ISADVD!");
+                    }
+                    preparedStatement.close();
+                    
+                    if(!isAdvd)
+                    {
+                        // Checks if it is a book so that we can update the pricing
+                        preparedStatement = connection.prepareStatement(listOfQueries.checkIfBook);
+                        preparedStatement.clearParameters();
+                        preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0)); 
+                        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                        resultSet = preparedStatement.executeQuery();
+                        if (!resultSet.next())
+                        {
+                            JOptionPane.showMessageDialog(null, "No records found!");
+                            return;
+                        } 
+                        else 
+                        {
+                            isAbook = true;
+                            System.out.println("ISABOOK!");
+                        }
+                    }        
+                    preparedStatement.close();
+      
+                    if(isAdvd || isAbook)
+                    {
+                        preparedStatement = connection.prepareStatement(listOfQueries.maxTransactionID);
+                        preparedStatement.clearParameters();
+                        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                        resultSet = preparedStatement.executeQuery(); 
+                        if (!resultSet.next()) 
+                        {
+                            JOptionPane.showMessageDialog(null, "No records found!");
+                            return;
+                        }
+                        else 
+                        {
+                            maxTransactionId = resultSet.getInt(1) + 1;
+                        }
+                        
+                        preparedStatement.close();
+                        
+                        
+                        preparedStatement = connection.prepareStatement(listOfQueries.getMediaCost);
+                        preparedStatement.clearParameters();
+                        preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                        resultSet = preparedStatement.executeQuery(); 
+                        if (!resultSet.next()) 
+                        {
+                            JOptionPane.showMessageDialog(null, "No records found!");
+                            return;
+                        }
+                        else 
+                        {
+                            System.out.println("geting cost!!!!");
+                            if(isAdvd)
+                            {
+                                cost = resultSet.getInt(1) + 1;
+                                System.out.println("Cost: " + cost);
+                            }                         
+                            if(isAbook)
+                            {
+                                cost = resultSet.getInt(1) + 2;
+                                System.out.println("Cost: " + cost);
+                            }
+                        }
+                        
+                        preparedStatement.close();
+                        
+                        
+                        // inserts purchase history
+                        preparedStatement = connection.prepareStatement(listOfQueries.insertPurchase_History);//"INSERT INTO 'purchase_History' (transationID,date_of_purchase, number_of_copies, total_cost) VALUES(?,CURDATE(),?,?);";
+                        preparedStatement.clearParameters();
+                        preparedStatement.setInt(1, maxTransactionId);
+                        preparedStatement.setInt(2, 1);// only 1 copy purchased
+                        preparedStatement.setInt(3, cost);
+                        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                        preparedStatement.execute();
+                        preparedStatement.close();
+                        
+                        // insert purchase
+                        preparedStatement = connection.prepareStatement(listOfQueries.insertPurchase);//"INSERT INTO 'purchase' (usersID, title, transationID) VALUES (?,?,?);";
+                        preparedStatement.clearParameters();
+                        preparedStatement.setString(1, userID);
+                        preparedStatement.setString(2, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                        preparedStatement.setInt(3, maxTransactionId);
+                        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                        preparedStatement.execute();
+                        preparedStatement.close(); 
+                    }
+                }
+                catch(SQLException sqle)
+                {
+                    System.out.println("SQLException in StoreFrame actionPerformed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
     {
