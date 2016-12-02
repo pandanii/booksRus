@@ -282,14 +282,6 @@ private JMenuBar createMenuBar()
     adminAddBookMenuItem.addActionListener(this);
     adminMenu.add(adminAddBookMenuItem);
 
-    adminAddDvdMenuItem = new JMenuItem("Add DVD" , KeyEvent.VK_I);
-    adminAddDvdMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.ALT_MASK));
-    adminAddDvdMenuItem.getAccessibleContext().setAccessibleDescription("Add DVD");
-    adminAddDvdMenuItem.setToolTipText("Add DVD");
-    adminAddDvdMenuItem.setActionCommand("ADD_DVD");
-    adminAddDvdMenuItem.addActionListener(this);
-    adminMenu.add(adminAddDvdMenuItem);
-
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
 
@@ -539,9 +531,15 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("ADD_USER"))
     {
-        new AddUserJDialog(this);   //intending on sending 'this' to the JDialog
-                                    //then after gathering the data from the JDialog
-                                    //calling a method of StoreFrame to add the new user to the DB
+        if(connection != null)
+        {
+        new AddUserJDialog(this);
+        }
+        else
+        {
+        System.out.println("No connection to database.");
+        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     else if(e.getActionCommand().equals("ADD_BOOK"))
     {
@@ -555,19 +553,6 @@ public void actionPerformed(ActionEvent e)
         JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    else if(e.getActionCommand().equals("ADD_DVD"))
-    {
-      if(connection != null)
-        {
-          new AddDvdDialog(this);
-        }
-      else
-        {
-        System.out.println("No connection to database.");
-        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
 }
     //=====================================================
     public void updateResultTable(ResultSet resultSet)
