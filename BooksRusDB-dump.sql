@@ -191,6 +191,30 @@ LOCK TABLES `purchase` WRITE;
 INSERT INTO `purchase` VALUES ('Not_admin','WitchCraft and Wizardry',1),('Not_admin','yoMomma',2),('Not_admin','yoMomma',3),('Not_admin','yoMomma',4),('Not_admin','yoMomma',5),('Not_admin','yoMomma',6),('Not_admin','Necronomicon ',7),('Not_admin','Necronomicon ',8),('Not_admin','WitchCraft and Wizardry',9),('Not_admin','Necronomicon ',10),('Admin_1','WitchCraft and Wizardry',11),('Admin_1','Doctor Strange ',12),('Admin_1','the ring',13),('Admin_1','the ring 2',14),('Admin_1','the ring 3',15),('Admin_1','WitchCraft and Wizardry',16);
 /*!40000 ALTER TABLE `purchase` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `beforeInsertOnPurchase` BEFORE INSERT ON `purchase` FOR EACH ROW BEGIN
+	CASE(SELECT copies_In_Stock FROM media WHERE title = NEW.title)
+		WHEN(0) THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Current item is out of stock';
+		ELSE
+			UPDATE media
+			SET    media.copies_In_Stock = media.copies_In_Stock - 1
+			WHERE  media.title = NEW.title;
+	END CASE;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `purchase_history`
@@ -231,7 +255,7 @@ CREATE TABLE `sequel_to` (
   KEY `prequel_title` (`prequel_title`),
   KEY `sequel_title` (`sequel_title`),
   CONSTRAINT `sequel_to_ibfk_1` FOREIGN KEY (`prequel_title`) REFERENCES `dvds` (`title`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sequel_to_ibfk_2` FOREIGN KEY (`sequel_title`) REFERENCES `dvds` (`title`) ON DELETE CASCADE ON UPDATE CASCADE 
+  CONSTRAINT `sequel_to_ibfk_2` FOREIGN KEY (`sequel_title`) REFERENCES `dvds` (`title`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -337,4 +361,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-08 22:57:40
+-- Dump completed on 2016-12-01 22:07:36
