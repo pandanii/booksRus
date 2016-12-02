@@ -535,6 +535,18 @@ public void actionPerformed(ActionEvent e)
                                     //then after gathering the data from the JDialog
                                     //calling a method of StoreFrame to add the new user to the DB
     }
+    else if(e.getActionCommand().equals("ADD_BOOK"))
+    {
+      if(connection != null)
+        {
+        new AddBookDialog(this);
+        }
+      else
+        {
+        System.out.println("No connection to database.");
+        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
     //=====================================================
     public void updateResultTable(ResultSet resultSet)
