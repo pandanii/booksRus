@@ -59,13 +59,13 @@ public class Queries
     public Queries()
     {
         
-        checkIfDvd = " SELECT title"
-                   + " FROM   dvds"
-                   + " WHERE  dvds.title = ?;";
+        checkIfDvd    = " SELECT title"
+                      + " FROM   dvds"
+                      + " WHERE  dvds.title = ?;";
         
-         checkIfBook = " SELECT title"
-                     + " FROM   books "
-                     + " WHERE  books.title = ? ";
+         checkIfBook  = " SELECT title"
+                      + " FROM   books "
+                      + " WHERE  books.title = ? ";
          
          getMediaCost = " SELECT price"
                       + " FROM   media "
@@ -79,15 +79,15 @@ public class Queries
         
         updateUser       = " UPDATE Users SET password = ?, phone_number = ?, address = ?, email = ?, name = ? WHERE userID = ?;";
              
-        newUser          = " INSERT INTO User(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
+        newUser          = " INSERT INTO Users(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
         
         displayUsers     = " SELECT * FROM users; ";
         
         displayMedia     = " SELECT * FROM Media; ";
         
-        deletePurchase     = " DELETE FROM purchase WHERE title = ?; ";
+        deletePurchase   = " DELETE FROM purchase WHERE title = ?; ";
         
-        deleteWrittenBy     = " DELETE FROM written_by WHERE title = ?; ";
+        deleteWrittenBy  = " DELETE FROM written_by WHERE title = ?; ";
         
         deleteMedia      = " DELETE FROM media WHERE title = ?; ";
         
@@ -106,18 +106,13 @@ public class Queries
         
         insertWrittenBy        = " INSERT INTO written_by(Title,Address,name) values (?,?,?);";
         
-        insertSequel           = "INSERT INTO sequel(prequel_title,sequel_title) values (?,?);";// optional only need to insert if pos
+        insertSequel           = " INSERT INTO sequel(prequel_title,sequel_title) values (?,?);";// optional only need to insert if pos
         
-        insertUsers            = "INSERT INTO Users(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
+        insertUsers            = " INSERT INTO Users(userID,password,phone_number,address,email,name,is_admin) VALUES (?,?,?,?,?,?,?);";
         
-        insertPurchase         = "INSERT INTO purchase(userID, title, transactionID) VALUES (?,?,?);";
+        insertPurchase         = " INSERT INTO purchase(userID, title, transactionID) VALUES (?,?,?);";
         
-        insertPurchase_History = "INSERT INTO purchase_History(transactionID, date_of_purchase, number_of_copies, total_cost) VALUES (?,CURDATE(),?,?);";
-        
-        
-        
-        
-        
+        insertPurchase_History = " INSERT INTO purchase_History(transactionID, date_of_purchase, number_of_copies, total_cost) VALUES (?,CURDATE(),?,?);";
         
         
         displayResultsDVDs = " SELECT DISTINCT media.title AS 'DVD Title', media.price AS 'Price', media.copies_In_Stock AS 'Amount in Stock', media.year as 'Year Released', dvds.cast AS 'CAST', dvds.director as Director, dvds.genre as Genre"
@@ -209,12 +204,12 @@ public class Queries
                            + " WHERE media.title = books.title  AND books.subject_category like ?";
 
        keyword_Books_Search = title_Books_Search
-                           + " UNION "
-                           + author_Search
-                           + " UNION "
-                           + publisher_Search
-                           + " UNION "
-                           + subject_Cate_Search;
+                            + " UNION "
+                            + author_Search
+                            + " UNION "
+                            + publisher_Search
+                            + " UNION "
+                            + subject_Cate_Search;
     }//EndOf Queries constructor
 
 }//EndOf Queries class.
