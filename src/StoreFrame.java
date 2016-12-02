@@ -29,7 +29,12 @@ ShoppingCart shoppingCart;
 JTable cartTable;
 
 boolean isAdmin;
-String username;
+String userID;
+String password;
+String phoneNumber;
+String address;
+String email;
+String name;
 boolean loggedIn;
 
 JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be referenced
@@ -52,6 +57,7 @@ public StoreFrame()
     JPanel mainPanel;
     JPanel buttonPanel;
 
+    JScrollPane myScrollPane;
 
     JButton closeButton;
 
@@ -82,8 +88,10 @@ public StoreFrame()
 //=====================================================
 private void setupMainFrame()
 {
-    Toolkit tk = Toolkit.getDefaultToolkit();
-    Dimension d = tk.getScreenSize();
+    Toolkit tk;
+    Dimension d;
+    tk = Toolkit.getDefaultToolkit();
+    d = tk.getScreenSize();
     setSize(d.width/4, d.height/4);
     setLocation(d.width/3, d.height/3);
     setTitle("Books-R-Us");
@@ -178,16 +186,6 @@ private JMenuBar createMenuBar()
     logInMenu.add(userInfoMenuItem);
     menuBar.add(logInMenu);
 
-    viewMenu     = new JMenu("View");
-    viewMenuItem = new JMenuItem("View Options" , KeyEvent.VK_V);
-    viewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
-    viewMenuItem.getAccessibleContext().setAccessibleDescription("Change the appearance.");
-    viewMenuItem.setToolTipText("Change the appearance of the window.");
-    viewMenuItem.setActionCommand("VIEW");
-    viewMenuItem.addActionListener(this);
-
-    viewMenu.add(viewMenuItem);
-    menuBar.add(viewMenu);
     cartMenu     = new JMenu("Shopping Cart");
     cartMenuItem = new JMenuItem("Open Shopping Cart" , KeyEvent.VK_C);
     cartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
@@ -278,7 +276,7 @@ private JMenuBar createMenuBar()
     adminAddBookMenuItem.setActionCommand("ADD_BOOK");
     adminAddBookMenuItem.addActionListener(this);
     adminMenu.add(adminAddBookMenuItem);
-    
+
     adminAddDvdMenuItem = new JMenuItem("Add DVD" , KeyEvent.VK_I);
     adminAddDvdMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.ALT_MASK));
     adminAddDvdMenuItem.getAccessibleContext().setAccessibleDescription("Add DVD");
@@ -317,11 +315,14 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("USERINFO"))
     {
-        // HERE WE WILL OPEN THE DIALOG FOR THE USERS INFO
-    }
-    else if (e.getActionCommand().equals("VIEW"))
-    {
-        //new JDialog to change appearance of the frame
+    if (connection != null && loggedIn == true)
+        {
+        new ModifyUserJDialog(this);
+        }
+    else
+        {
+        JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     else if (e.getActionCommand().equals("LOGIN"))
     {
@@ -347,7 +348,7 @@ public void actionPerformed(ActionEvent e)
         logInMenu.getItem(0).setText("LogIn");  //getting the JMenuItem
         isAdmin  = false;
         loggedIn = false;
-        username = null;
+        userID = null;
         adminMenu.setEnabled(false);
         this.setTitle("Books-R-Us");
         this.repaint(); //causes the whole frame to repaint with the update to its components
@@ -413,14 +414,14 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("HISTORY"))
     {
-        if(connection != null && username != null)
+        if(connection != null && userID != null)
         {
             try
             {
                 preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
                 preparedStatement.clearParameters();
                 System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                preparedStatement.setString(1, username);   //only the logged in user can see their history
+                preparedStatement.setString(1, userID);   //only the logged in user can see their history
                 resultSet = preparedStatement.executeQuery();
             }
         catch (SQLException sqle)
@@ -479,14 +480,10 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("REMOVE_MEDIA"))
     {
-        if(myTable == null)
-        {
-            JOptionPane.showMessageDialog(null,"List the media!");
-        }
-        else if(myTable.getSelectedRow() == -1)
+        if(myTable.getSelectedRow() == -1)
         {
             JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
-        } 
+        }
         else
         {
             int option = JOptionPane.showConfirmDialog(null,"Attempting to delete "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
@@ -494,20 +491,6 @@ public void actionPerformed(ActionEvent e)
             {
                 try
                 {
-                    preparedStatement = connection.prepareStatement(listOfQueries.deletePurchase);
-                    preparedStatement.clearParameters();
-                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
-                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                    preparedStatement.execute();
-                    preparedStatement.close();
-                    
-                    preparedStatement = connection.prepareStatement(listOfQueries.deleteWrittenBy);
-                    preparedStatement.clearParameters();
-                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
-                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                    preparedStatement.execute();
-                    preparedStatement.close();
-                    
                     preparedStatement = connection.prepareStatement(listOfQueries.deleteMedia);
                     preparedStatement.clearParameters();
                     preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
@@ -526,11 +509,7 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("REMOVE_USER"))
     {
-        if(myTable == null)
-        {
-            JOptionPane.showMessageDialog(null,"List the users!");
-        }
-        else if(myTable.getSelectedRow() == -1)
+        if(myTable.getSelectedRow() == -1)
         {
             JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
         }
@@ -679,10 +658,16 @@ public void actionPerformed(ActionEvent e)
         }
     }
     //=====================================================
-    public void setUserInfo(boolean isAdmin, String username)
+    public void setUserInfo(String userID, String password, String phoneNumber, String address, String email, String name, boolean isAdmin)
     {
+    this.userID = userID;
+    this.password = password;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.email = email;
+    this.name = name;
     this.isAdmin = isAdmin;
-    this.username = username;
+
     loggedIn = true;
 
     if(isAdmin)
@@ -690,7 +675,7 @@ public void actionPerformed(ActionEvent e)
 
     logInMenu.setText("Logout");
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
-    this.setTitle("Books-R-Us" + " - Signed in as: " + username);
+    this.setTitle("Books-R-Us" + " - Signed in as: " + userID);
     this.repaint();     //causes the whole frame to repaint with the update to its components
     }
     //=====================================================
@@ -771,6 +756,49 @@ System.out.println("isAdmin" + isAdmin);
 
     }
     //=====================================================
+    public void modifyUserInfo(String userID, String password, String phoneNumber, String address, String email, String name, boolean isAdmin)
+    {
+//UPDATE Users SET password = ?, phone_number = ?, address = ?, email = ?, name = ? WHERE userID = ?
+
+    PreparedStatement preparedStatement;
+/*
+System.out.println("UserID" + userID);
+System.out.println("password" + password);
+System.out.println("phoneNumber" + phoneNumber);
+System.out.println("address" + address);
+System.out.println("email" + email);
+System.out.println("name" + name);
+System.out.println("isAdmin" + isAdmin);
+*/
+    try
+    {
+        preparedStatement = connection.prepareStatement(listOfQueries.updateUser);
+        preparedStatement.clearParameters();
+        preparedStatement.setString(1, password);
+        preparedStatement.setString(2, phoneNumber);
+        preparedStatement.setString(3, address);
+        preparedStatement.setString(4, email);
+        preparedStatement.setString(5, name);
+        preparedStatement.setString(6, userID);
+
+
+
+        System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+        preparedStatement.execute();
+        preparedStatement.close();
+
+    this.setUserInfo(userID, password, phoneNumber, address, email, name, isAdmin);
+
+    }
+    catch (SQLException sqle)
+    {
+        System.out.println("SQLException in StoreFrame createNewUser");
+        sqle.printStackTrace();
+    }
+
+    }
+    //=====================================================
+
 
 }
 //#########################################################

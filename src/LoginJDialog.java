@@ -16,10 +16,10 @@ Connection connection;
 JButton loginButton;
 JButton cancelButton;
 
-JLabel usernameLabel;
+JLabel userIDLabel;
 JLabel passwordLabel;
 
-JTextField usernameTextField;
+JTextField userIDTextField;
 JPasswordField passwordTextField;
 
 JPanel mainPanel;
@@ -53,11 +53,11 @@ public LoginJDialog(StoreFrame pointerToStoreFrame)
     buttonPanel.add(loginButton);
     buttonPanel.add(cancelButton);
 
-    usernameLabel = new JLabel("Username: ");
+    userIDLabel = new JLabel("User ID: ");
     passwordLabel = new JLabel("Password: ");
 
-    usernameTextField = new JTextField(30);
-    usernameTextField.getDocument().addDocumentListener(this);
+    userIDTextField = new JTextField(30);
+    userIDTextField.getDocument().addDocumentListener(this);
 
     passwordTextField = new JPasswordField(30);
     passwordTextField.getDocument().addDocumentListener(this);
@@ -72,14 +72,14 @@ public LoginJDialog(StoreFrame pointerToStoreFrame)
 
     GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
 
-    hGroup.addGroup(groupLayout.createParallelGroup().addComponent(usernameLabel).addComponent(passwordLabel));
-    hGroup.addGroup(groupLayout.createParallelGroup().addComponent(usernameTextField).addComponent(passwordTextField));
+    hGroup.addGroup(groupLayout.createParallelGroup().addComponent(userIDLabel).addComponent(passwordLabel));
+    hGroup.addGroup(groupLayout.createParallelGroup().addComponent(userIDTextField).addComponent(passwordTextField));
 
     groupLayout.setHorizontalGroup(hGroup);
 
     GroupLayout.SequentialGroup vGroup = groupLayout.createSequentialGroup();
 
-    vGroup.addGroup(groupLayout.createParallelGroup().addComponent(usernameLabel).addComponent(usernameTextField));
+    vGroup.addGroup(groupLayout.createParallelGroup().addComponent(userIDLabel).addComponent(userIDTextField));
     vGroup.addGroup(groupLayout.createParallelGroup().addComponent(passwordLabel).addComponent(passwordTextField));
 
     groupLayout.setVerticalGroup(vGroup);
@@ -105,7 +105,7 @@ public LoginJDialog(StoreFrame pointerToStoreFrame)
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
     getRootPane().setDefaultButton(loginButton);
-    usernameTextField.requestFocus();
+    userIDTextField.requestFocus();
 
     setVisible(true);
 
@@ -118,8 +118,17 @@ public void actionPerformed(ActionEvent e)
     //Connection connection;
     if (e.getActionCommand().equals("LOGIN"))
     {
-        String username = usernameTextField.getText().trim();
+        String userID = userIDTextField.getText().trim();
         String password = new String(passwordTextField.getPassword()).trim();
+        String phoneNumber;
+        String address;
+        String email;
+        String name;
+
+        phoneNumber = "";
+        address = "";
+        email = "";
+        name = "";
 
         try
         {
@@ -130,7 +139,7 @@ public void actionPerformed(ActionEvent e)
 
             preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE users.userID = ? AND users.password = ?;");
             preparedStatement.clearParameters();
-            preparedStatement.setString(1, username);
+            preparedStatement.setString(1, userID);
             preparedStatement.setString(2, password);
             System.out.println("preparedStatement: "+preparedStatement);
             resultSet = preparedStatement.executeQuery();
@@ -145,21 +154,46 @@ public void actionPerformed(ActionEvent e)
                 for (int i = 1; i <= metaData.getColumnCount(); ++i)
                 {
                     System.out.println(metaData.getColumnLabel(i) + ": " + resultSet.getObject(i));
+
+                    if (metaData.getColumnLabel(i).equals("userID"))
+                        {
+                        userID = resultSet.getObject(i).toString();
+                        }
+                    else if (metaData.getColumnLabel(i).equals("password"))
+                        {
+                        password = resultSet.getObject(i).toString();
+                        }
+                    else if (metaData.getColumnLabel(i).equals("phone_number"))
+                        {
+                        phoneNumber = resultSet.getObject(i).toString();
+                        }
+                    else if (metaData.getColumnLabel(i).equals("address"))
+                        {
+                        address = resultSet.getObject(i).toString();
+                        }
+                    else if (metaData.getColumnLabel(i).equals("email"))
+                        {
+                        email = resultSet.getObject(i).toString();
+                        }
+                    else if (metaData.getColumnLabel(i).equals("name"))
+                        {
+                        name = resultSet.getObject(i).toString();
+                        }
                 }
 
                 // removed second query. No need to requery.
                 if (resultSet.getInt(7) == 1)
                     {
                     System.out.println("Admin loged in");
-                    pointerToStoreFrame.setUserInfo(true, username);
-                    JOptionPane.showMessageDialog(null, "Welcome Admin " + username + ".");
+                    pointerToStoreFrame.setUserInfo(userID, password, phoneNumber, address, email, name, true);
+                    JOptionPane.showMessageDialog(null, "Welcome Admin " + userID + ".");
                     this.dispose();
                     }
                 else
                     {
                     System.out.println("NONE Admin loged in");
-                    pointerToStoreFrame.setUserInfo(false, username);
-                    JOptionPane.showMessageDialog(null, "Welcome " + username + ".");
+                    pointerToStoreFrame.setUserInfo(userID, password, phoneNumber, address, email, name, false);
+                    JOptionPane.showMessageDialog(null, "Welcome " + userID + ".");
                     this.dispose();
                     }
             }
@@ -187,7 +221,7 @@ public void changedUpdate(DocumentEvent e)
 @Override
 public void removeUpdate(DocumentEvent e)
 {
-    if (usernameTextField.getText().trim().equals("") || passwordTextField.getText().trim().equals(""))
+    if (userIDTextField.getText().trim().equals("") || passwordTextField.getText().trim().equals(""))
     {
         loginButton.setEnabled(false);
     }
@@ -200,7 +234,7 @@ public void removeUpdate(DocumentEvent e)
 @Override
 public void insertUpdate(DocumentEvent e)
 {
-    if (usernameTextField.getText().trim().equals("") || passwordTextField.getText().trim().equals(""))
+    if (userIDTextField.getText().trim().equals("") || passwordTextField.getText().trim().equals(""))
     {
         loginButton.setEnabled(false);
     }

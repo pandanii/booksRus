@@ -163,7 +163,7 @@ boolean loggedIn;
                 preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
                 preparedStatement.clearParameters();
                 System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                preparedStatement.setString(1, pointerToStoreFrame.username);   //only the logged in user can see their history
+                preparedStatement.setString(1, pointerToStoreFrame.userID);   //only the logged in user can see their history
                 resultSet = preparedStatement.executeQuery();
                 }
             else if (comboObject.toString().equals("Admin Book Info"))
