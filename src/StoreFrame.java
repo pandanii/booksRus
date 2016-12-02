@@ -52,7 +52,6 @@ public StoreFrame()
     JPanel mainPanel;
     JPanel buttonPanel;
 
-    JScrollPane myScrollPane;
 
     JButton closeButton;
 
@@ -83,10 +82,8 @@ public StoreFrame()
 //=====================================================
 private void setupMainFrame()
 {
-    Toolkit tk;
-    Dimension d;
-    tk = Toolkit.getDefaultToolkit();
-    d = tk.getScreenSize();
+    Toolkit tk = Toolkit.getDefaultToolkit();
+    Dimension d = tk.getScreenSize();
     setSize(d.width/4, d.height/4);
     setLocation(d.width/3, d.height/3);
     setTitle("Books-R-Us");
@@ -482,7 +479,11 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("REMOVE_MEDIA"))
     {
-        if(myTable.getSelectedRow() == -1)
+        if(myTable == null)
+        {
+            JOptionPane.showMessageDialog(null,"List the media!");
+        }
+        else if(myTable.getSelectedRow() == -1)
         {
             JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
         } 
@@ -493,6 +494,20 @@ public void actionPerformed(ActionEvent e)
             {
                 try
                 {
+                    preparedStatement = connection.prepareStatement(listOfQueries.deletePurchase);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.execute();
+                    preparedStatement.close();
+                    
+                    preparedStatement = connection.prepareStatement(listOfQueries.deleteWrittenBy);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.execute();
+                    preparedStatement.close();
+                    
                     preparedStatement = connection.prepareStatement(listOfQueries.deleteMedia);
                     preparedStatement.clearParameters();
                     preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
@@ -511,7 +526,11 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("REMOVE_USER"))
     {
-        if(myTable.getSelectedRow() == -1)
+        if(myTable == null)
+        {
+            JOptionPane.showMessageDialog(null,"List the users!");
+        }
+        else if(myTable.getSelectedRow() == -1)
         {
             JOptionPane.showMessageDialog(null,"Nothing seems to be selected!");
         }
