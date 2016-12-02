@@ -490,7 +490,8 @@ public void actionPerformed(ActionEvent e)
                         preparedStatement.setInt(3, maxTransactionId);
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                         preparedStatement.execute();
-                        preparedStatement.close(); 
+                        preparedStatement.close();
+                        JOptionPane.showMessageDialog(null, "You just bought "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " we will ship it to you soon.");
                     }
                 }
                 catch(SQLException sqle)
