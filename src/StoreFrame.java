@@ -274,6 +274,14 @@ private JMenuBar createMenuBar()
     adminAddUserMenuItem.addActionListener(this);
     adminMenu.add(adminAddUserMenuItem);
 
+    adminAddBookMenuItem = new JMenuItem("Add Book" , KeyEvent.VK_B);
+    adminAddBookMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.ALT_MASK));
+    adminAddBookMenuItem.getAccessibleContext().setAccessibleDescription("Add Book");
+    adminAddBookMenuItem.setToolTipText("Add Book");
+    adminAddBookMenuItem.setActionCommand("ADD_BOOK");
+    adminAddBookMenuItem.addActionListener(this);
+    adminMenu.add(adminAddBookMenuItem);
+
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
 
