@@ -106,9 +106,9 @@ JButton createUserButton;
 
     GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
 
-    hGroup.addGroup(groupLayout.createParallelGroup().addComponent(userIDField).addComponent(passwordField).addComponent(phoneNumberField).addComponent(addressField).addComponent(emailField).addComponent(nameField).addComponent(isAdminComboBox));
-
     hGroup.addGroup(groupLayout.createParallelGroup().addComponent(userIDLabel).addComponent(passwordLabel).addComponent(phoneNumberLabel).addComponent(addressLabel).addComponent(emailLabel).addComponent(nameLabel).addComponent(isAdminLabel));
+
+    hGroup.addGroup(groupLayout.createParallelGroup().addComponent(userIDField).addComponent(passwordField).addComponent(phoneNumberField).addComponent(addressField).addComponent(emailField).addComponent(nameField).addComponent(isAdminComboBox));
 
     groupLayout.setHorizontalGroup(hGroup);
 
@@ -160,7 +160,7 @@ JButton createUserButton;
     public void actionPerformed(ActionEvent e)
     {
 
-    if (e.getActionCommand().equals("CLOSE"))
+    if (e.getActionCommand().equals("CANCEL"))
         {
         dispose();
         }
