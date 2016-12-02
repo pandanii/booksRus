@@ -265,6 +265,14 @@ private JMenuBar createMenuBar()
     adminRemoveMediaMenuItem.setActionCommand("REMOVE_MEDIA");
     adminRemoveMediaMenuItem.addActionListener(this);
     adminMenu.add(adminRemoveMediaMenuItem);
+    
+    adminAddBookMenuItem = new JMenuItem("Add Book" , KeyEvent.VK_B);
+    adminAddBookMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.ALT_MASK));
+    adminAddBookMenuItem.getAccessibleContext().setAccessibleDescription("Add Book");
+    adminAddBookMenuItem.setToolTipText("Add Book");
+    adminAddBookMenuItem.setActionCommand("ADD_BOOK");
+    adminAddBookMenuItem.addActionListener(this);
+    adminMenu.add(adminAddBookMenuItem);
 
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
@@ -379,6 +387,18 @@ public void actionPerformed(ActionEvent e)
     else if (e.getActionCommand().equals("OPENCART"))
     {
         shoppingCart.setVisible(true);
+    }
+    else if(e.getActionCommand().equals("ADD_BOOK"))
+    {
+      if(connection != null)
+        {
+        new AddBookDialog(this);
+        }
+      else
+        {
+        System.out.println("No connection to database.");
+        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     else if (e.getActionCommand().equals("SEARCH"))
     {
