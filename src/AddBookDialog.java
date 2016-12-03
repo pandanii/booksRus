@@ -15,7 +15,7 @@ public class AddBookDialog extends JDialog implements ActionListener
    private JTextField        publisherNameTextField;
    private JTextField        authorAddressTextField;
    private JTextField        authorNameTextField;
-    
+
    private JLabel        titleJLabel;
    private JLabel        priceJLabel;
    private JLabel        numCopiesJLabel;
@@ -26,14 +26,14 @@ public class AddBookDialog extends JDialog implements ActionListener
    private JLabel        publisherNameJLabel;
    private JLabel        authorAddressJLabel;
    private JLabel        authorNameJLabel;
-   
-     
+
+
    private Connection connection;
    private Queries    listOfQueries;
-   
+
    private JPanel mainPanel;
    private JPanel buttonPanel;
-   
+
    private JButton doneButton;
    private StoreFrame pointerToStoreFrame;
 
@@ -42,71 +42,71 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
     this.pointerToStoreFrame = pointerToStoreFrame;     //so a method of StoreFrame can be called later.
     connection = pointerToStoreFrame.connection;
     listOfQueries = new Queries();
-    
+
     mainPanel =  new JPanel();
     mainPanel.setLayout(new GridLayout(14,2,0,3));
     buttonPanel  =  new JPanel();
-        
-    titleJLabel    = new JLabel("Title: "); 
+
+    titleJLabel    = new JLabel("Title: ");
     titleTextField = new JTextField();
     mainPanel.add(titleJLabel);
     mainPanel.add(titleTextField);
-           
-    priceJLabel    = new JLabel("Cost: "); 
+
+    priceJLabel    = new JLabel("Cost: ");
     priceTextField  = new JTextField();
     mainPanel.add(priceJLabel);
-    mainPanel.add(priceTextField); 
-           
+    mainPanel.add(priceTextField);
+
     numCopiesJLabel = new JLabel("#inStock: ");
     numCopiesTextField = new JTextField();
     mainPanel.add(numCopiesJLabel);
-    mainPanel.add(numCopiesTextField); 
+    mainPanel.add(numCopiesTextField);
 
     yearJLabel = new JLabel("Year RELEASED: ");
     yearTextField = new JTextField();
     mainPanel.add(yearJLabel);
-    mainPanel.add(yearTextField); 
-   
+    mainPanel.add(yearTextField);
+
     isbnJLabel = new JLabel("ISBN: ");
     isbnTextField = new JTextField();
     mainPanel.add(isbnJLabel);
-    mainPanel.add(isbnTextField); 
-   
+    mainPanel.add(isbnTextField);
+
     subjectJLabel = new JLabel("Subject: ");
     subjectTextField = new JTextField();
     mainPanel.add(subjectJLabel);
     mainPanel.add(subjectTextField);
-   
+
     publisherAddressJLabel = new JLabel("Publisher's Address: ");
     publisherAddressTextField = new JTextField();
     mainPanel.add(publisherAddressJLabel);
     mainPanel.add(publisherAddressTextField);
-   
+
     publisherNameJLabel = new JLabel("Publisher's Name: ");
     publisherNameTextField = new JTextField();
     mainPanel.add(publisherNameJLabel);
     mainPanel.add(publisherNameTextField);
-   
+
     authorAddressJLabel = new JLabel("Author's Address: ");
     authorAddressTextField = new JTextField();
     mainPanel.add(authorAddressJLabel);
     mainPanel.add(authorAddressTextField);
-   
+
     authorNameJLabel   = new JLabel("Author's Name: ");
     authorNameTextField = new JTextField();
     mainPanel.add(authorNameJLabel);
     mainPanel.add(authorNameTextField);
-    
+
     this.add(mainPanel,BorderLayout.CENTER);
-   
+
     doneButton = new JButton("Done");
     doneButton.setActionCommand("DONE");
     doneButton.addActionListener(this);
     getRootPane().setDefaultButton(doneButton);
-    
+
     buttonPanel.add(doneButton);
     this.add(buttonPanel,BorderLayout.SOUTH);
-    
+
     this.setupMainFrame();
 }
 //-----------------------------------------------------
@@ -120,7 +120,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
     setTitle("Add Book to Database");
     setVisible(true);
   }
- //----------------------------------------------------- 
+ //-----------------------------------------------------
     @Override
   public void actionPerformed(ActionEvent e)
 {
@@ -154,7 +154,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.execute();
             preparedStatement.clearParameters();
             //---------------------------------------------------------
-            // This section is for the 3rd insertion query on Authors  // IF THIS FAILS THE OTHER MIGHT NOT GET EXECUTED!!! 
+            // This section is for the 3rd insertion query on Authors  // IF THIS FAILS THE OTHER MIGHT NOT GET EXECUTED!!!
             preparedStatement = connection.prepareStatement(listOfQueries.insertAuthors);//try insert " INSERT INTO AUTHORS(Address,Name) values (?,?)" // will be blocked if found
             preparedStatement.setString(1, authorAddressTextField.getText().trim());
             preparedStatement.setString(2, authorNameTextField.getText().trim());
@@ -171,13 +171,13 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.execute();
             preparedStatement.clearParameters();
             //---------------------------------------------------------
-            
+        	dispose();
         }
         catch(SQLException sqle1)
         {
             System.out.println("SQLException in addBookDialog actionPerformed");
             sqle1.printStackTrace();
-            
+
             try// extra incase the author fails above.
             {
                 // This section is for the 4th insertion query on written_by
@@ -195,13 +195,13 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
                 sqle1.printStackTrace();
             }
         }
-        catch (NumberFormatException nfe) 
+        catch (NumberFormatException nfe)
         {
             JOptionPane.showMessageDialog(this, "Number Format exception occured, please make sure that you entered a number in for price or number of copies", "ERROR.", JOptionPane.WARNING_MESSAGE);
             nfe.printStackTrace();
-        }  
+        }
     }// end of done
-    
-}// end of Action performed  
+
+}// end of Action performed
 //-----------------------------------------------------
 }

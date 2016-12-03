@@ -67,6 +67,7 @@ boolean loggedIn;
     searchTextFieldLabel = new JLabel("Keywords:");
 
     searchComboBox = new JComboBox();
+/*
     if (isAdmin)
         {
         searchComboBox.addItem("Admin Book Info");
@@ -77,6 +78,7 @@ boolean loggedIn;
         {
         searchComboBox.addItem("Purchase History");
         }
+*/
     searchComboBox.addItem("DVD Title");
     searchComboBox.addItem("Director Name");
     searchComboBox.addItem("Cast Member Name");
@@ -309,6 +311,7 @@ boolean loggedIn;
             System.out.println("SQLException in SearchJDialog actionPerformed");
             sqle.printStackTrace();
             }
+        dispose();
         }
     else
         {

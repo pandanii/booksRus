@@ -186,14 +186,14 @@ public void actionPerformed(ActionEvent e)
                     {
                     System.out.println("Admin loged in");
                     pointerToStoreFrame.setUserInfo(userID, password, phoneNumber, address, email, name, true);
-                    JOptionPane.showMessageDialog(null, "Welcome Admin " + userID + ".");
+//                    JOptionPane.showMessageDialog(null, "Welcome Admin " + userID + ".");
                     this.dispose();
                     }
                 else
                     {
                     System.out.println("NONE Admin loged in");
                     pointerToStoreFrame.setUserInfo(userID, password, phoneNumber, address, email, name, false);
-                    JOptionPane.showMessageDialog(null, "Welcome " + userID + ".");
+//                    JOptionPane.showMessageDialog(null, "Welcome " + userID + ".");
                     this.dispose();
                     }
             }

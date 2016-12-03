@@ -6,19 +6,30 @@ import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.event.*;
 import java.util.*;
+import javax.swing.table.*;
 
 //#########################################################
 public class ShoppingCart extends JDialog
-                          implements ActionListener
+                          implements ActionListener,
+                          			 MouseListener
 
 {
 StoreFrame pointerToStoreFrame;
 Connection connection;
 
-DefaultListModel<JTable> listOfTables;
+JTable cartTable;
+CartTableModel cartTableModel;
+DefaultTableColumnModel colModel;
+TableColumn col;
+JScrollPane scrollPane;
+
+int selectedRow;
+Point mousePoint;
+
 Queries listOfQueries;
 
 JPanel scrollPanel;
+JButton removeItemButton;
 JButton clearButton;
 
     //=====================================================
@@ -36,14 +47,46 @@ JButton clearButton;
     JButton purchaseButton;
     JButton closeButton;
 
-    listOfTables = new DefaultListModel<JTable>();
+	colModel = new DefaultTableColumnModel();
+	cartTableModel = new CartTableModel();
+	cartTable = new JTable(cartTableModel);
+	cartTable.addMouseListener(this);
+	cartTable.setColumnModel(colModel);
+
+	col = new TableColumn(0);
+	col.setPreferredWidth(120);
+	col.setMinWidth(50);
+	col.setHeaderValue("Title");
+	cartTable.addColumn(col);
+
+	col = new TableColumn(1);
+	col.setPreferredWidth(120);
+	col.setMinWidth(50);
+	col.setHeaderValue("Price");
+	cartTable.addColumn(col);
+
+	col = new TableColumn(2);
+	col.setPreferredWidth(120);
+	col.setMinWidth(50);
+	col.setHeaderValue("Quantity");
+	cartTable.addColumn(col);
+
+	scrollPane = new JScrollPane(cartTable);
+	scrollPane.setPreferredSize(new Dimension(450, 400));
 
     scrollPanel = new JPanel();
+    scrollPanel.add(scrollPane);
 
-    purchaseButton = new JButton("Purchase");
+    purchaseButton = new JButton("Purchase Cart");
     purchaseButton.setActionCommand("PURCHASE");
     purchaseButton.addActionListener(this);
     purchaseButton.setToolTipText("Purchase your cart's items.");
+
+    removeItemButton = new JButton("Remove Item");
+    removeItemButton.setActionCommand("REMOVEITEM");
+    removeItemButton.addActionListener(this);
+    removeItemButton.setToolTipText("Remove selected item from the cart.");
+    removeItemButton.setEnabled(false);
 
     closeButton = new JButton("Close");
     closeButton.setActionCommand("CLOSE");
@@ -56,8 +99,9 @@ JButton clearButton;
     clearButton.setToolTipText("Clear your cart of all items.");
     clearButton.setEnabled(false);
 
-    buttonPanel = new JPanel(new GridLayout(1,3));
+    buttonPanel = new JPanel(new GridLayout(1,4));
     buttonPanel.add(purchaseButton);
+    buttonPanel.add(removeItemButton);
     buttonPanel.add(clearButton);
     buttonPanel.add(closeButton);
 
@@ -82,8 +126,9 @@ JButton clearButton;
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
     connection = pointerToStoreFrame.copyConnection();
+
     }
-    //=====================================================
+	//=====================================================
     public void actionPerformed(ActionEvent e)
     {
 
@@ -104,47 +149,73 @@ JButton clearButton;
 
         //Tried the above, but can't figure out the best way to get the exact table selected.
 
-        listOfTables.clear();
+		cartTableModel.cartTableDefaultListModel.clear();
+		cartTableModel.fireTableDataChanged();
 
-        scrollPanel.removeAll();
-        scrollPanel.repaint();
-
+		removeItemButton.setEnabled(false);
         clearButton.setEnabled(false);
         }
+    else if (e.getActionCommand().equals("REMOVEITEM"))
+    	{
+		cartTableModel.cartTableDefaultListModel.deleteRow(selectedRow);
+		cartTableModel.fireTableDataChanged();
+		removeItemButton.setEnabled(false);
+		}
 
     }
     //=====================================================
-    public void addItemToCart(Vector<Object> cartRowList, Vector<Object> columnNames)
+    public void addItemToCart(Vector<Object> cartRow)
     {
-    JTable cartTable;
-    JScrollPane scrollPane;
 
-    scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
 
-    cartTable = new JTable(cartRowList, columnNames);
+	cartTableModel.cartTableDefaultListModel.addRow(cartRow);
+	cartTableModel.fireTableDataChanged();
 
-    listOfTables.addElement(cartTable);
-
-    scrollPane = new JScrollPane();
-    scrollPane.setPreferredSize(new Dimension(500, 400));
-
-    for (int i=0; i < listOfTables.size(); i++)
-        {
-        scrollPane.add(listOfTables.elementAt(i));
-        }
-
-    scrollPanel.add(scrollPane);
-
-    scrollPane.repaint();
 
     clearButton.setEnabled(true);
 
     }
     //=====================================================
+    public void mouseClicked(MouseEvent e)
+    {
+    System.out.println("ShoppingCart mouseClicked");
 
+    if (e.getButton() == MouseEvent.BUTTON1)
+        {
 
+        mousePoint = e.getPoint();
+        selectedRow = cartTable.rowAtPoint(mousePoint);
+        System.out.println(selectedRow + " SELECTED");
 
+        cartTable.changeSelection(selectedRow, 0, false, false);
+        removeItemButton.setEnabled(true);
+        }
+    else
+    	{
+	    removeItemButton.setEnabled(false);
+		}
+	}
+	//=====================================================
+    public void mousePressed(MouseEvent e)
+    {
 
+	}
+	//=====================================================
+    public void mouseReleased(MouseEvent e)
+    {
+
+	}
+	//=====================================================
+    public void mouseEntered(MouseEvent e)
+    {
+
+	}
+	//=====================================================
+    public void mouseExited(MouseEvent e)
+    {
+
+	}
+	//=====================================================
 
 
 

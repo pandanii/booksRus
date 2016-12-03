@@ -41,7 +41,7 @@ JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
 static final String USERNAME     = "root";
-static final String PASSWORD     = "admin";  //Adust this according to local host login or server login
+static final String PASSWORD     = "password";  //Adust this according to local host login or server login
 
 //=====================================================
 @SuppressWarnings({"LeakingThisInConstructor", "OverridableMethodCallInConstructor"})
@@ -95,7 +95,7 @@ private void setupMainFrame()
     setSize(d.width/4, d.height/4);
     setLocation(d.width/3, d.height/3);
     setTitle("Books-R-Us");
-    d.setSize(550, 550);
+    d.setSize(725, 550);
     setMinimumSize(d);
     setJMenuBar(createMenuBar());
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,35 +107,31 @@ private void setupPopMenu()
     Toolkit         tk;
     Dimension        d;
     JMenuItem addToCartButton;
-//    JMenuItem editRowButton;
+	JMenuItem cancelButton;
 
     rightClickMenu = new JPopupMenu("Right Click Options");
 
-    if (loggedIn)
-    {
-        addToCartButton = new JMenuItem("Add to Cart");
-        addToCartButton.setActionCommand("ADDTOCART");
-        addToCartButton.addActionListener(this);
-        addToCartButton.setToolTipText("Add this item to your checkout cart.");
-        addToCartButton.setPreferredSize(new Dimension(100,40));
-        rightClickMenu.add(addToCartButton);
-    }
-/* //this is not going to be used unless we want admins to edit individual table rows.
-    if (isAdmin)
-    {
-        editRowButton = new JMenuItem("Edit");
-        editRowButton.setActionCommand("EDITROW");
-        editRowButton.addActionListener(this);
-        editRowButton.setToolTipText("Edit this row.");
-        editRowButton.setPreferredSize(new Dimension(100,40));
-        rightClickMenu.add(editRowButton);
-    }
-*/
+
+	addToCartButton = new JMenuItem("Add to cart");
+	addToCartButton.setActionCommand("ADDTOCART");
+	addToCartButton.addActionListener(this);
+	addToCartButton.setToolTipText("Add the selected item to the shopping cart.");
+	addToCartButton.setPreferredSize(new Dimension(100,40));
+
+	cancelButton = new JMenuItem("Cancel");
+	cancelButton.setActionCommand("CANCELCLICK");
+	cancelButton.addActionListener(this);
+	cancelButton.setToolTipText("Close this popup.");
+	cancelButton.setPreferredSize(new Dimension(100,40));
+
+	rightClickMenu.add(addToCartButton);
+	rightClickMenu.add(cancelButton);
+
     tk = Toolkit.getDefaultToolkit();
     d = tk.getScreenSize();
     rightClickMenu.setSize(d.width/4, d.height/5);
-    rightClickMenu.setLocation(MouseInfo.getPointerInfo().getLocation());  //gets the mouse location and turns it into a point
-    d.setSize(500, 250);
+    rightClickMenu.setLocation(d.width/3, d.height/3);
+    d.setSize(500, 50);
     rightClickMenu.setMinimumSize(d);
 }
 
@@ -187,7 +183,10 @@ private JMenuBar createMenuBar()
     logInMenu.add(userInfoMenuItem);
     menuBar.add(logInMenu);
 
+
     cartMenu     = new JMenu("Shopping Cart");
+
+
     cartMenuItem = new JMenuItem("Open Shopping Cart" , KeyEvent.VK_C);
     cartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
     cartMenuItem.getAccessibleContext().setAccessibleDescription("View your shopping cart.");
@@ -195,16 +194,16 @@ private JMenuBar createMenuBar()
     cartMenuItem.setActionCommand("OPENCART");
     cartMenuItem.addActionListener(this);
 
+/*
     buyCartMenuItem = new JMenuItem("Buy" , KeyEvent.VK_B);
     buyCartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.ALT_MASK));
     buyCartMenuItem.getAccessibleContext().setAccessibleDescription("buy the selected item");
     buyCartMenuItem.setToolTipText("buy the selected item");
     buyCartMenuItem.setActionCommand("BUY");
     buyCartMenuItem.addActionListener(this);
-    cartMenu.add(buyCartMenuItem);
+*/
 
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
     addCartMenuItem = new JMenuItem("Add" , KeyEvent.VK_A);
     addCartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
     addCartMenuItem.getAccessibleContext().setAccessibleDescription("Add item to cart");
@@ -213,6 +212,7 @@ private JMenuBar createMenuBar()
     addCartMenuItem.addActionListener(this);
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+//    cartMenu.add(buyCartMenuItem);
     cartMenu.add(addCartMenuItem);
     cartMenu.add(cartMenuItem);
     menuBar.add(cartMenu);
@@ -307,6 +307,8 @@ public void actionPerformed(ActionEvent e)
     ResultSet         resultSet = null;
     boolean isAdvd = false;
     boolean isAbook = false;
+    rightClickMenu.setVisible(false);
+
     if (e.getActionCommand().equals("CLOSE"))
     {
         try
@@ -324,6 +326,10 @@ public void actionPerformed(ActionEvent e)
         }
         System.exit(0);
     }
+    else if (e.getActionCommand().equals("CANCELCLICK"))
+    	{
+		rightClickMenu.setVisible(false);
+		}
     else if (e.getActionCommand().equals("USERINFO"))
     {
     if (connection != null && loggedIn == true)
@@ -355,12 +361,13 @@ public void actionPerformed(ActionEvent e)
     else
         {
         //change the menu item back to Login
-        logInMenu.setText("Login");
+        logInMenu.setText("User Info/Login");
         logInMenu.getItem(0).setText("LogIn");  //getting the JMenuItem
         isAdmin  = false;
         loggedIn = false;
         userID = null;
         adminMenu.setEnabled(false);
+        scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
         this.setTitle("Books-R-Us");
         this.repaint(); //causes the whole frame to repaint with the update to its components
         }
@@ -379,7 +386,7 @@ public void actionPerformed(ActionEvent e)
         else
         {
             int option = JOptionPane.showConfirmDialog(null,"Attempting to Buy "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " would you like to continue?", "choose one", JOptionPane.YES_NO_OPTION);
-            if(option == JOptionPane.YES_OPTION)
+            if(option == JOptionPane.YES_OPTION && loggedIn)
             {
                 int maxTransactionId;
                 int cost = 0;
@@ -500,47 +507,86 @@ public void actionPerformed(ActionEvent e)
                     sqle.printStackTrace();
                 }
             }
+            else
+            {
+			JOptionPane.showMessageDialog(null, "You must be logged in first.");
+			}
         }
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
     {
-        rightClickMenu.setVisible(false);
-
+	try
+		{
         System.out.println("Attempting to ADDTOCART");
 
-        int currentColumnIndex;
-        int numberInStockColumnIndex = 0;
-        Vector<Object> cartRowList = new Vector<>(); //only ever size one in this setup
-        Vector<Object> currentRow = new Vector<>();
+		String titleToAdd;
+		String response;
+		int priceToAdd;
+		int quantityToPurchase;
+        int numberInStock;
+		Vector<Object> cartRow;
 
-        for (int i=0; i < myTable.getColumnCount(); i++)
+		priceToAdd = 0;
+        numberInStock = 0;
+        titleToAdd = null;
+        cartRow = new Vector<Object>();
+
+		if (myTable != null)
+			{
+			for (int i=0; i < myTable.getColumnCount(); i++)
+				{
+				if (myTable.getColumnName(i).equals("Amount in Stock"))
+					{
+					numberInStock = (int)(myTable.getValueAt(selectedRow, i));
+					}
+				if (myTable.getColumnName(i).equals("DVD Title") || myTable.getColumnName(i).equals("Book Title"))
+					{
+					titleToAdd = (String)myTable.getValueAt(selectedRow, i);
+					}
+				if (myTable.getColumnName(i).equals("Price"))
+					{
+					priceToAdd = (int)myTable.getValueAt(selectedRow, i);
+					}
+				}
+			}
+
+System.out.println("titleToAdd " + titleToAdd);
+System.out.println("numberInStock " + numberInStock);
+System.out.println("priceToAdd " + priceToAdd);
+
+		quantityToPurchase = 0;
+        if (numberInStock > 0 && titleToAdd != null)
             {
-                if (myTable.getColumnName(i).equals("Amount in Stock"))
-                {
-                    numberInStockColumnIndex = i;
-                }
-            }
+			response = JOptionPane.showInputDialog("Enter the quantity of " + titleToAdd + " you'd like to purchase.");
 
+			quantityToPurchase = Integer.parseInt(response);
 
-        if ((int)myTable.getValueAt(selectedRow, numberInStockColumnIndex) > 0)
-            {
-            currentColumnIndex = 0;
-            while (currentColumnIndex < myTable.getColumnCount())
-                {
-                currentRow.add(myTable.getValueAt(selectedRow, currentColumnIndex));  //selectedRow comes from mouselistener click
-                                                                                      //do JTables index at 0? This assumes so.
-                currentColumnIndex += 1;
-                }                                                                     //current column index to walk through the rows columns
+System.out.println("quantityToPurchase " + quantityToPurchase);
 
-            cartRowList.add(currentRow);
+			if (quantityToPurchase > numberInStock)
+				{
+				JOptionPane.showMessageDialog(null, "Too few items in stock for that transaction.", "Failed", JOptionPane.ERROR_MESSAGE);
+				}
+			else
+				{
+				cartRow.add(titleToAdd);
+				cartRow.add(priceToAdd);
+				cartRow.add(quantityToPurchase);
 
-            shoppingCart.addItemToCart(cartRowList, columnNames);    //should take a list of rows and column names to make a new JTable for each purchased item
-                                                                    //easiest way to handle that book's columns != DVD's columns
+				shoppingCart.addItemToCart(cartRow);    //should take a rowList to add it to the JTable for each purchased item
+            	}									//that table has media title, media cost, and quantity as columns already
             }
         else
             {
-            JOptionPane.showMessageDialog(null, "Couldn't add item to cart.", "Out of Stock", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Couldn't add item to cart.", "Failed", JOptionPane.ERROR_MESSAGE);
             }
+		}
+	catch(NumberFormatException nfe)
+		{
+		System.out.println("NumberFormatException in StoreFrame actionPerformed");
+		JOptionPane.showMessageDialog(null, "Enter a number for the quantity.", "Failed", JOptionPane.ERROR_MESSAGE);
+		nfe.printStackTrace();
+		}
 
     }
     else if (e.getActionCommand().equals("OPENCART"))
@@ -782,8 +828,9 @@ public void actionPerformed(ActionEvent e)
             myTable = new JTable(rowList, columnNames);
             myTable.addMouseListener(this);
             myScrollPane = new JScrollPane(myTable);
-            myScrollPane.setPreferredSize(new Dimension(500, 400));
+            myScrollPane.setPreferredSize(new Dimension(700, 400));
             scrollPanel.add(myScrollPane);
+//            myJTable.scrollRectToVisible(myJTable.getCellRect(myJTable.getRowCount() - 1, 0, true));
             validate();
             }
 
@@ -837,7 +884,7 @@ public void actionPerformed(ActionEvent e)
         adminMenu.setEnabled(true);
     }
 
-    logInMenu.setText("Logout");
+    logInMenu.setText("User Info/Logout");
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
     this.setTitle("Books-R-Us" + " - Signed in as: " + userID);
     this.repaint();     //causes the whole frame to repaint with the update to its components
@@ -858,6 +905,10 @@ public void actionPerformed(ActionEvent e)
         myTable.changeSelection(selectedRow, 0, false, false);
         rightClickMenu.setVisible(true);
         }
+    else
+    	{
+	    rightClickMenu.setVisible(false);
+		}
     }
 
     //=====================================================
