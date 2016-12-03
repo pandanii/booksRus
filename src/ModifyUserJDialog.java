@@ -177,7 +177,7 @@ JButton modifyUserButton;
         name = nameField.getText().trim();
 
         pointerToStoreFrame.modifyUserInfo(userID, password, phoneNumber, address, email, name, isAdmin);
-
+		dispose();
         }
 
     }

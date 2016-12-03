@@ -196,6 +196,7 @@ JButton createUserButton;
             }
 
         pointerToStoreFrame.createNewUser(userID, password, phoneNumber, address, email, name, isAdmin);
+        dispose();
         }
 
     }

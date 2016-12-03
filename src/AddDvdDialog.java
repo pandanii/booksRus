@@ -14,7 +14,7 @@ public class AddDvdDialog extends JDialog implements ActionListener
    private JTextField        genreTextField;
    private JTextField        sequelTextField;
 
-    
+
    private JLabel        titleJLabel;
    private JLabel        priceJLabel;
    private JLabel        numCopiesJLabel;
@@ -23,14 +23,14 @@ public class AddDvdDialog extends JDialog implements ActionListener
    private JLabel        directorJLabel;
    private JLabel        genreJLabel;
    private JLabel        sequelJLabel;
-   
-     
+
+
    private Connection connection;
    private Queries    listOfQueries;
-   
+
    private JPanel mainPanel;
    private JPanel buttonPanel;
-   
+
    private JButton doneButton;
    private StoreFrame pointerToStoreFrame;
 
@@ -39,62 +39,62 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
     this.pointerToStoreFrame = pointerToStoreFrame;     //so a method of StoreFrame can be called later.
     connection = pointerToStoreFrame.connection;
     listOfQueries = new Queries();
-    
+
     mainPanel =  new JPanel();
     mainPanel.setLayout(new GridLayout(14,2,0,3));
     buttonPanel  =  new JPanel();
-    
-    
-    titleJLabel    = new JLabel("Title: "); 
+
+
+    titleJLabel    = new JLabel("Title: ");
     titleTextField = new JTextField();
     mainPanel.add(titleJLabel);
     mainPanel.add(titleTextField);
-           
-    priceJLabel    = new JLabel("Cost: "); 
+
+    priceJLabel    = new JLabel("Cost: ");
     priceTextField  = new JTextField();
     mainPanel.add(priceJLabel);
-    mainPanel.add(priceTextField); 
-           
+    mainPanel.add(priceTextField);
+
     numCopiesJLabel = new JLabel("#inStock: ");
     numCopiesTextField = new JTextField();
     mainPanel.add(numCopiesJLabel);
-    mainPanel.add(numCopiesTextField); 
+    mainPanel.add(numCopiesTextField);
 
     yearJLabel = new JLabel("Year RELEASED: ");
     yearTextField = new JTextField();
     mainPanel.add(yearJLabel);
-    mainPanel.add(yearTextField); 
-   
+    mainPanel.add(yearTextField);
+
     castJLabel = new JLabel("Cast: ");
     castTextField = new JTextField();
     mainPanel.add(castJLabel);
-    mainPanel.add(castTextField); 
-   
+    mainPanel.add(castTextField);
+
     directorJLabel = new JLabel("Director: ");
     directorTextField = new JTextField();
     mainPanel.add(directorJLabel);
     mainPanel.add(directorTextField);
-   
+
     genreJLabel = new JLabel("Genre: ");
     genreTextField = new JTextField();
     mainPanel.add(genreJLabel);
     mainPanel.add(genreTextField);
-   
+
     sequelJLabel = new JLabel("Sequel's Title: ");
     sequelTextField = new JTextField();
     mainPanel.add(sequelJLabel);
     mainPanel.add(sequelTextField);
-    
+
     this.add(mainPanel,BorderLayout.CENTER);
-   
+
     doneButton = new JButton("Done");
     doneButton.setActionCommand("DONE");
     doneButton.addActionListener(this);
     getRootPane().setDefaultButton(doneButton);
-    
+
     buttonPanel.add(doneButton);
     this.add(buttonPanel,BorderLayout.SOUTH);
-    
+
     this.setupMainFrame();
 }
 //-----------------------------------------------------
@@ -108,7 +108,7 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
     setTitle("Add dvd to Database");
     setVisible(true);
   }
- //----------------------------------------------------- 
+ //-----------------------------------------------------
     @Override
   public void actionPerformed(ActionEvent e)
 {
@@ -149,9 +149,10 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
                 System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
                 preparedStatement.execute();
                 preparedStatement.clearParameters();
+                dispose();
             }
             //---------------------------------------------------------
-            
+
         }
         catch(SQLException sqle1)
         {
@@ -159,7 +160,7 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
             sqle1.printStackTrace();
         }
     }// end of done
-    
-}// end of Action performed  
+
+}// end of Action performed
 //-----------------------------------------------------
 }
