@@ -23,6 +23,10 @@ public class Queries
     public final String insertDvds;
     public final String insertBooks;
     public final String insertAuthors;
+    //###############################################################
+
+    public final String insertPublishers;
+    //###############################################################
     public final String insertWrittenBy;
     public final String insertSequel;
     public final String insertUsers;
@@ -103,7 +107,10 @@ public class Queries
         insertBooks            = " INSERT INTO books(title,ISBN,subject_category,address,name) values (?,?,?,?,?);";
 
         insertAuthors          = " INSERT INTO authors(address,name) values (?,?);";
+        //###############################################################
+        insertPublishers       = " INSERT INTO publishers(address,name,URL,phone_number) values (?,?,?,?);";
 
+		//###############################################################
         insertWrittenBy        = " INSERT INTO written_by(title,address,name) values (?,?,?);";
 
         insertSequel           = " INSERT INTO sequel(prequel_title,sequel_title) values (?,?);";// optional only need to insert if pos

@@ -13,6 +13,10 @@ public class AddBookDialog extends JDialog implements ActionListener
    private JTextField        subjectTextField;
    private JTextField        publisherAddressTextField;
    private JTextField        publisherNameTextField;
+   //###################
+   private JTextField        publisherURLTextField;
+   private JTextField        publisherPhoneNumberTextField;
+   //###################
    private JTextField        authorAddressTextField;
    private JTextField        authorNameTextField;
 
@@ -24,6 +28,10 @@ public class AddBookDialog extends JDialog implements ActionListener
    private JLabel        subjectJLabel;
    private JLabel        publisherAddressJLabel;
    private JLabel        publisherNameJLabel;
+   //###################
+   private JLabel        publisherURLJLabel;
+   private JLabel        publisherPhoneNumberJLabel;
+   //###################
    private JLabel        authorAddressJLabel;
    private JLabel        authorNameJLabel;
 
@@ -86,6 +94,17 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
     publisherNameTextField = new JTextField();
     mainPanel.add(publisherNameJLabel);
     mainPanel.add(publisherNameTextField);
+    //########################
+    publisherURLJLabel = new JLabel("Publisher's URL: ");
+    publisherURLTextField = new JTextField();
+    mainPanel.add(publisherURLJLabel);
+    mainPanel.add(publisherURLTextField);
+
+    publisherPhoneNumberJLabel = new JLabel("Publisher's Phone #: ");
+    publisherPhoneNumberTextField = new JTextField();
+    mainPanel.add(publisherPhoneNumberJLabel);
+    mainPanel.add(publisherPhoneNumberTextField);
+    //########################
 
     authorAddressJLabel = new JLabel("Author's Address: ");
     authorAddressTextField = new JTextField();
@@ -143,6 +162,20 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.execute();
             preparedStatement.clearParameters();
             //---------------------------------------------------------
+            //#########################################################
+			                        preparedStatement = connection.prepareStatement(listOfQueries.insertPublishers);//"INSERT INTO publishers(address,name,URL,phone_number) values (?,?,?,?)"
+						            preparedStatement.setString(1, publisherAddressTextField.getText().trim());
+						            preparedStatement.setString(2, publisherNameTextField.getText().trim());
+						            preparedStatement.setString(3, publisherURLTextField.getText().trim());
+						            preparedStatement.setString(4, publisherPhoneNumberTextField.getText().trim());
+						            System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
+						            preparedStatement.execute();
+			            			preparedStatement.clearParameters();
+
+
+
+
+            //#########################################################
             // This section is for the 2nd insertion query on books.
             preparedStatement = connection.prepareStatement(listOfQueries.insertBooks);//"INSERT INTO books(Title,ISBN,subject_category,Address,name) values (?,?,?,?,?)"
             preparedStatement.setString(1, titleTextField.getText().trim());
@@ -154,6 +187,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.execute();
             preparedStatement.clearParameters();
             //---------------------------------------------------------
+
             // This section is for the 3rd insertion query on Authors  // IF THIS FAILS THE OTHER MIGHT NOT GET EXECUTED!!!
             preparedStatement = connection.prepareStatement(listOfQueries.insertAuthors);//try insert " INSERT INTO AUTHORS(Address,Name) values (?,?)" // will be blocked if found
             preparedStatement.setString(1, authorAddressTextField.getText().trim());
@@ -171,6 +205,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.execute();
             preparedStatement.clearParameters();
             //---------------------------------------------------------
+
         	dispose();
         }
         catch(SQLException sqle1)
@@ -188,6 +223,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
                 System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
                 preparedStatement.execute();
                 preparedStatement.clearParameters();
+                dispose();
             }
             catch(SQLException sqle2)
             {
