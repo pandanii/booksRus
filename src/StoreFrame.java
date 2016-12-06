@@ -1,12 +1,8 @@
-//BooksRUs Software
-
-
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
-
 
 //#########################################################
 public class StoreFrame extends JFrame implements ActionListener,MouseListener
@@ -19,29 +15,30 @@ Queries    listOfQueries;
 
 JMenu      adminMenu;
 JPopupMenu rightClickMenu;
-int selectedRow;
-Point mousePoint;
+int        selectedRow;
+Point      mousePoint;
 
 Vector<Object> columnNames;
-ShoppingCart shoppingCart;
+ShoppingCart   shoppingCart;
 
 JTable cartTable;
 
 boolean isAdmin;
+boolean loggedIn;
+
 String userID;
 String password;
 String phoneNumber;
 String address;
 String email;
 String name;
-boolean loggedIn;
 
 JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be referenced
 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
 static final String USERNAME     = "root";
-static final String PASSWORD     = "password";  //Adust this according to local host login or server login
+static final String PASSWORD     = "admin";//"password"  //Adust this according to local host login or server login
 
 //=====================================================
 @SuppressWarnings({"LeakingThisInConstructor", "OverridableMethodCallInConstructor"})
@@ -88,10 +85,8 @@ public StoreFrame()
 //=====================================================
 private void setupMainFrame()
 {
-    Toolkit tk;
-    Dimension d;
-    tk = Toolkit.getDefaultToolkit();
-    d = tk.getScreenSize();
+    Toolkit   tk = Toolkit.getDefaultToolkit();
+    Dimension d  = tk.getScreenSize();
     setSize(d.width/4, d.height/4);
     setLocation(d.width/3, d.height/3);
     setTitle("Books-R-Us");
@@ -104,28 +99,27 @@ private void setupMainFrame()
 //=====================================================
 private void setupPopMenu()
 {
-    Toolkit         tk;
-    Dimension        d;
-    JMenuItem addToCartButton;
-	JMenuItem cancelButton;
+    Toolkit     tk;
+    Dimension   d;
+    JMenuItem   addToCartButton;
+    JMenuItem   cancelButton;
 
     rightClickMenu = new JPopupMenu("Right Click Options");
 
+    addToCartButton = new JMenuItem("Add to cart");
+    addToCartButton.setActionCommand("ADDTOCART");
+    addToCartButton.addActionListener(this);
+    addToCartButton.setToolTipText("Add the selected item to the shopping cart.");
+    addToCartButton.setPreferredSize(new Dimension(100,40));
 
-	addToCartButton = new JMenuItem("Add to cart");
-	addToCartButton.setActionCommand("ADDTOCART");
-	addToCartButton.addActionListener(this);
-	addToCartButton.setToolTipText("Add the selected item to the shopping cart.");
-	addToCartButton.setPreferredSize(new Dimension(100,40));
+    cancelButton = new JMenuItem("Cancel");
+    cancelButton.setActionCommand("CANCELCLICK");
+    cancelButton.addActionListener(this);
+    cancelButton.setToolTipText("Close this popup.");
+    cancelButton.setPreferredSize(new Dimension(100,40));
 
-	cancelButton = new JMenuItem("Cancel");
-	cancelButton.setActionCommand("CANCELCLICK");
-	cancelButton.addActionListener(this);
-	cancelButton.setToolTipText("Close this popup.");
-	cancelButton.setPreferredSize(new Dimension(100,40));
-
-	rightClickMenu.add(addToCartButton);
-	rightClickMenu.add(cancelButton);
+    rightClickMenu.add(addToCartButton);
+    rightClickMenu.add(cancelButton);
 
     tk = Toolkit.getDefaultToolkit();
     d = tk.getScreenSize();
@@ -139,12 +133,9 @@ private void setupPopMenu()
 private JMenuBar createMenuBar()
 {
     JMenuBar menuBar;
-//    JMenu logInMenu; //made this have a larger scope so it can be used later to logout when user is logged in.
-    //JMenu viewMenu;
     JMenu searchMenu;
     JMenu cartMenu;
 
-    //JMenuItem viewMenuItem;
     JMenuItem loginMenuItem;
     JMenuItem userInfoMenuItem;
     JMenuItem searchMenuItem;
@@ -194,14 +185,14 @@ private JMenuBar createMenuBar()
     cartMenuItem.setActionCommand("OPENCART");
     cartMenuItem.addActionListener(this);
 
-/*
-    buyCartMenuItem = new JMenuItem("Buy" , KeyEvent.VK_B);
+
+    buyCartMenuItem = new JMenuItem("Buy NOW!" , KeyEvent.VK_B);
     buyCartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.ALT_MASK));
     buyCartMenuItem.getAccessibleContext().setAccessibleDescription("buy the selected item");
     buyCartMenuItem.setToolTipText("buy the selected item");
     buyCartMenuItem.setActionCommand("BUY");
     buyCartMenuItem.addActionListener(this);
-*/
+
 
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     addCartMenuItem = new JMenuItem("Add" , KeyEvent.VK_A);
@@ -212,7 +203,7 @@ private JMenuBar createMenuBar()
     addCartMenuItem.addActionListener(this);
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-//    cartMenu.add(buyCartMenuItem);
+    cartMenu.add(buyCartMenuItem);
     cartMenu.add(addCartMenuItem);
     cartMenu.add(cartMenuItem);
     menuBar.add(cartMenu);
@@ -305,8 +296,8 @@ public void actionPerformed(ActionEvent e)
 {
     PreparedStatement preparedStatement;
     ResultSet         resultSet = null;
-    boolean isAdvd = false;
-    boolean isAbook = false;
+    boolean           isAdvd    = false;
+    boolean           isAbook   = false;
     rightClickMenu.setVisible(false);
 
     if (e.getActionCommand().equals("CLOSE"))
@@ -322,56 +313,54 @@ public void actionPerformed(ActionEvent e)
         {
             System.out.println("SQLException in StoreFrame actionPerformed");
             JOptionPane.showMessageDialog(null, "Unable to sever connection.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-            //sqle1.printStackTrace();
+            sqle1.printStackTrace();
         }
         System.exit(0);
     }
     else if (e.getActionCommand().equals("CANCELCLICK"))
-    	{
-		rightClickMenu.setVisible(false);
-		}
+    {
+	rightClickMenu.setVisible(false);
+    }
     else if (e.getActionCommand().equals("USERINFO"))
     {
-    if (connection != null && loggedIn == true)
+        if (connection != null && loggedIn == true)
         {
-        ModifyUserJDialog modifyUserJDialog = new ModifyUserJDialog(this);
+            ModifyUserJDialog modifyUserJDialog = new ModifyUserJDialog(this);
         }
-    else
+        else
         {
-        JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     else if (e.getActionCommand().equals("LOGIN"))
     {
-    System.out.println("Creating LoginJDialog");
-    if (!loggedIn)
+        System.out.println("Creating LoginJDialog");
+        if (!loggedIn)
         {
-        if (connection != null)
+            if (connection != null)
             {
-            LoginJDialog loginJDialog = new LoginJDialog(this); //sending the JDialog a pointer to this instance of
-                                        //StoreFrame so it can all one of its methods
-            System.out.println("Good connection");
+                LoginJDialog loginJDialog = new LoginJDialog(this); //sending the JDialog a pointer to this instance of StoreFrame so it can all one of its methods                    
+                System.out.println("Good connection");
             }
+            else
+            {
+                System.out.println("Null connection");
+                JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
         else
-            {
-            System.out.println("Null connection");
-            JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    else
         {
-        //change the menu item back to Login
-        logInMenu.setText("User Info/Login");
-        logInMenu.getItem(0).setText("LogIn");  //getting the JMenuItem
-        isAdmin  = false;
-        loggedIn = false;
-        userID = null;
-        adminMenu.setEnabled(false);
-        scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
-        this.setTitle("Books-R-Us");
-        this.repaint(); //causes the whole frame to repaint with the update to its components
+            //change the menu item back to Login
+            logInMenu.setText("User Info/Login");
+            logInMenu.getItem(0).setText("LogIn");  //getting the JMenuItem
+            isAdmin  = false;
+            loggedIn = false;
+            userID = null;
+            adminMenu.setEnabled(false);
+            scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
+            this.setTitle("Books-R-Us");
+            this.repaint(); //causes the whole frame to repaint with the update to its components
         }
-
     }
     else if (e.getActionCommand().equals("BUY"))
     {
@@ -449,7 +438,7 @@ public void actionPerformed(ActionEvent e)
                         }
                         preparedStatement.close();
 
-                        // GET MAX TRANSID
+                        // GET PRICE
                         System.out.println("GET PRICE!");
                         preparedStatement = connection.prepareStatement(listOfQueries.getMediaCost);
                         preparedStatement.clearParameters();
@@ -498,7 +487,7 @@ public void actionPerformed(ActionEvent e)
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                         preparedStatement.execute();
                         preparedStatement.close();
-                        JOptionPane.showMessageDialog(null, "You just bought "+myTable.getValueAt(myTable.getSelectedRow(),0)+ " we will ship it to you soon.");
+                        JOptionPane.showMessageDialog(null, "You just bought "+myTable.getValueAt(myTable.getSelectedRow(),0)+" for $"+ cost+",  we will ship it to you soon.");
                     }
                 }
                 catch(SQLException sqle)
@@ -509,84 +498,71 @@ public void actionPerformed(ActionEvent e)
             }
             else
             {
-			JOptionPane.showMessageDialog(null, "You must be logged in first.");
-			}
+		JOptionPane.showMessageDialog(null, "You must be logged in first.");
+	    }
         }
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
     {
 	try
+        {
+            System.out.println("Attempting to ADDTOCART");
+            String titleToAdd = null;
+            String response;
+            int priceToAdd = 0;
+            int numberInStock = 0;
+            int quantityToPurchase;
+            Vector<Object> cartRow = new Vector<>();
+            if (myTable != null)
+            {
+                for (int i=0; i < myTable.getColumnCount(); i++)
+                {
+                    if (myTable.getColumnName(i).equals("Amount in Stock"))
+                    {
+                        numberInStock = (int)(myTable.getValueAt(selectedRow, i));
+                    }
+                    if (myTable.getColumnName(i).equals("DVD Title") || myTable.getColumnName(i).equals("Book Title"))
+                    {
+                        titleToAdd = (String)myTable.getValueAt(selectedRow, i);
+                    }
+                    if (myTable.getColumnName(i).equals("Price"))
+                    {
+                        priceToAdd = (int)myTable.getValueAt(selectedRow, i);
+                    }
+                }
+            }
+            System.out.println("titleToAdd " + titleToAdd);
+            System.out.println("numberInStock " + numberInStock);
+            System.out.println("priceToAdd " + priceToAdd);
+            quantityToPurchase = 0;
+            if (numberInStock > 0 && titleToAdd != null)
+            {
+                response = JOptionPane.showInputDialog("Enter the quantity of " + titleToAdd + " you'd like to purchase.");
+		quantityToPurchase = Integer.parseInt(response);
+                System.out.println("quantityToPurchase " + quantityToPurchase);
+		if (quantityToPurchase > numberInStock)
 		{
-        System.out.println("Attempting to ADDTOCART");
-
-		String titleToAdd;
-		String response;
-		int priceToAdd;
-		int quantityToPurchase;
-        int numberInStock;
-		Vector<Object> cartRow;
-
-		priceToAdd = 0;
-        numberInStock = 0;
-        titleToAdd = null;
-        cartRow = new Vector<Object>();
-
-		if (myTable != null)
-			{
-			for (int i=0; i < myTable.getColumnCount(); i++)
-				{
-				if (myTable.getColumnName(i).equals("Amount in Stock"))
-					{
-					numberInStock = (int)(myTable.getValueAt(selectedRow, i));
-					}
-				if (myTable.getColumnName(i).equals("DVD Title") || myTable.getColumnName(i).equals("Book Title"))
-					{
-					titleToAdd = (String)myTable.getValueAt(selectedRow, i);
-					}
-				if (myTable.getColumnName(i).equals("Price"))
-					{
-					priceToAdd = (int)myTable.getValueAt(selectedRow, i);
-					}
-				}
-			}
-
-System.out.println("titleToAdd " + titleToAdd);
-System.out.println("numberInStock " + numberInStock);
-System.out.println("priceToAdd " + priceToAdd);
-
-		quantityToPurchase = 0;
-        if (numberInStock > 0 && titleToAdd != null)
-            {
-			response = JOptionPane.showInputDialog("Enter the quantity of " + titleToAdd + " you'd like to purchase.");
-
-			quantityToPurchase = Integer.parseInt(response);
-
-System.out.println("quantityToPurchase " + quantityToPurchase);
-
-			if (quantityToPurchase > numberInStock)
-				{
-				JOptionPane.showMessageDialog(null, "Too few items in stock for that transaction.", "Failed", JOptionPane.ERROR_MESSAGE);
-				}
-			else
-				{
-				cartRow.add(titleToAdd);
-				cartRow.add(priceToAdd);
-				cartRow.add(quantityToPurchase);
-
-				shoppingCart.addItemToCart(cartRow);    //should take a rowList to add it to the JTable for each purchased item
-            	}									//that table has media title, media cost, and quantity as columns already
-            }
-        else
-            {
-            JOptionPane.showMessageDialog(null, "Couldn't add item to cart.", "Failed", JOptionPane.ERROR_MESSAGE);
-            }
+                    JOptionPane.showMessageDialog(null, "Too few items in stock for that transaction.", "Failed", JOptionPane.ERROR_MESSAGE);
 		}
+		else
+		{
+                    cartRow.add(titleToAdd);
+                    cartRow.add(priceToAdd);
+                    cartRow.add(quantityToPurchase);
+                    shoppingCart.addItemToCart(cartRow);    //should take a rowList to add it to the JTable for each purchased item//that table has media title, media cost, and quantity as columns already
+            	}									
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Couldn't add item to cart.", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+	}
 	catch(NumberFormatException nfe)
-		{
-		System.out.println("NumberFormatException in StoreFrame actionPerformed");
-		JOptionPane.showMessageDialog(null, "Enter a number for the quantity.", "Failed", JOptionPane.ERROR_MESSAGE);
-		nfe.printStackTrace();
-		}
+	{
+            System.out.println("NumberFormatException in StoreFrame actionPerformed");
+            JOptionPane.showMessageDialog(null, "Enter a number for the quantity.", "Failed", JOptionPane.ERROR_MESSAGE);
+            nfe.printStackTrace();
+	}
 
     }
     else if (e.getActionCommand().equals("OPENCART"))
@@ -595,14 +571,14 @@ System.out.println("quantityToPurchase " + quantityToPurchase);
     }
     else if (e.getActionCommand().equals("SEARCH"))
     {
-    if(connection != null)
+        if(connection != null)
         {
-        SearchJDialog searchJDialog = new SearchJDialog(this); //sending it 'this' so it can call a method of StoreFrame later on.
+            SearchJDialog searchJDialog = new SearchJDialog(this); //sending it 'this' so it can call a method of StoreFrame later on.
         }
-    else
+        else
         {
-        System.out.println("No connection to database.");
-        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("No connection to database.");
+            JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     else if (e.getActionCommand().equals("HISTORY"))
@@ -617,20 +593,20 @@ System.out.println("quantityToPurchase " + quantityToPurchase);
                 preparedStatement.setString(1, userID);   //only the logged in user can see their history
                 resultSet = preparedStatement.executeQuery();
             }
-        catch (SQLException sqle)
+            catch (SQLException sqle)
             {
-            System.out.println("SQLException in StoreFrame actionPerformed");
-            sqle.printStackTrace();
+                System.out.println("SQLException in StoreFrame actionPerformed");
+                sqle.printStackTrace();
             }
-         if (resultSet != null)
+            if (resultSet != null)
             {
-            this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+                this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
             }
         }
         else
         {
-        System.out.println("No connection to database, or you are not logged in.");
-        JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("No connection to database, or you are not logged in.");
+            JOptionPane.showMessageDialog(null, "No connection to database, or you are not logged in.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     else if (e.getActionCommand().equals("DISPLAY_USERS"))
@@ -752,77 +728,71 @@ System.out.println("quantityToPurchase " + quantityToPurchase);
         }
         else
         {
-        System.out.println("No connection to database.");
-        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("No connection to database.");
+            JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     else if(e.getActionCommand().equals("ADD_BOOK"))
     {
-      if(connection != null)
+        if(connection != null)
         {
-          AddBookDialog addBookDialog = new AddBookDialog(this);
+            AddBookDialog addBookDialog = new AddBookDialog(this);
         }
-      else
+        else
         {
-        System.out.println("No connection to database.");
-        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("No connection to database.");
+            JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     else if(e.getActionCommand().equals("ADD_DVD"))
     {
-      if(connection != null)
-      {
-          AddDvdDialog addDvdDialog = new AddDvdDialog(this);
-      }
-      else
-      {
-        System.out.println("No connection to database.");
-        JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-      }
+        if(connection != null)
+        {
+            AddDvdDialog addDvdDialog = new AddDvdDialog(this);
+        }
+        else
+        {
+            System.out.println("No connection to database.");
+            JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
-    //=====================================================
-    public void updateResultTable(ResultSet resultSet)
-    {
-
+//=====================================================
+public void updateResultTable(ResultSet resultSet)
+{
     ResultSetMetaData resultMetaData;
-
     Vector<Object> columnNames;
     Vector<Object> currentRow;
     Vector<Object> rowList;
-
     JScrollPane myScrollPane;
-
     scrollPanel.removeAll();// REMOVES THE OLD TABLE FROM THE PANEL
-
     try
-        {
+    {
         if (!resultSet.first())
-            {
+        {
             System.out.println("No records");
             JOptionPane.showMessageDialog(null, "No results found.", "No results", JOptionPane.ERROR_MESSAGE);
-            }
+        }
         else
-            {
+        {
             columnNames = new Vector<>();
             currentRow  = new Vector<>();
             rowList     = new Vector<>();
             resultMetaData = resultSet.getMetaData();
 
             for (int i=0; i < resultMetaData.getColumnCount(); i++)
-                {
+            {
                 columnNames.addElement(resultMetaData.getColumnLabel(i+1));// USING getColumnLabel() INSTEAD OF getColumnName() ALLOWS FOR ALIASING!
-                }
-
+            }
             do
-                {
+            {
                 currentRow = new Vector<>();
                 for (int j=0; j < resultMetaData.getColumnCount(); j++)
-                    {
+                {
                     currentRow.addElement(resultSet.getObject(j+1));
-                    }
-                rowList.addElement(currentRow);
                 }
+                rowList.addElement(currentRow);
+            }
             while (resultSet.next());
 
             myTable = new JTable(rowList, columnNames);
@@ -832,43 +802,39 @@ System.out.println("quantityToPurchase " + quantityToPurchase);
             scrollPanel.add(myScrollPane);
 //            myJTable.scrollRectToVisible(myJTable.getCellRect(myJTable.getRowCount() - 1, 0, true));
             validate();
-            }
-
+        }
         resultSet.close();
-
-        }
+    }
     catch (SQLException sqle2)
-        {
+    {
         System.out.println("SQLException2 in StoreFrame actionPerformed");
-
         JOptionPane.showMessageDialog(null, "Query Error.", "Query Error", JOptionPane.ERROR_MESSAGE);
-        }
-
     }
-    //=====================================================
-    public void establishConnection()
+}
+//=====================================================
+public void establishConnection()
+{
+    try
     {
-        try
-        {
-            Class.forName(JDBC_DRIVER);
-            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
-        }
-        catch (ClassNotFoundException cnfe)
-        {
-            System.out.println("ClassNotFoundException in LoginJDialog establishConnection");
-            JOptionPane.showMessageDialog(null, "Failed to load driver.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
-    //        cnfe.printStackTrace();
-        }
-        catch (SQLException sqle)
-        {
-            System.out.println("SQLException in LoginJDialog establishConnection");
-            JOptionPane.showMessageDialog(null, "Failed to create a connection with the database.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
-    //        sqle.printStackTrace();
-        }
+        Class.forName(JDBC_DRIVER);
+        connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
     }
-    //=====================================================
-    public void setUserInfo(String userID, String password, String phoneNumber, String address, String email, String name, boolean isAdmin)
+    catch (ClassNotFoundException cnfe)
     {
+        System.out.println("ClassNotFoundException in LoginJDialog establishConnection");
+        JOptionPane.showMessageDialog(null, "Failed to load driver.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
+        cnfe.printStackTrace();
+    }
+    catch (SQLException sqle)
+    {
+        System.out.println("SQLException in LoginJDialog establishConnection");
+        JOptionPane.showMessageDialog(null, "Failed to create a connection with the database.", "Failed to connect", JOptionPane.ERROR_MESSAGE);
+        sqle.printStackTrace();
+    }
+}
+//=====================================================
+public void setUserInfo(String userID, String password, String phoneNumber, String address, String email, String name, boolean isAdmin)
+{
     this.userID = userID;
     this.password = password;
     this.phoneNumber = phoneNumber;
@@ -888,30 +854,26 @@ System.out.println("quantityToPurchase " + quantityToPurchase);
     logInMenu.getItem(0).setText("Logout");  //getting the JMenuItem
     this.setTitle("Books-R-Us" + " - Signed in as: " + userID);
     this.repaint();     //causes the whole frame to repaint with the update to its components
-    }
+}
     //=====================================================
 @Override
-    public void mouseClicked(MouseEvent e)
-    {
+public void mouseClicked(MouseEvent e)
+{
     System.out.println("StoreFrame mouseClicked");
-
-    if (e.getButton() == MouseEvent.BUTTON3)
-        {
-
+    if(e.getButton() == MouseEvent.BUTTON3)
+    {
         mousePoint = e.getPoint();
         selectedRow = myTable.rowAtPoint(mousePoint);
         System.out.println(selectedRow + " SELECTED");
-
         myTable.changeSelection(selectedRow, 0, false, false);
         rightClickMenu.setVisible(true);
-        }
-    else
-    	{
-	    rightClickMenu.setVisible(false);
-		}
     }
-
-    //=====================================================
+    else
+    {
+	rightClickMenu.setVisible(false);
+    }
+}
+//=====================================================
 @Override
     public void mousePressed(MouseEvent e)
     {
@@ -937,10 +899,8 @@ System.out.println("quantityToPurchase " + quantityToPurchase);
         return connection;
     }
     //=====================================================
-    public void createNewUser(String userID, String password, String phoneNumber, String address, String email, String name, int isAdmin)
-    {
-
-    PreparedStatement preparedStatement;
+public void createNewUser(String userID, String password, String phoneNumber, String address, String email, String name, int isAdmin)
+{
 /*
 System.out.println("UserID" + userID);
 System.out.println("password" + password);
@@ -950,6 +910,7 @@ System.out.println("email" + email);
 System.out.println("name" + name);
 System.out.println("isAdmin" + isAdmin);
 */
+    PreparedStatement preparedStatement;
     try
     {
         preparedStatement = connection.prepareStatement(listOfQueries.newUser);
@@ -962,25 +923,20 @@ System.out.println("isAdmin" + isAdmin);
         preparedStatement.setString(6, name);
         preparedStatement.setInt(7, isAdmin);
 
-
         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
         preparedStatement.execute();
         preparedStatement.close();
-
     }
     catch (SQLException sqle)
     {
         System.out.println("SQLException in StoreFrame createNewUser");
         sqle.printStackTrace();
     }
-
-    }
+}
     //=====================================================
-    public void modifyUserInfo(String userID, String password, String phoneNumber, String address, String email, String name, boolean isAdmin)
-    {
+public void modifyUserInfo(String userID, String password, String phoneNumber, String address, String email, String name, boolean isAdmin)
+{
 //UPDATE Users SET password = ?, phone_number = ?, address = ?, email = ?, name = ? WHERE userID = ?
-
-    PreparedStatement preparedStatement;
 /*
 System.out.println("UserID" + userID);
 System.out.println("password" + password);
@@ -990,6 +946,7 @@ System.out.println("email" + email);
 System.out.println("name" + name);
 System.out.println("isAdmin" + isAdmin);
 */
+    PreparedStatement preparedStatement;
     try
     {
         preparedStatement = connection.prepareStatement(listOfQueries.updateUser);
@@ -1000,15 +957,10 @@ System.out.println("isAdmin" + isAdmin);
         preparedStatement.setString(4, email);
         preparedStatement.setString(5, name);
         preparedStatement.setString(6, userID);
-
-
-
         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
         preparedStatement.execute();
         preparedStatement.close();
-
-    this.setUserInfo(userID, password, phoneNumber, address, email, name, isAdmin);
-
+        this.setUserInfo(userID, password, phoneNumber, address, email, name, isAdmin);
     }
     catch (SQLException sqle)
     {
@@ -1016,7 +968,7 @@ System.out.println("isAdmin" + isAdmin);
         sqle.printStackTrace();
     }
 
-    }
-    //=====================================================
+}
+//=====================================================
 }
 //#########################################################

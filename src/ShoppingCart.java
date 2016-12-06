@@ -4,15 +4,11 @@ import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import javax.swing.event.*;
 import java.util.*;
 import javax.swing.table.*;
 
 //#########################################################
-public class ShoppingCart extends JDialog
-                          implements ActionListener,
-                          			 MouseListener
-
+public class ShoppingCart extends JDialog implements ActionListener,MouseListener
 {
 StoreFrame pointerToStoreFrame;
 Connection connection;
@@ -32,9 +28,9 @@ JPanel scrollPanel;
 JButton removeItemButton;
 JButton clearButton;
 
-    //=====================================================
-    public ShoppingCart(StoreFrame pointerToStoreFrame)
-    {
+//=====================================================
+public ShoppingCart(StoreFrame pointerToStoreFrame)
+{
     this.pointerToStoreFrame = pointerToStoreFrame;
 
     Container cp;
@@ -47,32 +43,32 @@ JButton clearButton;
     JButton purchaseButton;
     JButton closeButton;
 
-	colModel = new DefaultTableColumnModel();
-	cartTableModel = new CartTableModel();
-	cartTable = new JTable(cartTableModel);
-	cartTable.addMouseListener(this);
-	cartTable.setColumnModel(colModel);
+    colModel = new DefaultTableColumnModel();
+    cartTableModel = new CartTableModel();
+    cartTable = new JTable(cartTableModel);
+    cartTable.addMouseListener(this);
+    cartTable.setColumnModel(colModel);
 
-	col = new TableColumn(0);
-	col.setPreferredWidth(120);
-	col.setMinWidth(50);
-	col.setHeaderValue("Title");
-	cartTable.addColumn(col);
+    col = new TableColumn(0);
+    col.setPreferredWidth(120);
+    col.setMinWidth(50);
+    col.setHeaderValue("Title");
+    cartTable.addColumn(col);
 
-	col = new TableColumn(1);
-	col.setPreferredWidth(120);
-	col.setMinWidth(50);
-	col.setHeaderValue("Price");
-	cartTable.addColumn(col);
+    col = new TableColumn(1);
+    col.setPreferredWidth(120);
+    col.setMinWidth(50);
+    col.setHeaderValue("Price");
+    cartTable.addColumn(col);
 
-	col = new TableColumn(2);
-	col.setPreferredWidth(120);
-	col.setMinWidth(50);
-	col.setHeaderValue("Quantity");
-	cartTable.addColumn(col);
-
-	scrollPane = new JScrollPane(cartTable);
-	scrollPane.setPreferredSize(new Dimension(450, 400));
+    col = new TableColumn(2);
+    col.setPreferredWidth(120);
+    col.setMinWidth(50);
+    col.setHeaderValue("Quantity");
+    cartTable.addColumn(col);
+    
+    scrollPane = new JScrollPane(cartTable);
+    scrollPane.setPreferredSize(new Dimension(450, 400));
 
     scrollPanel = new JPanel();
     scrollPanel.add(scrollPane);
@@ -116,7 +112,7 @@ JButton clearButton;
     setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
     tk = Toolkit.getDefaultToolkit();
-    d = tk.getScreenSize();
+    d  = tk.getScreenSize();
     setSize(d.width/4, d.height/4);
     setLocation(d.width/3 + 50, d.height/3 + 50);
 
@@ -127,97 +123,82 @@ JButton clearButton;
 
     connection = pointerToStoreFrame.copyConnection();
 
-    }
-	//=====================================================
-    public void actionPerformed(ActionEvent e)
-    {
-
+}
+//=====================================================
+public void actionPerformed(ActionEvent e)
+{
     if (e.getActionCommand().equals("CLOSE"))
-        {
+    {
         this.setVisible(false);
-        }
+    }
     else if (e.getActionCommand().equals("PURCHASE"))
-        {
-        //use a loop to send sql commands to database to subtract stock
-
-
-        }
+    {
+    //use a loop to send sql commands to database to subtract stock
+    }
     else if (e.getActionCommand().equals("CLEARCART"))
-        {
+    {
         //get selected table and delete it from defaultListModel, then reform the scrollpane
         //add this as a listener to each table when they are created to know when they are selected.
-
         //Tried the above, but can't figure out the best way to get the exact table selected.
-
-		cartTableModel.cartTableDefaultListModel.clear();
-		cartTableModel.fireTableDataChanged();
-
-		removeItemButton.setEnabled(false);
+        cartTableModel.cartTableDefaultListModel.clear();
+        cartTableModel.fireTableDataChanged();
+        removeItemButton.setEnabled(false);
         clearButton.setEnabled(false);
-        }
+    }
     else if (e.getActionCommand().equals("REMOVEITEM"))
-    	{
-		cartTableModel.cartTableDefaultListModel.deleteRow(selectedRow);
-		cartTableModel.fireTableDataChanged();
-		removeItemButton.setEnabled(false);
-		}
-
-    }
-    //=====================================================
-    public void addItemToCart(Vector<Object> cartRow)
     {
+        cartTableModel.cartTableDefaultListModel.deleteRow(selectedRow);
+        cartTableModel.fireTableDataChanged();
+        removeItemButton.setEnabled(false);
+    }
 
-
-	cartTableModel.cartTableDefaultListModel.addRow(cartRow);
-	cartTableModel.fireTableDataChanged();
-
-
+}
+//=====================================================
+public void addItemToCart(Vector<Object> cartRow)
+{
+    cartTableModel.cartTableDefaultListModel.addRow(cartRow);
+    cartTableModel.fireTableDataChanged();
     clearButton.setEnabled(true);
-
-    }
-    //=====================================================
-    public void mouseClicked(MouseEvent e)
-    {
+}
+//=====================================================
+@Override
+public void mouseClicked(MouseEvent e)
+{
     System.out.println("ShoppingCart mouseClicked");
-
+    
     if (e.getButton() == MouseEvent.BUTTON1)
-        {
-
+    {
         mousePoint = e.getPoint();
         selectedRow = cartTable.rowAtPoint(mousePoint);
         System.out.println(selectedRow + " SELECTED");
-
         cartTable.changeSelection(selectedRow, 0, false, false);
         removeItemButton.setEnabled(true);
-        }
+    }
     else
-    	{
-	    removeItemButton.setEnabled(false);
-		}
-	}
-	//=====================================================
-    public void mousePressed(MouseEvent e)
     {
-
-	}
-	//=====================================================
-    public void mouseReleased(MouseEvent e)
-    {
-
-	}
-	//=====================================================
-    public void mouseEntered(MouseEvent e)
-    {
-
-	}
-	//=====================================================
-    public void mouseExited(MouseEvent e)
-    {
-
-	}
-	//=====================================================
-
-
-
+        removeItemButton.setEnabled(false);
+    }
+}
+//=====================================================
+@Override
+public void mousePressed(MouseEvent e)
+{
+}
+//=====================================================
+@Override
+ public void mouseReleased(MouseEvent e)
+{
+}
+//=====================================================
+@Override
+public void mouseEntered(MouseEvent e)
+{
+}
+//=====================================================
+@Override
+public void mouseExited(MouseEvent e)
+{
+}
+//=====================================================
 }
 //#########################################################
