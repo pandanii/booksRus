@@ -195,7 +195,7 @@ private JMenuBar createMenuBar()
 
 
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    addCartMenuItem = new JMenuItem("Add" , KeyEvent.VK_A);
+    addCartMenuItem = new JMenuItem("Add To Cart" , KeyEvent.VK_A);
     addCartMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
     addCartMenuItem.getAccessibleContext().setAccessibleDescription("Add item to cart");
     addCartMenuItem.setToolTipText("Add item to cart");
@@ -319,7 +319,7 @@ public void actionPerformed(ActionEvent e)
     }
     else if (e.getActionCommand().equals("CANCELCLICK"))
     {
-	rightClickMenu.setVisible(false);
+    rightClickMenu.setVisible(false);
     }
     else if (e.getActionCommand().equals("USERINFO"))
     {
@@ -339,7 +339,7 @@ public void actionPerformed(ActionEvent e)
         {
             if (connection != null)
             {
-                LoginJDialog loginJDialog = new LoginJDialog(this); //sending the JDialog a pointer to this instance of StoreFrame so it can all one of its methods                    
+                LoginJDialog loginJDialog = new LoginJDialog(this); //sending the JDialog a pointer to this instance of StoreFrame so it can all one of its methods
                 System.out.println("Good connection");
             }
             else
@@ -498,13 +498,13 @@ public void actionPerformed(ActionEvent e)
             }
             else
             {
-		JOptionPane.showMessageDialog(null, "You must be logged in first.");
-	    }
+        JOptionPane.showMessageDialog(null, "You must be logged in first.");
+        }
         }
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
     {
-	try
+    try
         {
             System.out.println("Attempting to ADDTOCART");
             String titleToAdd = null;
@@ -538,31 +538,31 @@ public void actionPerformed(ActionEvent e)
             if (numberInStock > 0 && titleToAdd != null)
             {
                 response = JOptionPane.showInputDialog("Enter the quantity of " + titleToAdd + " you'd like to purchase.");
-		quantityToPurchase = Integer.parseInt(response);
+        quantityToPurchase = Integer.parseInt(response);
                 System.out.println("quantityToPurchase " + quantityToPurchase);
-		if (quantityToPurchase > numberInStock)
-		{
+        if (quantityToPurchase > numberInStock)
+        {
                     JOptionPane.showMessageDialog(null, "Too few items in stock for that transaction.", "Failed", JOptionPane.ERROR_MESSAGE);
-		}
-		else
-		{
+        }
+        else
+        {
                     cartRow.add(titleToAdd);
                     cartRow.add(priceToAdd);
                     cartRow.add(quantityToPurchase);
                     shoppingCart.addItemToCart(cartRow);    //should take a rowList to add it to the JTable for each purchased item//that table has media title, media cost, and quantity as columns already
-            	}									
+                }
             }
             else
             {
                 JOptionPane.showMessageDialog(null, "Couldn't add item to cart.", "Failed", JOptionPane.ERROR_MESSAGE);
             }
-	}
-	catch(NumberFormatException nfe)
-	{
+    }
+    catch(NumberFormatException nfe)
+    {
             System.out.println("NumberFormatException in StoreFrame actionPerformed");
             JOptionPane.showMessageDialog(null, "Enter a number for the quantity.", "Failed", JOptionPane.ERROR_MESSAGE);
             nfe.printStackTrace();
-	}
+    }
 
     }
     else if (e.getActionCommand().equals("OPENCART"))
@@ -870,7 +870,7 @@ public void mouseClicked(MouseEvent e)
     }
     else
     {
-	rightClickMenu.setVisible(false);
+    rightClickMenu.setVisible(false);
     }
 }
 //=====================================================
