@@ -129,34 +129,33 @@ public ShoppingCart(StoreFrame pointerToStoreFrame)
 @Override
 public void actionPerformed(ActionEvent e)
 {
-
     if (e.getActionCommand().equals("CLOSE"))
     {
         this.setVisible(false);
     }
     else if (e.getActionCommand().equals("PURCHASE"))
     {
-    //use a loop to send sql commands to database to subtract stock
-    PreparedStatement preparedStatement;
-    ResultSet         resultSet = null;
-    boolean           isAdvd    = false;
-    boolean           isAbook   = false;
-    int numberOfCopiesToBuy;
-    int costTotal;
-    if(connection == null)
-    {
-        JOptionPane.showMessageDialog(null,"The connection is null!!!!");
-    }
-    if(cartTable == null)
+        //use a loop to send sql commands to database to subtract stock
+        PreparedStatement preparedStatement;
+        ResultSet         resultSet = null;
+        boolean           isAdvd    = false;
+        boolean           isAbook   = false;
+        int               numberOfCopiesToBuy;
+        int               costTotal;
+        if(connection == null)
         {
+            JOptionPane.showMessageDialog(null,"The connection is null!!!!");
+        }
+        else if(cartTable == null || cartTable.getRowCount() == 0)
+        {   
             JOptionPane.showMessageDialog(null,"There is nothing in your cart!");
         }
-    else
+        else
         {
             int maxTransactionId;
             int cost = 0;
             costTotal = 0;
-        for (int i=0; i < cartTable.getRowCount(); i++)
+            for (int i=0; i < cartTable.getRowCount(); i++)
             {
                 try
                 {
@@ -243,9 +242,7 @@ public void actionPerformed(ActionEvent e)
                                 System.out.println("Cost: " + cost);
                             }
                         }
-
                         preparedStatement.close();
-
                         numberOfCopiesToBuy = (int)cartTable.getValueAt(i, 2);
                         cost = cost * numberOfCopiesToBuy;
                         costTotal = costTotal + cost;
@@ -268,7 +265,6 @@ public void actionPerformed(ActionEvent e)
                         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                         preparedStatement.execute();
                         preparedStatement.close();
-
                     }
                 }
                 catch(SQLException sqle)
@@ -277,12 +273,12 @@ public void actionPerformed(ActionEvent e)
                     sqle.printStackTrace();
                 }
             }
-        JOptionPane.showMessageDialog(null, "Transaction completed for $" + costTotal + " ,we will ship it to you soon.");
+            JOptionPane.showMessageDialog(null, "Transaction completed for $" + costTotal + " ,we will ship it to you soon.");
 
-        cartTableModel.cartTableDefaultListModel.clear();
-        cartTableModel.fireTableDataChanged();
-        removeItemButton.setEnabled(false);
-        clearButton.setEnabled(false);
+            cartTableModel.cartTableDefaultListModel.clear();
+            cartTableModel.fireTableDataChanged();
+            removeItemButton.setEnabled(false);
+            clearButton.setEnabled(false);
         }
     }
     else if (e.getActionCommand().equals("CLEARCART"))

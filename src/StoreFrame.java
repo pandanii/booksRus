@@ -698,7 +698,6 @@ public void actionPerformed(ActionEvent e)
             {
                 try
                 {
-
                     preparedStatement = connection.prepareStatement(listOfQueries.deletePurchase);
                     preparedStatement.clearParameters();
                     preparedStatement.setString(1, (String)myTable.getValueAt(myTable.getSelectedRow(),0));
