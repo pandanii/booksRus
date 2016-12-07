@@ -13,7 +13,6 @@ JPanel     scrollPanel;
 Connection connection;
 Queries    listOfQueries;
 
-JMenu      adminMenu;
 JPopupMenu rightClickMenu;
 int        selectedRow;
 Point      mousePoint;
@@ -34,6 +33,7 @@ String email;
 String name;
 
 JMenu logInMenu; //one dropdown part of the menu bar declared here so it can be referenced
+JMenu adminMenu;
 
 static final String JDBC_DRIVER  = "com.mysql.jdbc.Driver";
 static final String DATABASE_URL = "jdbc:mysql://localhost:3306/movies&books"/*"jdbc:mysql://falcon-cs.fairmontstate.edu/DB00";SWAP THESE FOR SCHOOL EDITING.*/;
@@ -80,6 +80,7 @@ public StoreFrame()
     establishConnection();
     
     shoppingCart = new ShoppingCart(this); // MUST BE INITIALIZED AFTER THE CONNECTION IS ESTABLISHED TO THE SERVER
+    logInMenu.getItem(0).doClick();// should click on DISPLAY_MEDIA button
 }
 //=====================================================
 private void setupMainFrame()
