@@ -836,23 +836,30 @@ public void actionPerformed(ActionEvent e)
     }
     else if(e.getActionCommand().equals("USERPURCH"))
     {
-        try
+        if(!loggedIn)
         {
-            System.out.println("Purchase History");//DEBUG
-            preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
-            preparedStatement.clearParameters();
-            System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-            preparedStatement.setString(1, userID);   //only the logged in user can see their history
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet != null)
-            {
-                this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
-            }
+         JOptionPane.showMessageDialog(null, "Not Logged in.", "Login please!", JOptionPane.ERROR_MESSAGE);   
         }
-        catch (SQLException sqle) 
+        else
         {
-            System.out.println("SQLException in StoreFrame actionPerformed");
-            sqle.printStackTrace();
+            try
+            {
+                System.out.println("Purchase History");//DEBUG
+                preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
+                preparedStatement.clearParameters();
+                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                preparedStatement.setString(1, userID);   //only the logged in user can see their history
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet != null)
+                {
+                    this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+                }
+            }
+            catch (SQLException sqle) 
+            {
+                System.out.println("SQLException in StoreFrame actionPerformed");
+                sqle.printStackTrace();
+            }
         }
     }
 }
