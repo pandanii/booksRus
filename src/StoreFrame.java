@@ -151,6 +151,9 @@ private JMenuBar createMenuBar()
     JMenuItem adminAddDvdMenuItem;
     JMenuItem adminAddBookMenuItem;
     JMenuItem adminRemoveMediaMenuItem;
+    JMenuItem adminBookInfoMenuItem;
+    JMenuItem adminAdminLast24MenuItem;
+    JMenuItem adminTop10MenuItem;
 
     menuBar = new JMenuBar();
 
@@ -284,7 +287,21 @@ private JMenuBar createMenuBar()
     adminAddDvdMenuItem.setActionCommand("ADD_DVD");
     adminAddDvdMenuItem.addActionListener(this);
     adminMenu.add(adminAddDvdMenuItem);
-
+    
+    adminAdminLast24MenuItem = new JMenuItem("Orders in last 24 hrs");
+    adminAdminLast24MenuItem.getAccessibleContext().setAccessibleDescription("Orders in last 24 hrs");
+    adminAdminLast24MenuItem.setToolTipText("Orders in last 24 hrs");
+    adminAdminLast24MenuItem.setActionCommand("AD_LAST_24");
+    adminAdminLast24MenuItem.addActionListener(this);
+    adminMenu.add(adminAdminLast24MenuItem);
+    
+    adminTop10MenuItem = new JMenuItem("Admin Top Ten");
+    adminTop10MenuItem.getAccessibleContext().setAccessibleDescription("Admin Top Ten");
+    adminTop10MenuItem.setToolTipText("Admin Top Ten");
+    adminTop10MenuItem.setActionCommand("ADMIN_TOP10");
+    adminTop10MenuItem.addActionListener(this);
+    adminMenu.add(adminTop10MenuItem);
+    
     menuBar.add(adminMenu);
     adminMenu.setEnabled(false);
 
@@ -455,16 +472,28 @@ public void actionPerformed(ActionEvent e)
                             System.out.println("geting cost!!!!");
                             if(isAdvd)
                             {
-                                cost = resultSet.getInt(1) + 1;
-                                System.out.println("Cost: " + cost);
+                                if(cost > 50)
+                                {
+                                  System.out.println("Free shipping!!!!!");   
+                                }
+                                else
+                                {
+                                    cost = resultSet.getInt(1) + 1;
+                                }
                             }
                             if(isAbook)
                             {
-                                cost = resultSet.getInt(1) + 2;
-                                System.out.println("Cost: " + cost);
+                                if(cost > 50)
+                                {
+                                  System.out.println("Free shipping!!!!!");   
+                                }
+                                else
+                                {
+                                    cost = resultSet.getInt(1) + 1;
+                                }
                             }
+                            System.out.println("Cost: " + cost);
                         }
-
                         preparedStatement.close();
 
 
@@ -498,8 +527,8 @@ public void actionPerformed(ActionEvent e)
             }
             else
             {
-        JOptionPane.showMessageDialog(null, "You must be logged in first.");
-        }
+                JOptionPane.showMessageDialog(null, "You must be logged in first.");
+            }
         }
     }
     else if (e.getActionCommand().equals("ADDTOCART"))
@@ -754,6 +783,46 @@ public void actionPerformed(ActionEvent e)
         {
             System.out.println("No connection to database.");
             JOptionPane.showMessageDialog(null, "Not connected.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    else if(e.getActionCommand().equals("AD_LAST_24"))
+    {
+        try
+        {
+            System.out.println("comboObject.toString().equals(\"Admin Last 24 hours\")");//DEBUG
+            preparedStatement = connection.prepareStatement(listOfQueries.admin_In_Last_24h);
+            preparedStatement.clearParameters();
+            System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet != null)
+            {
+                this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+            }
+        }
+        catch (SQLException sqle) 
+        {
+            System.out.println("SQLException in StoreFrame actionPerformed");
+            sqle.printStackTrace();
+        }
+    }
+    else if(e.getActionCommand().equals("ADMIN_TOP10"))
+    {
+        try
+        {
+            System.out.println("!!ADMIN_TOP10!!");//DEBUG
+            preparedStatement = connection.prepareStatement(listOfQueries.admin_top_10);
+            preparedStatement.clearParameters();
+            System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet != null)
+            {
+                this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+            }
+        }
+        catch (SQLException sqle) 
+        {
+            System.out.println("SQLException in StoreFrame actionPerformed");
+            sqle.printStackTrace();
         }
     }
 }

@@ -67,18 +67,19 @@ boolean loggedIn;
     searchTextFieldLabel = new JLabel("Keywords:");
 
     searchComboBox = new JComboBox();
-/*
+
     if (isAdmin)
-        {
+    {
+        // leave these in, but I put them in the other spot to... admin book info doesnt work there though!
         searchComboBox.addItem("Admin Book Info");
         searchComboBox.addItem("Admin Last 24 hours");
         searchComboBox.addItem("Admin Top Ten");
-        }
+    }
     if (loggedIn)
-        {
+    {
         searchComboBox.addItem("Purchase History");
-        }
-*/
+    }
+
     searchComboBox.addItem("DVD Title");
     searchComboBox.addItem("Director Name");
     searchComboBox.addItem("Cast Member Name");
