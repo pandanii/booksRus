@@ -288,6 +288,10 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+ALTER table `purchase`
+	DROP FOREIGN KEY `purchase_ibfk_1`
+
+ALTER table `purchase` ADD CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
 --
 -- Dumping data for table `users`
 --
