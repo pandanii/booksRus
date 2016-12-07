@@ -79,6 +79,7 @@ public StoreFrame()
     setupPopMenu();
     establishConnection();
     
+    shoppingCart = new ShoppingCart(this); // MUST BE INITIALIZED AFTER THE CONNECTION IS ESTABLISHED TO THE SERVER
 }
 //=====================================================
 private void setupMainFrame()
