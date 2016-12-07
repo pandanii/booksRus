@@ -149,10 +149,10 @@ public AddDvdDialog(StoreFrame pointerToStoreFrame)
                 System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
                 preparedStatement.execute();
                 preparedStatement.clearParameters();
-                dispose();
             }
             //---------------------------------------------------------
-
+            pointerToStoreFrame.adminMenu.getItem(1).doClick();// should click on DISPLAY_MEDIA button
+            dispose();
         }
         catch(SQLException sqle1)
         {

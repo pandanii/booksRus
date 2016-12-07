@@ -138,6 +138,7 @@ private JMenuBar createMenuBar()
 
     JMenuItem loginMenuItem;
     JMenuItem userInfoMenuItem;
+    JMenuItem userPurchaseMenuItem;
     JMenuItem searchMenuItem;
     JMenuItem historyMenuItem;
     JMenuItem cartMenuItem;
@@ -151,7 +152,6 @@ private JMenuBar createMenuBar()
     JMenuItem adminAddDvdMenuItem;
     JMenuItem adminAddBookMenuItem;
     JMenuItem adminRemoveMediaMenuItem;
-    JMenuItem adminBookInfoMenuItem;
     JMenuItem adminAdminLast24MenuItem;
     JMenuItem adminTop10MenuItem;
 
@@ -165,6 +165,7 @@ private JMenuBar createMenuBar()
     loginMenuItem.setToolTipText("Log into your Books-R-Us account.");
     loginMenuItem.setActionCommand("LOGIN");
     loginMenuItem.addActionListener(this);
+    logInMenu.add(loginMenuItem);
 
     userInfoMenuItem = new JMenuItem("User Info" , KeyEvent.VK_U);
     userInfoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.ALT_MASK));
@@ -172,9 +173,17 @@ private JMenuBar createMenuBar()
     userInfoMenuItem.setToolTipText("EDIT your Books-R-Us account info.");
     userInfoMenuItem.setActionCommand("USERINFO");
     userInfoMenuItem.addActionListener(this);
-
-    logInMenu.add(loginMenuItem);
     logInMenu.add(userInfoMenuItem);
+    
+    userPurchaseMenuItem = new JMenuItem("User Purchase Info");
+    userPurchaseMenuItem.getAccessibleContext().setAccessibleDescription("User Purchase Info");
+    userPurchaseMenuItem.setToolTipText("User Purchase Info");
+    userPurchaseMenuItem.setActionCommand("USERPURCH");
+    userPurchaseMenuItem.addActionListener(this);
+    logInMenu.add(userPurchaseMenuItem);
+    
+    
+
     menuBar.add(logInMenu);
 
 
@@ -739,7 +748,7 @@ public void actionPerformed(ActionEvent e)
                     System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
                     preparedStatement.execute();
                     preparedStatement.close();
-                    adminMenu.getItem(0).doClick();// should click on DISPLAY_MEDIA button
+                    adminMenu.getItem(0).doClick();// should click on REMOVE_USER button
                 }
                 catch (SQLException sqle)
                 {
@@ -813,6 +822,27 @@ public void actionPerformed(ActionEvent e)
             preparedStatement = connection.prepareStatement(listOfQueries.admin_top_10);
             preparedStatement.clearParameters();
             System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet != null)
+            {
+                this.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+            }
+        }
+        catch (SQLException sqle) 
+        {
+            System.out.println("SQLException in StoreFrame actionPerformed");
+            sqle.printStackTrace();
+        }
+    }
+    else if(e.getActionCommand().equals("USERPURCH"))
+    {
+        try
+        {
+            System.out.println("Purchase History");//DEBUG
+            preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
+            preparedStatement.clearParameters();
+            System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+            preparedStatement.setString(1, userID);   //only the logged in user can see their history
             resultSet = preparedStatement.executeQuery();
             if (resultSet != null)
             {
@@ -995,6 +1025,7 @@ System.out.println("isAdmin" + isAdmin);
         System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
         preparedStatement.execute();
         preparedStatement.close();
+        adminMenu.getItem(0).doClick();// should click on REMOVE_USER button
     }
     catch (SQLException sqle)
     {

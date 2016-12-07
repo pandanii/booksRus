@@ -163,17 +163,14 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
             preparedStatement.clearParameters();
             //---------------------------------------------------------
             //#########################################################
-			                        preparedStatement = connection.prepareStatement(listOfQueries.insertPublishers);//"INSERT INTO publishers(address,name,URL,phone_number) values (?,?,?,?)"
-						            preparedStatement.setString(1, publisherAddressTextField.getText().trim());
-						            preparedStatement.setString(2, publisherNameTextField.getText().trim());
-						            preparedStatement.setString(3, publisherURLTextField.getText().trim());
-						            preparedStatement.setString(4, publisherPhoneNumberTextField.getText().trim());
-						            System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
-						            preparedStatement.execute();
-			            			preparedStatement.clearParameters();
-
-
-
+            preparedStatement = connection.prepareStatement(listOfQueries.insertPublishers);//"INSERT INTO publishers(address,name,URL,phone_number) values (?,?,?,?)"
+            preparedStatement.setString(1, publisherAddressTextField.getText().trim());
+            preparedStatement.setString(2, publisherNameTextField.getText().trim());
+            preparedStatement.setString(3, publisherURLTextField.getText().trim());
+            preparedStatement.setString(4, publisherPhoneNumberTextField.getText().trim());
+            System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
+            preparedStatement.execute();
+            preparedStatement.clearParameters();
 
             //#########################################################
             // This section is for the 2nd insertion query on books.
@@ -223,6 +220,7 @@ public AddBookDialog(StoreFrame pointerToStoreFrame)
                 System.out.println("Attempting to execute INSERT with preparedStatement: " + preparedStatement.toString());
                 preparedStatement.execute();
                 preparedStatement.clearParameters();
+                pointerToStoreFrame.adminMenu.getItem(1).doClick();// should click on DISPLAY_MEDIA button
                 dispose();
             }
             catch(SQLException sqle2)

@@ -72,12 +72,12 @@ boolean loggedIn;
     {
         // leave these in, but I put them in the other spot to... admin book info doesnt work there though!
         searchComboBox.addItem("Admin Book Info");
-        searchComboBox.addItem("Admin Last 24 hours");
-        searchComboBox.addItem("Admin Top Ten");
+        //searchComboBox.addItem("Admin Last 24 hours");
+        //searchComboBox.addItem("Admin Top Ten");
     }
     if (loggedIn)
     {
-        searchComboBox.addItem("Purchase History");
+        //searchComboBox.addItem("Purchase History");
     }
 
     searchComboBox.addItem("DVD Title");

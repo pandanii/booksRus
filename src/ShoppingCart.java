@@ -10,6 +10,7 @@ import javax.swing.table.*;
 //#########################################################
 public class ShoppingCart extends JDialog implements ActionListener,MouseListener
 {
+private static final long serialVersionUID = 1L;
 StoreFrame pointerToStoreFrame;
 Connection connection;
 
