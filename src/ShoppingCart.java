@@ -142,6 +142,7 @@ public void actionPerformed(ActionEvent e)
         boolean           isAbook   = false;
         int               numberOfCopiesToBuy;
         int               costTotal;
+        int               shippingTotal;
         if(connection == null)
         {
             JOptionPane.showMessageDialog(null,"The connection is null!!!!");
@@ -154,7 +155,9 @@ public void actionPerformed(ActionEvent e)
         {
             int maxTransactionId;
             int cost = 0;
+            int shippingCost = 0;
             costTotal = 0;
+            shippingTotal = 0;
             for (int i=0; i < cartTable.getRowCount(); i++)
             {
                 try
@@ -231,21 +234,37 @@ public void actionPerformed(ActionEvent e)
                         else
                         {
                             System.out.println("geting cost!!!!");
+                            cost = resultSet.getInt(1);
                             if(isAdvd)
                             {
-                                cost = resultSet.getInt(1) + 1;
+                                //cost = resultSet.getInt(1) + 1;
+                                shippingCost = 1;
                                 System.out.println("Cost: " + cost);
                             }
                             if(isAbook)
                             {
-                                cost = resultSet.getInt(1) + 2;
+                                //cost = resultSet.getInt(1) + 2;
+                                shippingCost = 2;
                                 System.out.println("Cost: " + cost);
                             }
                         }
                         preparedStatement.close();
                         numberOfCopiesToBuy = (int)cartTable.getValueAt(i, 2);
                         cost = cost * numberOfCopiesToBuy;
+                        System.out.println("Cost:"+cost);  
+                        shippingCost = shippingCost * numberOfCopiesToBuy;
+                        System.out.println("shippingCost!:"+shippingCost);  
+                        shippingTotal = shippingTotal + shippingCost;
+                        System.out.println("shippingTotal!:"+shippingTotal);  
                         costTotal = costTotal + cost;
+                        System.out.println("costTotal!:"+costTotal);  
+                        if(costTotal >50)
+                        {
+                            shippingTotal = 0;
+                            System.out.println("Free Shipping!");  
+                        }
+                        costTotal = costTotal+ shippingTotal;// sets the shipping cost
+                        
                         // inserts purchase history
                         preparedStatement = connection.prepareStatement(listOfQueries.insertPurchase_History);//"INSERT INTO 'purchase_History' (transationID,date_of_purchase, number_of_copies, total_cost) VALUES(?,CURDATE(),?,?);";
                         preparedStatement.clearParameters();
@@ -273,7 +292,7 @@ public void actionPerformed(ActionEvent e)
                     sqle.printStackTrace();
                 }
             }
-            JOptionPane.showMessageDialog(null, "Transaction completed for $" + costTotal + " ,we will ship it to you soon.");
+            JOptionPane.showMessageDialog(null, "Transaction completed for $" + costTotal + " total [shipping was: $"+shippingTotal+"] ,we will ship it to you soon.");
 
             cartTableModel.cartTableDefaultListModel.clear();
             cartTableModel.fireTableDataChanged();
