@@ -519,15 +519,15 @@ public void actionPerformed(ActionEvent e)
                 {
                     if (myTable.getColumnName(i).equals("Amount in Stock"))
                     {
-                        numberInStock = (int)(myTable.getValueAt(selectedRow, i));
+                        numberInStock = (int)(myTable.getValueAt(myTable.getSelectedRow(), i));
                     }
                     if (myTable.getColumnName(i).equals("DVD Title") || myTable.getColumnName(i).equals("Book Title"))
                     {
-                        titleToAdd = (String)myTable.getValueAt(selectedRow, i);
+                        titleToAdd = (String)myTable.getValueAt(myTable.getSelectedRow(), i);
                     }
                     if (myTable.getColumnName(i).equals("Price"))
                     {
-                        priceToAdd = (int)myTable.getValueAt(selectedRow, i);
+                        priceToAdd = (int)myTable.getValueAt(myTable.getSelectedRow(), i);
                     }
                 }
             }
@@ -538,14 +538,14 @@ public void actionPerformed(ActionEvent e)
             if (numberInStock > 0 && titleToAdd != null)
             {
                 response = JOptionPane.showInputDialog("Enter the quantity of " + titleToAdd + " you'd like to purchase.");
-        quantityToPurchase = Integer.parseInt(response);
+                quantityToPurchase = Integer.parseInt(response);
                 System.out.println("quantityToPurchase " + quantityToPurchase);
-        if (quantityToPurchase > numberInStock)
-        {
+                if (quantityToPurchase > numberInStock)
+                {
                     JOptionPane.showMessageDialog(null, "Too few items in stock for that transaction.", "Failed", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+                }
+                else
+                {
                     cartRow.add(titleToAdd);
                     cartRow.add(priceToAdd);
                     cartRow.add(quantityToPurchase);

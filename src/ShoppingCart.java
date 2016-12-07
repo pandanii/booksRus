@@ -29,9 +29,11 @@ JButton removeItemButton;
 JButton clearButton;
 
 //=====================================================
+@SuppressWarnings({"LeakingThisInConstructor", "OverridableMethodCallInConstructor"})
 public ShoppingCart(StoreFrame pointerToStoreFrame)
 {
     this.pointerToStoreFrame = pointerToStoreFrame;
+    listOfQueries = new Queries();
     this.connection = pointerToStoreFrame.connection;
 
     Container cp;
@@ -126,6 +128,7 @@ public ShoppingCart(StoreFrame pointerToStoreFrame)
 
 }
 //=====================================================
+@Override
 public void actionPerformed(ActionEvent e)
 {
 
