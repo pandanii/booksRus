@@ -75,12 +75,10 @@ public StoreFrame()
     cp = getContentPane();
     cp.add(mainPanel, BorderLayout.CENTER);
 
-    shoppingCart = new ShoppingCart(this);
-
     setupMainFrame();
     setupPopMenu();
-
     establishConnection();
+    
 }
 //=====================================================
 private void setupMainFrame()

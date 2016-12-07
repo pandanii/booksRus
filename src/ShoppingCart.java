@@ -123,9 +123,6 @@ public ShoppingCart(StoreFrame pointerToStoreFrame)
     setMinimumSize(d);
 
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-    connection = pointerToStoreFrame.copyConnection();
-
 }
 //=====================================================
 @Override
@@ -145,7 +142,10 @@ public void actionPerformed(ActionEvent e)
     boolean           isAbook   = false;
     int numberOfCopiesToBuy;
     int costTotal;
-
+    if(connection == null)
+    {
+        JOptionPane.showMessageDialog(null,"The connection is null!!!!");
+    }
     if(cartTable == null)
         {
             JOptionPane.showMessageDialog(null,"There is nothing in your cart!");
