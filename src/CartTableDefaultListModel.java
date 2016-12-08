@@ -1,40 +1,32 @@
 
-import javax.swing.*;
 import java.util.*;
-
+import javax.swing.*;
 
 //#########################################################
-public class CartTableDefaultListModel extends DefaultListModel
-									   implements CartDataManagerInterface
+public class CartTableDefaultListModel extends DefaultListModel implements CartDataManagerInterface
 {
-Vector<Object> cartRow;
 
+    private static final long serialVersionUID = 1L;
 
-	//=====================================================
-	public CartTableDefaultListModel() //constructor
-	{
-	cartRow = new Vector<Object>();
-	}
-	//=====================================================
-	public void addRow(Vector<Object> cartRow)
-	{
-//	System.out.println("CartTableDefaultListModel addRow");
-	//add the cartRow to the DefaultListModel
+    public Vector<Object> cartRow;
 
-	addElement(cartRow);
+    //=====================================================
+    public CartTableDefaultListModel() //constructor
+    {
+        cartRow = new Vector<>();
+    }
 
-	}
-	//=====================================================
-	public void deleteRow(int rowToRemoveIndex)
-	{
-//	System.out.println("CartTableDefaultListModel deleteRow");
-	//delete a selected row
+    //=====================================================
+    public void addRow(Vector<Object> cartRow)//add the cartRow to the DefaultListModel
+    {
+        this.addElement(cartRow);
+    }
 
-	removeElementAt(rowToRemoveIndex);
-
-
-	}
-	//=====================================================
-
+    //=====================================================
+    public void deleteRow(int rowToRemoveIndex)//delete a selected row
+    {
+        removeElementAt(rowToRemoveIndex);
+    }
+    //=====================================================
 }
 //#########################################################

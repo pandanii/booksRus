@@ -1,388 +1,372 @@
 //BooksRUs Software
 
-import java.sql.*;
 import java.awt.*;
-import javax.swing.*;
 import java.awt.event.*;
+import java.sql.*;
+import javax.swing.*;
 import javax.swing.event.*;
 
-
 //#########################################################
-public class SearchJDialog extends JDialog
-                           implements ActionListener,
-                                      DocumentListener
+public class SearchJDialog extends JDialog implements ActionListener, DocumentListener
 {
 
-Queries listOfQueries;
+    public Queries listOfQueries;
 
-StoreFrame pointerToStoreFrame;
+    public StoreFrame pointerToStoreFrame;
 
-JButton searchButton;
-JTextField searchTextField;
-JComboBox searchComboBox;
+    public JButton searchButton;
+    public JTextField searchTextField;
+    public JComboBox searchComboBox;
 
-boolean isAdmin;
-boolean loggedIn;
+    public boolean isAdmin;
+    public boolean loggedIn;
 
     //=====================================================
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public SearchJDialog(StoreFrame pointerToStoreFrame)
     {
-    this.pointerToStoreFrame = pointerToStoreFrame;
-    this.isAdmin = pointerToStoreFrame.isAdmin;
-    this.loggedIn = pointerToStoreFrame.loggedIn;
+        this.pointerToStoreFrame = pointerToStoreFrame;
+        this.isAdmin = pointerToStoreFrame.isAdmin;
+        this.loggedIn = pointerToStoreFrame.loggedIn;
 
-    Container cp;
-    Toolkit tk;
-    Dimension d;
+        Container cp;
+        Toolkit tk;
+        Dimension d;
 
-    listOfQueries = new Queries();
+        listOfQueries = new Queries();
 
-    JButton cancelButton;
+        JButton cancelButton;
 
-    JLabel searchComboBoxLabel;
-    JLabel searchTextFieldLabel;
+        JLabel searchComboBoxLabel;
+        JLabel searchTextFieldLabel;
 
-    JPanel mainPanel;
-    JPanel searchComboBoxAndLabelPanel;
-    JPanel searchTextFieldAndLabelPanel;
-    JPanel buttonPanel;
+        JPanel mainPanel;
+        JPanel searchComboBoxAndLabelPanel;
+        JPanel searchTextFieldAndLabelPanel;
+        JPanel buttonPanel;
 
-    searchButton = new JButton("Search");
-    searchButton.setActionCommand("SEARCH");
-    searchButton.addActionListener(this);
-    searchButton.setToolTipText("Begin the search.");
-    //searchButton.setEnabled(false);
+        searchButton = new JButton("Search");
+        searchButton.setActionCommand("SEARCH");
+        searchButton.addActionListener(this);
+        searchButton.setToolTipText("Begin the search.");
+        //searchButton.setEnabled(false);
 
-    cancelButton = new JButton("Cancel");
-    cancelButton.setActionCommand("CANCEL");
-    cancelButton.addActionListener(this);
-    cancelButton.setToolTipText("Close the search window.");
+        cancelButton = new JButton("Cancel");
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        cancelButton.setToolTipText("Close the search window.");
 
-    buttonPanel = new JPanel();
-    buttonPanel.add(searchButton);
-    buttonPanel.add(cancelButton);
+        buttonPanel = new JPanel();
+        buttonPanel.add(searchButton);
+        buttonPanel.add(cancelButton);
 
-    searchComboBoxLabel = new JLabel("Search By:");
+        searchComboBoxLabel = new JLabel("Search By:");
 
-    searchTextFieldLabel = new JLabel("Keywords:");
+        searchTextFieldLabel = new JLabel("Keywords:");
 
-    searchComboBox = new JComboBox();
+        searchComboBox = new JComboBox();
 
-    if (isAdmin)
-    {
-        // leave these in, but I put them in the other spot to... admin book info doesnt work there though!
-        searchComboBox.addItem("Admin Book Info");
-        //searchComboBox.addItem("Admin Last 24 hours");
-        //searchComboBox.addItem("Admin Top Ten");
-    }
-    if (loggedIn)
-    {
-        //searchComboBox.addItem("Purchase History");
-    }
+        if (isAdmin)
+        {
+            // leave these in, but I put them in the other spot to... admin book info doesnt work there though!
+            searchComboBox.addItem("Admin Book Info");
+            //searchComboBox.addItem("Admin Last 24 hours");
+            //searchComboBox.addItem("Admin Top Ten");
+        }
+        if (loggedIn)
+        {
+            //searchComboBox.addItem("Purchase History");
+        }
 
-    searchComboBox.addItem("DVD Title");
-    searchComboBox.addItem("Director Name");
-    searchComboBox.addItem("Cast Member Name");
-    searchComboBox.addItem("Genre");
-    searchComboBox.addItem("Sequel");
-    searchComboBox.addItem("DVD Keyword");
-    searchComboBox.addItem("Book Title");
-    searchComboBox.addItem("Author Name");
-    searchComboBox.addItem("Publisher Name");
-    searchComboBox.addItem("Book Category");
-    searchComboBox.addItem("Book Keyword");
-    searchComboBox.addActionListener(this);
+        searchComboBox.addItem("DVD Title");
+        searchComboBox.addItem("Director Name");
+        searchComboBox.addItem("Cast Member Name");
+        searchComboBox.addItem("Genre");
+        searchComboBox.addItem("Sequel");
+        searchComboBox.addItem("DVD Keyword");
+        searchComboBox.addItem("Book Title");
+        searchComboBox.addItem("Author Name");
+        searchComboBox.addItem("Publisher Name");
+        searchComboBox.addItem("Book Category");
+        searchComboBox.addItem("Book Keyword");
+        searchComboBox.addActionListener(this);
 
-    searchTextField = new JTextField(30);
-    searchTextField.getDocument().addDocumentListener(this);
+        searchTextField = new JTextField(30);
+        searchTextField.getDocument().addDocumentListener(this);
 
-    searchComboBoxAndLabelPanel = new JPanel(new BorderLayout());
-    searchComboBoxAndLabelPanel.add(searchComboBoxLabel, BorderLayout.CENTER);
-    searchComboBoxAndLabelPanel.add(searchComboBox, BorderLayout.SOUTH);
+        searchComboBoxAndLabelPanel = new JPanel(new BorderLayout());
+        searchComboBoxAndLabelPanel.add(searchComboBoxLabel, BorderLayout.CENTER);
+        searchComboBoxAndLabelPanel.add(searchComboBox, BorderLayout.SOUTH);
 
-    searchTextFieldAndLabelPanel = new JPanel(new BorderLayout());
-    searchTextFieldAndLabelPanel.add(searchTextFieldLabel, BorderLayout.CENTER);
-    searchTextFieldAndLabelPanel.add(searchTextField, BorderLayout.SOUTH);
+        searchTextFieldAndLabelPanel = new JPanel(new BorderLayout());
+        searchTextFieldAndLabelPanel.add(searchTextFieldLabel, BorderLayout.CENTER);
+        searchTextFieldAndLabelPanel.add(searchTextField, BorderLayout.SOUTH);
 
-    mainPanel = new JPanel();
-    mainPanel.add(searchTextFieldAndLabelPanel);
-    mainPanel.add(searchComboBoxAndLabelPanel);
+        mainPanel = new JPanel();
+        mainPanel.add(searchTextFieldAndLabelPanel);
+        mainPanel.add(searchComboBoxAndLabelPanel);
 
-    cp = getContentPane();
-    cp.add(mainPanel, BorderLayout.CENTER);
-    cp.add(buttonPanel, BorderLayout.SOUTH);
+        cp = getContentPane();
+        cp.add(mainPanel, BorderLayout.CENTER);
+        cp.add(buttonPanel, BorderLayout.SOUTH);
 
-    setTitle("Search Panel");
-    setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        setTitle("Search Panel");
+        setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
-    tk = Toolkit.getDefaultToolkit();
-    d = tk.getScreenSize();
-    setSize(d.width/4, d.height/8);
-    setLocation(d.width/3, d.height/3);
+        tk = Toolkit.getDefaultToolkit();
+        d = tk.getScreenSize();
+        setSize(d.width / 4, d.height / 8);
+        setLocation(d.width / 3, d.height / 3);
 
-    d.setSize(550, 100);
-    setMinimumSize(d);
+        d.setSize(550, 100);
+        setMinimumSize(d);
 
-    setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-    searchComboBox.setSelectedIndex(0); //select the first Item in the combobox to determine text field status
+        searchComboBox.setSelectedIndex(0); //select the first Item in the combobox to determine text field status
 
-    getRootPane().setDefaultButton(searchButton);
-    searchTextField.requestFocus();
+        getRootPane().setDefaultButton(searchButton);
+        searchTextField.requestFocus();
 
-    setVisible(true);
+        setVisible(true);
 
     }
     //=====================================================
-@SuppressWarnings("CallToPrintStackTrace")
-@Override
+
+    @SuppressWarnings("CallToPrintStackTrace")
+    @Override
     public void actionPerformed(ActionEvent e)
     {
 
-    if (e.getActionCommand().equals("CANCEL"))
+        if (e.getActionCommand().equals("CANCEL"))
         {
-        dispose();
+            dispose();
         }
-    else if (e.getActionCommand().equals("SEARCH"))
+        else if (e.getActionCommand().equals("SEARCH"))
         {
-        PreparedStatement preparedStatement;
-        Object comboObject;
-        String searchString;
-        Connection connection;
-        ResultSet resultSet;
+            PreparedStatement preparedStatement;
+            Object comboObject;
+            String searchString;
+            Connection connection;
+            ResultSet resultSet;
 
-        connection = pointerToStoreFrame.connection;
+            connection = pointerToStoreFrame.connection;
 
-        searchString = searchTextField.getText().trim();    //get what the user wants to search for
+            searchString = searchTextField.getText().trim();    //get what the user wants to search for
 
-        comboObject = searchComboBox.getSelectedItem();     //get what they want to search in from the combo box
-                                                            //and relate it to the Queries data members
-        resultSet = null;
-        try
+            comboObject = searchComboBox.getSelectedItem();     //get what they want to search in from the combo box
+            //and relate it to the Queries data members
+            resultSet = null;
+            try
             {
-            if (comboObject.toString().equals("Purchase History"))
+                if (comboObject.toString().equals("Purchase History"))
                 {
-                System.out.println("comboObject.toString().equals(\"Purchase History\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
-                preparedStatement.clearParameters();
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                preparedStatement.setString(1, pointerToStoreFrame.userID);   //only the logged in user can see their history
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Purchase History\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.purchase_History);
+                    preparedStatement.clearParameters();
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    preparedStatement.setString(1, pointerToStoreFrame.userID);   //only the logged in user can see their history
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Admin Book Info"))
+                else if (comboObject.toString().equals("Admin Book Info"))
                 {
-                System.out.println("comboObject.toString().equals(\"Admin Book Info\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.admin_Book_Info);
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, searchString);
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Admin Book Info\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.admin_Book_Info);
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, searchString);
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Admin Last 24 hours"))
+                else if (comboObject.toString().equals("Admin Last 24 hours"))
                 {
-                System.out.println("comboObject.toString().equals(\"Admin Last 24 hours\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.admin_In_Last_24h);
-                preparedStatement.clearParameters();
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    System.out.println("comboObject.toString().equals(\"Admin Last 24 hours\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.admin_In_Last_24h);
+                    preparedStatement.clearParameters();
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
 //                preparedStatement.setString(1, '%'+searchString+'%'); //not needed in this query
-                resultSet = preparedStatement.executeQuery();
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Admin Top Ten"))
+                else if (comboObject.toString().equals("Admin Top Ten"))
                 {
-                System.out.println("comboObject.toString().equals(\"Admin Top Ten\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.admin_top_10);
-                preparedStatement.clearParameters();
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    System.out.println("comboObject.toString().equals(\"Admin Top Ten\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.admin_top_10);
+                    preparedStatement.clearParameters();
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
 //                preparedStatement.setString(1, '%'+searchString+'%'); //not needed in this query
-                resultSet = preparedStatement.executeQuery();
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("DVD Title"))
+                else if (comboObject.toString().equals("DVD Title"))
                 {
-                System.out.println("comboObject.toString().equals(\"DVD Title\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs +listOfQueries.title_DVDs_Search +" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"DVD Title\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.title_DVDs_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Director Name"))
+                else if (comboObject.toString().equals("Director Name"))
                 {
-                System.out.println("comboObject.toString().equals(\"Director Name\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.director_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Director Name\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.director_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Cast Member Name"))
+                else if (comboObject.toString().equals("Cast Member Name"))
                 {
-                System.out.println("comboObject.toString().equals(\"Cast Member Name\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.cast_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Cast Member Name\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.cast_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Genre"))
+                else if (comboObject.toString().equals("Genre"))
                 {
-                System.out.println("comboObject.toString().equals(\"Genre\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.genre_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Genre\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.genre_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("DVD Keyword"))
+                else if (comboObject.toString().equals("DVD Keyword"))
                 {
-                System.out.println("comboObject.toString().equals(\"DVD Keyword\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.keyword_DVDs_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                preparedStatement.setString(2, '%'+searchString+'%');
-                preparedStatement.setString(3, '%'+searchString+'%');
-                preparedStatement.setString(4, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"DVD Keyword\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.keyword_DVDs_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    preparedStatement.setString(2, '%' + searchString + '%');
+                    preparedStatement.setString(3, '%' + searchString + '%');
+                    preparedStatement.setString(4, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Sequel"))
+                else if (comboObject.toString().equals("Sequel"))
                 {
-                System.out.println("comboObject.toString().equals(\"Sequel\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.sequel_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, searchString);
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Sequel\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsDVDs + listOfQueries.sequel_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, searchString);
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Book Title"))
+                else if (comboObject.toString().equals("Book Title"))
                 {
-                System.out.println("comboObject.toString().equals(\"Book Title\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.title_Books_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Book Title\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.title_Books_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Author Name"))
+                else if (comboObject.toString().equals("Author Name"))
                 {
-                System.out.println("comboObject.toString().equals(\"Author Name\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.author_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Author Name\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.author_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Publisher Name"))
+                else if (comboObject.toString().equals("Publisher Name"))
                 {
-                System.out.println("comboObject.toString().equals(\"Publisher Name\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.publisher_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Publisher Name\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.publisher_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Book Category"))
+                else if (comboObject.toString().equals("Book Category"))
                 {
-                System.out.println("comboObject.toString().equals(\"Book Category\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.subject_Cate_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Book Category\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.subject_Cate_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
-            else if (comboObject.toString().equals("Book Keyword"))
+                else if (comboObject.toString().equals("Book Keyword"))
                 {
-                System.out.println("comboObject.toString().equals(\"Book Keyword\")");//DEBUG
-                preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.keyword_Books_Search+" );");
-                preparedStatement.clearParameters();
-                preparedStatement.setString(1, '%'+searchString+'%');
-                preparedStatement.setString(2, '%'+searchString+'%');
-                preparedStatement.setString(3, '%'+searchString+'%');
-                preparedStatement.setString(4, '%'+searchString+'%');
-                System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
-                resultSet = preparedStatement.executeQuery();
+                    System.out.println("comboObject.toString().equals(\"Book Keyword\")");//DEBUG
+                    preparedStatement = connection.prepareStatement(listOfQueries.displayResultsBooks + listOfQueries.keyword_Books_Search + " );");
+                    preparedStatement.clearParameters();
+                    preparedStatement.setString(1, '%' + searchString + '%');
+                    preparedStatement.setString(2, '%' + searchString + '%');
+                    preparedStatement.setString(3, '%' + searchString + '%');
+                    preparedStatement.setString(4, '%' + searchString + '%');
+                    System.out.println("ATTEMPTING TO CALL SQL QUERY: " + preparedStatement);
+                    resultSet = preparedStatement.executeQuery();
                 }
 
-            if (resultSet != null)
+                if (resultSet != null)
                 {
-                pointerToStoreFrame.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
+                    pointerToStoreFrame.updateResultTable(resultSet);   //sending the resultSet to StoreFrame to be displayed
                 }
             }
-        catch (SQLException sqle)
+            catch (SQLException sqle)
             {
-            System.out.println("SQLException in SearchJDialog actionPerformed");
-            sqle.printStackTrace();
+                System.out.println("SQLException in SearchJDialog actionPerformed");
+                sqle.printStackTrace();
             }
-        dispose();
+            dispose();
         }
-    else
+        else
         {
-        reactToComboChanges();  //if selected Combo Item doesn't allow use of text field, disable field
+            reactToComboChanges();  //if selected Combo Item doesn't allow use of text field, disable field
         }
 
     }
     //=====================================================
-@Override
+
+    @Override
     public void changedUpdate(DocumentEvent e)
     {
-    //do nothing
     }
     //=====================================================
-@Override
+
+    @Override
     public void removeUpdate(DocumentEvent e)
     {
-    /*if (searchTextField.getText().trim().equals(""))
-        {
-        searchButton.setEnabled(false);
-        }
-    else
-        {
-        searchButton.setEnabled(true);
-        }*/
     }
     //=====================================================
-@Override
+
+    @Override
     public void insertUpdate(DocumentEvent e)
     {
-   /* if (searchTextField.getText().trim().equals(""))
-        {
-        searchButton.setEnabled(false);
-        }
-    else
-        {
-        searchButton.setEnabled(true);
-        }*/
     }
+
     //=====================================================
     public void reactToComboChanges()
     {
-//    System.out.println("reacting");
-    String selectedItem;
+        String selectedItem;
 
-    selectedItem = searchComboBox.getSelectedItem().toString();
+        selectedItem = searchComboBox.getSelectedItem().toString();
 
-    if (selectedItem.equals("Purchase History"))    //for any search option that cannot use the text field, disable it.
+        if (selectedItem.equals("Purchase History"))    //for any search option that cannot use the text field, disable it.
         {
-        searchTextField.setText("");
-        searchTextField.setEnabled(false);
+            searchTextField.setText("");
+            searchTextField.setEnabled(false);
         }
-    else if (selectedItem.equals("Admin Last 24 hours"))
+        else if (selectedItem.equals("Admin Last 24 hours"))
         {
-        searchTextField.setText("");
-        searchTextField.setEnabled(false);
+            searchTextField.setText("");
+            searchTextField.setEnabled(false);
         }
-    else if (selectedItem.equals("Admin Top Ten"))
+        else if (selectedItem.equals("Admin Top Ten"))
         {
-        searchTextField.setText("");
-        searchTextField.setEnabled(false);
+            searchTextField.setText("");
+            searchTextField.setEnabled(false);
         }
-    else
+        else
         {
-        searchTextField.setEnabled(true);
-        searchTextField.requestFocus();
+            searchTextField.setEnabled(true);
+            searchTextField.requestFocus();
         }
     }
     //=====================================================
-
 
 }
 //#########################################################

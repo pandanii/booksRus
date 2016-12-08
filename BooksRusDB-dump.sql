@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `movies&books` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `movies&books`;
 -- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: movies&books
@@ -37,7 +35,7 @@ CREATE TABLE `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES ('812 cthulhu lane','H. P. Lovecraft '),('newtownsomewhere','fred');
+INSERT INTO `authors` VALUES ('812 cthulhu lane','H. P. Lovecraft '),('Ben','Ben'),('Kurt Cobain','Kurt Cobain'),('newtownsomewhere','fred');
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +65,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES ('Necronomicon ',6660,'horror','underworld, 666 1000 street','necorocorp'),('WitchCraft and Wizardry',666,'zalgo','zalgo','zalgo'),('yoMomma',11,'horror','SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz');
+INSERT INTO `books` VALUES ('How to Drum',1111,'Music','Ben','Ben'),('Necronomicon ',6660,'horror','underworld, 666 1000 street','necorocorp'),('Nirvana',4321,'Jive','Music','Kurt Cobain'),('WitchCraft and Wizardry',666,'zalgo','zalgo','zalgo'),('yoMomma',11,'horror','SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +92,7 @@ CREATE TABLE `dvds` (
 
 LOCK TABLES `dvds` WRITE;
 /*!40000 ALTER TABLE `dvds` DISABLE KEYS */;
-INSERT INTO `dvds` VALUES ('Bruno','Sacha Baron Cohen ','Sacha Baron Cohen ','comedy'),('catdog','somedudes','neil patrick harris','gayromance'),('catdog2','somedudes and stuff','neil patrick harris','gayromance'),('Doctor Strange ','Ben CucumberBatch','Scott Derrickson','SuperHero'),('Fifty Shades of Grey','Dakota Johnson','Sam Taylor-Johnson',' erotic drama '),('Harry Potter and the sore bone','Harry and Ron','neil patrick harris','horror'),('rip','rip','rip','rip'),('the ring','Gore','Gore Verbinski','horror'),('the ring 2','Gore','Gore Verbinski','horror'),('the ring 3','Gore','Gore Verbinski','horror');
+INSERT INTO `dvds` VALUES ('Bleach','Kurt Cobain','Dave Grohl','Music'),('Bruno','Sacha Baron Cohen ','Sacha Baron Cohen ','comedy'),('catdog','somedudes','neil patrick harris','gayromance'),('catdog2','somedudes and stuff','neil patrick harris','gayromance'),('Doctor Strange ','Ben CucumberBatch','Scott Derrickson','SuperHero'),('Fifty Shades of Grey','Dakota Johnson','Sam Taylor-Johnson',' erotic drama '),('Harry Potter and the sore bone','Harry and Ron','neil patrick harris','horror'),('rip','rip','rip','rip'),('The Humpty Dance','Digital Underground','Sex packets','Comedy'),('the ring','Gore','Gore Verbinski','horror'),('the ring 2','Gore','Gore Verbinski','horror'),('the ring 3','Gore','Gore Verbinski','horror');
 /*!40000 ALTER TABLE `dvds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,7 +130,7 @@ CREATE TABLE `media` (
 
 LOCK TABLES `media` WRITE;
 /*!40000 ALTER TABLE `media` DISABLE KEYS */;
-INSERT INTO `media` VALUES ('Bruno',1,3,2016),('catdog',100,5,1994),('catdog2',100,5,1995),('Doctor Strange ',1,3,2016),('Fifty Shades of Grey',1,3,2016),('Harry Potter and the sore bone',2,1,2016),('Necronomicon ',666,6,2017),('rip',6,6,2006),('the ring',1,111,2002),('the ring 2',2,222,2003),('the ring 3',3,333,2003),('WitchCraft and Wizardry',666,666,1996),('yoMomma',1,100,1969);
+INSERT INTO `media` VALUES ('Bleach',27,48,1994),('Bruno',1,3,2016),('catdog',100,5,1994),('catdog2',100,5,1995),('Doctor Strange ',1,3,2016),('Fifty Shades of Grey',1,3,2016),('Harry Potter and the sore bone',2,1,2016),('How to Drum',11,40,2014),('Necronomicon ',666,6,2017),('Nirvana',24,19,1994),('rip',6,6,2006),('The Humpty Dance',69,168,1991),('the ring',1,111,2002),('the ring 2',2,222,2003),('the ring 3',3,333,2003),('WitchCraft and Wizardry',666,666,1996),('yoMomma',1,100,1969);
 /*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +156,7 @@ CREATE TABLE `publishers` (
 
 LOCK TABLES `publishers` WRITE;
 /*!40000 ALTER TABLE `publishers` DISABLE KEYS */;
-INSERT INTO `publishers` VALUES ('SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz','wizis.com','1111111111'),('underworld, 666 1000 street','necorocorp','necrocorp.com','6666666666'),('zalgo','zalgo','zalgo.zalgo','1234555555');
+INSERT INTO `publishers` VALUES ('Ben','Ben','Ben.com','55555555'),('Music','Kurt Cobain','Nirvana.com','2222222'),('SOMEEEEWHEEERRROVERTHERAINBOW','wizardofOzz','wizis.com','1111111111'),('underworld, 666 1000 street','necorocorp','necrocorp.com','6666666666'),('zalgo','zalgo','zalgo.zalgo','1234555555');
 /*!40000 ALTER TABLE `publishers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +174,7 @@ CREATE TABLE `purchase` (
   PRIMARY KEY (`userID`,`title`,`transactionID`),
   KEY `title` (`title`),
   KEY `transactionID` (`transactionID`),
-  CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`),
+  CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `purchase_ibfk_2` FOREIGN KEY (`title`) REFERENCES `media` (`title`),
   CONSTRAINT `purchase_ibfk_3` FOREIGN KEY (`transactionID`) REFERENCES `purchase_history` (`transactionID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -288,17 +286,17 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-ALTER table `purchase`
-	DROP FOREIGN KEY `purchase_ibfk_1`
-
-ALTER table `purchase` ADD CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
 --
 -- Dumping data for table `users`
 --
+ALTER table `purchase` DROP FOREIGN KEY `purchase_ibfk_1`;
+
+ALTER table `purchase` ADD CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('Admin_1','12','5556421111','somewhere','admin_1@booksRus.com','Admin',1),('Not_admin','1','5556321121','somewhere1','not_admin_1@booksRus.com','Not_Admin',0);
+INSERT INTO `users` VALUES ('Admin_1','12','5556421111','somewhere','admin_1@booksRus.com','Admin',1),('Dani','1','6666666666','hell','hailsatan','dani',1),('hossain','1','1','???','Mahmood.Hossain@fairmontstate.edu','Mahmood Hossain',1),('Max','3','3456','things','stuff','max',1),('Not_admin','1','5556321121','somewhere1','not_admin_1@booksRus.com','Not_Admin',0),('pj','2','12345','cave','stuff','Phil',1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,7 +324,7 @@ CREATE TABLE `written_by` (
 
 LOCK TABLES `written_by` WRITE;
 /*!40000 ALTER TABLE `written_by` DISABLE KEYS */;
-INSERT INTO `written_by` VALUES ('Necronomicon ','812 cthulhu lane','H. P. Lovecraft '),('WitchCraft and Wizardry','newtownsomewhere','fred'),('yoMomma','newtownsomewhere','fred');
+INSERT INTO `written_by` VALUES ('Necronomicon ','812 cthulhu lane','H. P. Lovecraft '),('How to Drum','Ben','Ben'),('Nirvana','Kurt Cobain','Kurt Cobain'),('WitchCraft and Wizardry','newtownsomewhere','fred'),('yoMomma','newtownsomewhere','fred');
 /*!40000 ALTER TABLE `written_by` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -365,4 +363,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-01 22:07:36
+-- Dump completed on 2016-12-07 19:06:14
